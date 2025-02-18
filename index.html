@@ -513,7 +513,7 @@
             opcion1: ["No desea el servicio", "Cliente necesita cable HDMI", "Cliente no necesita cable HDMI", "Cliente INSISTE querer ayuda técnica para la instalación", "Cliente desea cambiar dirección de instalación.", "Aplazamiento de llamada", "Cliente no contesta", "Contestador automático", "Número equivocado, cliente si conoce el producto y  el destinatario.", "Número equivocado, cliente no conoce ni el producto, ni el destinatario.", "Cliente extranjero", "Actualización de numero telefonico", "Abandono"],
             opcion2: ["No desea el servicio", "Cliente no tiene cerca el router de la TV (Acepta amplificador).", "Cliente no tiene cerca el router de la TV (No acepta amplificador).", "Cliente no cuenta con conexión HDMI", "Cliente INSISTE querer ayuda técnica para la instalación", "Cliente desea el servicio.", "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)", "Aplazamiento de llamada", "Cliente no contesta", "Contestador automático", "Número equivocado, cliente si conoce el producto y  el destinatario.", "Número equivocado, cliente no conoce ni el producto, ni el destinatario.", "Cliente extranjero", "Actualización de numero telefonico", "Abandono"],
             opcion3: ["No desea el servicio", "Cliente no cuenta con roseta o clavija de fibra óptica","No sabe si tiene roseta en el domicilio","No desea conectar terminal fijo","Cliente INSISTE querer ayuda técnica para la instalación","Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)","Cliente desea el servicio.","Cliente desea cambiar dirección de instalación.","Cliente no contesta","Contestador automático","Número equivocado, cliente si conoce el producto y  el destinatario.","Número equivocado, cliente no conoce ni el producto, ni el destinatario.","Aplazamiento de llamada","Cliente extranjero","Actualización de numero telefonico","Abandono"],
-            opcion4: ["No desea el servicio","Cliente no cuenta con roseta o clavija de fibra óptica","No sabe si tiene roseta en el domicilio","Cliente no tiene cerca el router de la TV (Acepta amplificador).","Cliente no tiene cerca el router de la TV (No acepta amplificador).","Cliente desea el servicio.","Cliente desea cambiar dirección de instalación.","No desea conectar terminal fijo","Cliente no tiene roseta pero acepta amplificador.","Cliente no cuenta con conexión HDMI","Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)","Cliente no contesta","Contestador automático","Número equivocado, cliente si conoce el producto y  el destinatario.","Número equivocado, cliente no conoce ni el producto, ni el destinatario.","Aplazamiento de llamada","Cliente extranjero","Actualización de numero telefonico","Abandono"],
+            opcion4: ["No desea el servicio","Cliente INSISTE querer ayuda técnica para la instalación","Cliente no cuenta con roseta o clavija de fibra óptica","No sabe si tiene roseta en el domicilio","Cliente no tiene cerca el router de la TV (Acepta amplificador).","Cliente no tiene cerca el router de la TV (No acepta amplificador).","Cliente desea el servicio.","Cliente desea cambiar dirección de instalación.","No desea conectar terminal fijo","Cliente no tiene roseta pero acepta amplificador.","Cliente no cuenta con conexión HDMI","Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)","Cliente no contesta","Contestador automático","Número equivocado, cliente si conoce el producto y  el destinatario.","Número equivocado, cliente no conoce ni el producto, ni el destinatario.","Aplazamiento de llamada","Cliente extranjero","Actualización de numero telefonico","Abandono"],
             opcion5: ["No desea el servicio","Cliente desea el servicio.","Cliente tiene servicio incompatible","Cliente desea cambiar dirección de instalación.","Cliente INSISTE querer ayuda técnica para la instalación","Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)","Cliente no contesta","Contestador automático","Número equivocado, cliente si conoce el producto y  el destinatario.","Número equivocado, cliente no conoce ni el producto, ni el destinatario.","Aplazamiento de llamada","Cliente extranjero","Actualización de numero telefonico","Abandono"],
             opcion6: ["Cliente asegura que no recibio el paquete (reportar a tu lider)","Ya instalo y realizo configuración del equipo nuevo.","Cliente INSISTE querer ayuda técnica para la instalación","(AFR)Phonebox-migración: Cliente cuenta con servicio incompatible con tecnologia radio.","Material averiado o roto.","Se realizamos varios intentos de instalación y/o configuración, pero no se pudo completar el proceso","Cliente rechaza el servicio de instalación y configuración (devolver)","Aplazamiento de llamada","Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)","Contestador automático","Cliente no contesta","Número equivocado, cliente si conoce el producto y  el destinatario.", "Número equivocado, cliente no conoce ni el producto, ni el destinatario.","Cliente extranjero","Cliente no cuenta con roseta o clavija de fibra óptica","Abandono"],
             opcion7: ["No desea el servicio", "Cliente no cuenta con roseta o clavija de fibra óptica", "No sabe si tiene roseta en el domicilio", "No desea conectar terminal fijo", "Cliente INSISTE querer ayuda técnica para la instalación", "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)", "Cliente desea el servicio.", "Cliente desea cambiar dirección de instalación.", "Cliente no contesta", "Contestador automático", "Número equivocado, cliente sí conoce el producto y el destinatario.", "Número equivocado, cliente no conoce ni el producto ni el destinatario.", "Aplazamiento de llamada", "Cliente extranjero", "Actualización de número telefónico", "Abandono", "Cliente no tiene cerca el router de la TV (Acepta amplificador).", "Cliente no tiene cerca el router de la TV (No acepta amplificador).", "Cliente no tiene roseta pero acepta amplificador.", "Cliente no cuenta con conexión HDMI"],
@@ -827,6 +827,114 @@ console.log(listasOrdenadas);// Inicializa EmailJS con tu User ID
                     console.error("Error al enviar el correo:", error);
                 });
         }
-    </script>
+// Objeto para almacenar las estadísticas
+    const estadisticas = {
+        totalCopias: 0, // Contador total de copias
+        copiasConBoton: {}, // Contador de copias por botón
+        copiasConLista: {}, // Contador de copias por lista
+        detallesCopias: [] // Array para almacenar detalles de cada copia
+    };
+
+    // Variables para almacenar el botón y la lista seleccionada actualmente
+    let botonSeleccionado = null;
+    let listaSeleccionada = null;
+
+    // Función para registrar el botón seleccionado
+    document.querySelectorAll('.buttons button').forEach(button => {
+        button.addEventListener('click', () => {
+            botonSeleccionado = button.textContent.trim(); // Almacenar el texto del botón
+        });
+    });
+
+    // Función para registrar la lista seleccionada
+    const lista = document.getElementById('lista');
+    lista.addEventListener('change', () => {
+        listaSeleccionada = lista.options[lista.selectedIndex].text; // Almacenar el texto de la opción seleccionada
+    });
+
+    // Función para registrar copias de texto
+    const textarea = document.getElementById('descripcion');
+    textarea.addEventListener('copy', () => {
+        // Incrementar el contador de copias
+        estadisticas.totalCopias++;
+
+        // Actualizar contador de copias por botón
+        if (botonSeleccionado) {
+            estadisticas.copiasConBoton[botonSeleccionado] = (estadisticas.copiasConBoton[botonSeleccionado] || 0) + 1;
+        }
+
+        // Actualizar contador de copias por lista
+        if (listaSeleccionada) {
+            estadisticas.copiasConLista[listaSeleccionada] = (estadisticas.copiasConLista[listaSeleccionada] || 0) + 1;
+        }
+
+        // Almacenar detalles de la copia
+        estadisticas.detallesCopias.push({
+            fechaHora: new Date().toLocaleString(),
+            boton: botonSeleccionado || 'Ninguno',
+            lista: listaSeleccionada || 'Ninguna'
+        });
+
+        console.log('Total de copias:', estadisticas.totalCopias);
+        console.log('Copias por botón:', estadisticas.copiasConBoton);
+        console.log('Copias por lista:', estadisticas.copiasConLista);
+        console.log('Detalles de copias:', estadisticas.detallesCopias);
+    });
+
+    // Función para guardar las estadísticas en un archivo de texto
+    function guardarEstadisticas() {
+    const datos = [];
+    datos.push("Estadísticas de copias de texto:\n");
+
+    // Agregar el total de copias
+    datos.push(`- Total de copias: ${estadisticas.totalCopias}`);
+
+    // Agregar estadísticas por botón
+    datos.push("\n- Copias por botón:");
+    for (const boton in estadisticas.copiasConBoton) {
+        datos.push(`  - ${boton}: ${estadisticas.copiasConBoton[boton]}`);
+    }
+
+    // Agregar estadísticas por lista
+    datos.push("\n- Copias por lista:");
+    for (const lista in estadisticas.copiasConLista) {
+        datos.push(`  - ${lista}: ${estadisticas.copiasConLista[lista]}`);
+    }
+
+    // Agregar detalles de cada copia
+    datos.push("\n- Detalles de copias:");
+    estadisticas.detallesCopias.forEach(copia => {
+        datos.push(`  - Fecha/Hora: ${copia.fechaHora}, Botón: ${copia.boton}, Lista: ${copia.lista}`);
+    });
+
+    // Convertir a texto
+    const texto = datos.join("\n");
+
+    // Obtener la fecha y hora actual en formato DD-MM-AAAA_HH-MM
+    const fechaActual = new Date();
+    const dia = String(fechaActual.getDate()).padStart(2, '0'); // Día con dos dígitos
+    const mes = String(fechaActual.getMonth() + 1).padStart(2, '0'); // Mes con dos dígitos
+    const año = fechaActual.getFullYear(); // Año con cuatro dígitos
+    const horas = String(fechaActual.getHours()).padStart(2, '0'); // Horas con dos dígitos
+    const minutos = String(fechaActual.getMinutes()).padStart(2, '0'); // Minutos con dos dígitos
+    const fechaHoraFormateada = `${dia}-${mes}-${año}_${horas}-${minutos}`; // Formato DD-MM-AAAA_HH-MM
+
+    // Crear un archivo de texto y permitir su descarga
+    const blob = new Blob([texto], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${fechaHoraFormateada}.txt`; // Nombre del archivo con la fecha y hora en formato DD-MM-AAAA_HH-MM
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+    // Guardar estadísticas al cerrar sesión
+    document.getElementById('logoutButton').addEventListener('click', () => {
+        guardarEstadisticas(); // Guardar estadísticas en un archivo de texto
+    });
+
+
+</script>
 </body>
 </html>

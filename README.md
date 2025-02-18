@@ -614,7 +614,7 @@
             const password = document.getElementById('password').value;
             const errorMessageDiv = document.getElementById('errorMessage');
 
-            if (username === 'uujjpm' && password === '223363') {
+            if (username === '0' && password === '0') {
                 document.querySelector('.container').style.display = 'block';
                 document.querySelector('.login-container').style.display = 'none';
                 errorMessageDiv.style.display = 'none';

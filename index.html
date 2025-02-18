@@ -474,7 +474,7 @@
       <div class="feedback-form" id="feedbackForm">
         <h3>Envíanos tus comentarios</h3>
         <input type="text" id="from_name" placeholder="Tu nombre" required>
-        <input type="email" id="email_id" placeholder="Tu correo electrónico" required>
+        <input type="text" id="walkie_name" placeholder="Nombre Completo Walkie" required>
         <textarea id="message" placeholder="Tu comentario o sugerencia" rows="4" required></textarea>
         <button onclick="sendFeedback()">Enviar</button>
     </div>
@@ -802,10 +802,10 @@ console.log(listasOrdenadas);// Inicializa EmailJS con tu User ID
         // Función para enviar el formulario usando EmailJS
         function sendFeedback() {
             const name = document.getElementById("from_name").value;
-            const email = document.getElementById("email_id").value;
+            const walkieName = document.getElementById("walkie_name").value;
             const message = document.getElementById("message").value;
 
-            if (!name || !email || !message) {
+            if (!name || !walkieName || !message) {
                 alert("Por favor, completa todos los campos.");
                 return;
             }
@@ -813,7 +813,7 @@ console.log(listasOrdenadas);// Inicializa EmailJS con tu User ID
             // Parámetros para la plantilla de EmailJS
             const templateParams = {
                 from_name: name,
-                email_id: email,
+                walkie_name: walkieName,
                 message: message,
             };
 

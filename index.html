@@ -438,6 +438,12 @@
         .feedback-form button:hover {
             background-color: #4cd831;
         }
+	/*Efecto boton*/
+	.selected-button {
+	box-shadow: 0 0 10px rgba(255, 0, 0, 0.8); /* Luz verde alrededor */
+        border: 2px solid #54eb36; /* Borde verde */
+        transform: scale(1.05); /* Ligero aumento de tamaño */
+	}
     </style>
 </head>
 <body>
@@ -560,7 +566,7 @@
             opcion3: "<img src='img/IMATV-VD.png' alt='IMATV-VD'>",
             opcion4: "<img src='img/IMATV-VDT.png' alt='IMATV-VDT'>",
             opcion5: "<div class='imagenes-paralelas'><img src='img/AFR-MIGRACION.png' alt='AFR-MIGRACION'><img src='img/AFR-V.png' alt='AFR-V'></div>",
-            opcion6: "<a href='https://padlet.com/NICO333/multiconsulta-formaci-n-25ks0qamr4j4vhy6/wish/dMA1W8X3bJY1W4OV'><img src='img/MTV-2.png' alt='MTV-2'></a>",
+            opcion6: "<a href='https://padlet.com/NICO333/multiconsulta-formaci-n-25ks0qamr4j4vhy6/wish/dMA1W8X3bJY1W4OV' target='_blank'><img src='img/MTV-2.png' alt='MTV-2'></a>",
             opcion7: "<div class='imagenes-paralelas'><img src='img/ASOS-VD.png' alt='ASOS-VD'><img src='img/ASOS-VDT.png' alt='ASOS-VDT'></div>",
             opcion8: "<img src='img/WIFI-6.png' alt='WIFI-6'>",
 
@@ -592,6 +598,7 @@
             showImage(opcion);
 
             // NUEVO: Guardar la última opción seleccionada en localStorage
+
             localStorage.setItem('lastSelectedOption', opcion);
         }
 
@@ -614,7 +621,7 @@
             const password = document.getElementById('password').value;
             const errorMessageDiv = document.getElementById('errorMessage');
 
-            if (username === '0' && password === '0') {
+            if (username === 'uujjpm' && password === '223363') {
                 document.querySelector('.container').style.display = 'block';
                 document.querySelector('.login-container').style.display = 'none';
                 errorMessageDiv.style.display = 'none';
@@ -630,6 +637,7 @@
             document.querySelector('.login-container').style.display = 'flex';
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
+	    window.open("Conversor.html", "_blank");
         });
 
         document.getElementById('password').addEventListener('keydown', function(event) {
@@ -677,6 +685,7 @@
         darkModeButton.addEventListener('click', toggleDarkMode);
 
         // NUEVO: Evento para el botón de limpiar descripción
+
         clearDescriptionButton.addEventListener('click', function() {
             descripcionTextarea.value = ''; // Limpiar el textarea
             localStorage.removeItem('lastDescriptionText'); // Opcional: limpiar también de localStorage
@@ -685,6 +694,7 @@
 
 
         //  Carga inicial de la página:
+
         document.addEventListener('DOMContentLoaded', function() {
             // Restaurar el modo oscuro desde localStorage (si está guardado)
             if (localStorage.getItem('darkMode') === 'enabled') {
@@ -692,6 +702,7 @@
             }
 
             // NUEVO: Restaurar la última opción de producto seleccionada desde localStorage
+
             const lastOption = localStorage.getItem('lastSelectedOption');
             if (lastOption) {
                 changeList(lastOption);
@@ -701,6 +712,7 @@
             }
 
             // NUEVO: Restaurar el texto del área de descripción desde localStorage
+
             const lastDescription = localStorage.getItem('lastDescriptionText');
             if (lastDescription) {
                 descripcionTextarea.value = lastDescription;
@@ -794,12 +806,14 @@ console.log(listasOrdenadas);// Inicializa EmailJS con tu User ID
         })();
 
         // Función para mostrar/ocultar el formulario de comentarios
+
         function toggleFeedbackForm() {
             const form = document.getElementById("feedbackForm");
             form.style.display = form.style.display === "none" ? "block" : "none";
         }
 
         // Función para enviar el formulario usando EmailJS
+
         function sendFeedback() {
             const name = document.getElementById("from_name").value;
             const walkieName = document.getElementById("walkie_name").value;
@@ -811,6 +825,7 @@ console.log(listasOrdenadas);// Inicializa EmailJS con tu User ID
             }
 
             // Parámetros para la plantilla de EmailJS
+
             const templateParams = {
                 from_name: name,
                 walkie_name: walkieName,
@@ -818,6 +833,7 @@ console.log(listasOrdenadas);// Inicializa EmailJS con tu User ID
             };
 
             // Envía el correo usando EmailJS
+
             emailjs.send("MTV1/MTV2", "Template_MTV", templateParams)
                 .then(function(response) {
                     alert("¡Gracias por tus comentarios!");
@@ -828,6 +844,7 @@ console.log(listasOrdenadas);// Inicializa EmailJS con tu User ID
                 });
         }
 // Objeto para almacenar las estadísticas
+
     const estadisticas = {
         totalCopias: 0, // Contador total de copias
         copiasConBoton: {}, // Contador de copias por botón
@@ -836,10 +853,12 @@ console.log(listasOrdenadas);// Inicializa EmailJS con tu User ID
     };
 
     // Variables para almacenar el botón y la lista seleccionada actualmente
+
     let botonSeleccionado = null;
     let listaSeleccionada = null;
 
     // Función para registrar el botón seleccionado
+
     document.querySelectorAll('.buttons button').forEach(button => {
         button.addEventListener('click', () => {
             botonSeleccionado = button.textContent.trim(); // Almacenar el texto del botón
@@ -847,28 +866,33 @@ console.log(listasOrdenadas);// Inicializa EmailJS con tu User ID
     });
 
     // Función para registrar la lista seleccionada
+
     const lista = document.getElementById('lista');
     lista.addEventListener('change', () => {
         listaSeleccionada = lista.options[lista.selectedIndex].text; // Almacenar el texto de la opción seleccionada
     });
 
     // Función para registrar copias de texto
+
     const textarea = document.getElementById('descripcion');
     textarea.addEventListener('copy', () => {
         // Incrementar el contador de copias
         estadisticas.totalCopias++;
 
         // Actualizar contador de copias por botón
+
         if (botonSeleccionado) {
             estadisticas.copiasConBoton[botonSeleccionado] = (estadisticas.copiasConBoton[botonSeleccionado] || 0) + 1;
         }
 
         // Actualizar contador de copias por lista
+
         if (listaSeleccionada) {
             estadisticas.copiasConLista[listaSeleccionada] = (estadisticas.copiasConLista[listaSeleccionada] || 0) + 1;
         }
 
         // Almacenar detalles de la copia
+
         estadisticas.detallesCopias.push({
             fechaHora: new Date().toLocaleString(),
             boton: botonSeleccionado || 'Ninguno',
@@ -882,35 +906,42 @@ console.log(listasOrdenadas);// Inicializa EmailJS con tu User ID
     });
 
     // Función para guardar las estadísticas en un archivo de texto
+
     function guardarEstadisticas() {
     const datos = [];
     datos.push("Estadísticas de copias de texto:\n");
 
     // Agregar el total de copias
+
     datos.push(`- Total de copias: ${estadisticas.totalCopias}`);
 
     // Agregar estadísticas por botón
+
     datos.push("\n- Copias por botón:");
     for (const boton in estadisticas.copiasConBoton) {
         datos.push(`  - ${boton}: ${estadisticas.copiasConBoton[boton]}`);
     }
 
     // Agregar estadísticas por lista
+
     datos.push("\n- Copias por lista:");
     for (const lista in estadisticas.copiasConLista) {
         datos.push(`  - ${lista}: ${estadisticas.copiasConLista[lista]}`);
     }
 
     // Agregar detalles de cada copia
+
     datos.push("\n- Detalles de copias:");
     estadisticas.detallesCopias.forEach(copia => {
-        datos.push(`  - Fecha/Hora: ${copia.fechaHora}, Botón: ${copia.boton}, Lista: ${copia.lista}`);
+        datos.push(`  - Fecha/Hora: ${copia.fechaHora},${copia.boton},${copia.lista}`);
     });
 
     // Convertir a texto
+
     const texto = datos.join("\n");
 
     // Obtener la fecha y hora actual en formato DD-MM-AAAA_HH-MM
+
     const fechaActual = new Date();
     const dia = String(fechaActual.getDate()).padStart(2, '0'); // Día con dos dígitos
     const mes = String(fechaActual.getMonth() + 1).padStart(2, '0'); // Mes con dos dígitos
@@ -920,6 +951,7 @@ console.log(listasOrdenadas);// Inicializa EmailJS con tu User ID
     const fechaHoraFormateada = `${dia}-${mes}-${año}_${horas}-${minutos}`; // Formato DD-MM-AAAA_HH-MM
 
     // Crear un archivo de texto y permitir su descarga
+
     const blob = new Blob([texto], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -930,11 +962,27 @@ console.log(listasOrdenadas);// Inicializa EmailJS con tu User ID
 }
 
     // Guardar estadísticas al cerrar sesión
+
     document.getElementById('logoutButton').addEventListener('click', () => {
         guardarEstadisticas(); // Guardar estadísticas en un archivo de texto
     });
+//Luz Botones
 
+function changeList(option) {
+        // Remueve la clase 'selected-button' de todos los botones
+        document.querySelectorAll(".buttons button").forEach(btn => {
+            btn.classList.remove("selected-button");
+        });
 
+        // Agrega la clase al botón que fue presionado
+        const selectedButton = document.querySelector(`button[data-imagen="${option}"]`);
+        if (selectedButton) {
+            selectedButton.classList.add("selected-button");
+        }
+
+        // Aquí va tu código original para cambiar la lista
+        console.log("Seleccionaste:", option);
+    }
 </script>
 </body>
 </html>

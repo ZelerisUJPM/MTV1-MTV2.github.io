@@ -438,6 +438,14 @@
         .feedback-form button:hover {
             background-color: #4cd831;
         }
+
+        /* Luz Boton Seleccionado*/
+
+	.selected {
+	box-shadow: 0 0 10px 5px rgba(255, 0, 0, 0.7); /* Sombra roja */
+        border-color: red; /* Borde rojo */
+        background-color: #e6e6e6; /* Puedes ajustar el color de fondo si deseas */
+        }
     </style>
 </head>
 <body>
@@ -575,23 +583,30 @@
             });
         });
 
+        // Lógica para la selección de botones y manejo de la interfaz
         function changeList(opcion) {
+            const buttons = document.querySelectorAll('.buttons button');
+            buttons.forEach(button => {
+                button.classList.remove('selected');
+            });
+
+            const selectedButton = document.querySelector(`button[data-imagen='${opcion}']`);
+            selectedButton.classList.add('selected');
+
             const lista = document.getElementById('lista');
             lista.innerHTML = '';
+
             listas[opcion].forEach(item => {
                 const option = document.createElement('option');
                 option.value = item;
                 option.textContent = item;
                 lista.appendChild(option);
             });
-            document.getElementById('descripcion').value = '';
 
-            lista.selectedIndex = 0; // Selecciona la primera opción por defecto
-            showDescription();        // Carga la descripción de la primera opción
-
+            lista.selectedIndex = 0;
+            showDescription();
             showImage(opcion);
 
-            // NUEVO: Guardar la última opción seleccionada en localStorage
             localStorage.setItem('lastSelectedOption', opcion);
         }
 
@@ -599,14 +614,12 @@
             const lista = document.getElementById('lista');
             const item = lista.value;
             document.getElementById('descripcion').value = descripciones[item];
-
-            // NUEVO: Guardar la descripción en localStorage al cambiarla
-            localStorage.setItem('lastDescriptionText',  document.getElementById('descripcion').value);
+            localStorage.setItem('lastDescriptionText', document.getElementById('descripcion').value);
         }
 
         function showImage(opcion) {
             const imageContainer = document.getElementById('image-container');
-            imageContainer.innerHTML = imagenes[opcion] || ''; // Muestra la imagen o vacio si no hay imagen
+            imageContainer.innerHTML = imagenes[opcion] || '';
         }
 
         document.getElementById('loginButton').addEventListener('click', function() {

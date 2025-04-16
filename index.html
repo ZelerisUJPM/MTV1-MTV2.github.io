@@ -1,953 +1,1219 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MTV 1/MTV 2</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="icon" href="img/logo.ico" type="image/x-icon">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #e0e7ec;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zeleris</title>
+  <link rel="icon" href="img/logo.ico" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* ====================================== */
+      /*          PALETA DE COLORES MODO CLARO          */
+      /* ====================================== */
+      --primary-color: #54eb36;
+      --primary-hover: #42ba2c;
+      --text-color: #000;
+      --background-color: #fff;
+      --border-color: #ddd;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+      --highlight-color: #f00;
 
-        .container {
-            text-align: center;
-            background-color: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-            padding: 30px;
-            display: none;
-        }
+      /* ====================================== */
+      /*    PALETA DE COLORES MODO OSCURO - ESCALA DE GRISES   */
+      /* ====================================== */
+      --dark-gray-bg-base: #282828;
+      --dark-gray-bg-secondary: #383838;
+      --dark-gray-text-primary: #E0E0E0;
+      --dark-gray-text-secondary: #B0B0B0;
+      --dark-gray-accent: #A0A0A0;
+      --shadow-color-dark-mode: rgba(255, 255, 255, 0.03);
+    }
 
-        .buttons button {
-            margin: 5px;
-            background-color: #54eb36;
-            color: #000;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.1s ease-in-out; /* Transición y escala para feedback visual */
-        }
+    /* Estilos generales */
+    body {
+      font-family: Arial, sans-serif;
+      background: #e0e7ec;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--text-color);
+    }
 
-        .buttons button:hover {
-            background-color: #4cd831;
-        }
+    .logo-empresa {
+      text-align: center;
+      margin: 20px 0;
+    }
 
-        /* NUEVO: Feedback visual al presionar los botones de producto */
-        .buttons button:active {
-            transform: scale(0.95); /* Ligeramente más pequeño al presionar */
-        }
+    .container {
+      background: var(--background-color);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px var(--shadow-color);
+      width: 100%;
+      max-width: 870px;
+      margin-bottom: 20px;
+    }
 
+    header,
+    h1,
+    h2 {
+      text-align: center;
+      color: var(--text-color);
+    }
 
-        #lista {
-            margin: 20px 0;
-            border-color: #ced4da;
-            color: #495057;
-            border-radius: 8px;
-            padding: 10px;
-        }
+    header {
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--border-color);
+      margin-bottom: 20px;
+    }
 
-        footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
+    /* Botones y contenedores */
+    .botones-sub-boton,
+    .botones-iniciales {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
 
-        #descripcion {
-            margin-top: 20px;
-            background-color: #ffffff;
-            border: 1px solid #ced4da;
-            border-radius: 8px;
-            padding: 15px;
-            text-align: left;
-            min-height: 100px;
-            box-sizing: border-box;
-            overflow-wrap: break-word;
-            font-family: 'Roboto', sans-serif;
-            color: #495057;
-            font-size: 1em;
-            line-height: 1.6;
-            overflow: hidden;
-            resize: none;
-            outline: none;
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-            transition: box-shadow 0.3s ease;
-        }
+    .botones-iniciales {
+      width: 100%;
+      margin-top: 20px;
+    }
 
-        .image-container {
-            margin-top: 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+    button {
+      background: var(--primary-color);
+      color: var(--text-color);
+      border: none;
+      border-radius: 5px;
+      padding: 12px 20px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      font-weight: bold;
+      text-align: center;
+    }
 
-        .image-container img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
-        }
+    button:hover {
+      background: var(--primary-hover);
+      transform: scale(1.05);
+    }
 
-        .login-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #e0e7ec;
-        }
+    .botones-sub-boton button[aria-pressed="true"] {
+      box-shadow: 0 0 10px var(--highlight-color);
+      border: 2px solid var(--highlight-color);
+    }
 
-        .login-form {
-            padding: 30px;
-            border: none;
-            background-color: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-        }
+    /* Inputs, selects y formularios */
+    input[type="text"],
+    input[type="password"],
+    select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      margin-bottom: 15px;
+      box-sizing: border-box;
+    }
 
-        .login-form h2 {
-            color: #495057;
-            margin-bottom: 20px;
-        }
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      border-color: #007BFF;
+      outline: none;
+    }
 
-        .login-form input {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            border: 1px solid #ced4da;
-        }
+    /* Selector y descripción */
+    .selector-contenido {
+      margin-bottom: 20px;
+    }
 
-        .login-form button {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: none;
-            background-color: #54eb36;
-            color: #ffffff;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+    .descripcion-contenido {
+      background: #f9f9f9;
+      border: 1px solid var(--border-color);
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 6px var(--shadow-color);
+      text-align: left;
+      max-width: 100%;
+      white-space: normal;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
 
-        .login-form button:hover {
-            background-color: #4cd831;
-        }
+    /* Centrar las imágenes dentro de la descripción */
+    .descripcion-contenido img {
+      display: block;
+      margin: 0 auto;
+      border-radius: 10px;
+      width: 400px;
+      height: 380px;
+    }
 
-        .logout-button {
-            background-color: transparent;
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            padding: 0;
-            color: #ffffff;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-            overflow: hidden;
-        }
+    /* Mensaje sin estadísticas */
+    .mensaje-sin-estadisticas {
+      color: darkorange;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 10px;
+    }
 
-        .logout-button:hover {
-            background-color: rgba(0, 0, 0, 0.4);
-            box-shadow: 0 0 10px #ff4d4d;
-        }
+    /* Título del botón seleccionado */
+    .titulo-boton-seleccionado {
+      font-size: 2.5em;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 20px;
+      color: #000;
+    }
 
-        .logout-button img {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 2px solid #ffffff;
-            box-sizing: border-box;
-        }
+    /* Formularios de inicio y registro */
+    .formulario {
+      background: #fff;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      max-width: 400px;
+      margin: 30px auto;
+      text-align: center;
+      font-family: 'Roboto', sans-serif;
+    }
 
-        .error-message {
-            color: #ff4d4d;
-            margin-top: 10px;
-            display: none;
-            font-size: 0.9em;
-        }
+    .formulario h2 {
+      margin-bottom: 20px;
+      font-size: 1.8em;
+      color: #333;
+    }
 
-        #loadingIndicator {
-            text-align: center;
-            margin-top: 15px;
-            color: #6c757d;
-            display: none;
-        }
+    .formulario label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #555;
+    }
 
-        .dark-mode-button {
-            background-color: transparent;
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            padding: 0;
-            color: #ffffff;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-            overflow: hidden;
-            box-shadow: 0 0 10px #000000; /* Sombra negra por defecto (modo oscuro desactivado) */
-        }
+    .formulario input[type="text"],
+    .formulario input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1em;
+      transition: border-color 0.3s;
+    }
 
-        .dark-mode-button:hover {
-           background-color: rgba(0, 0, 0, 0.4);
-           box-shadow: 0 0 10px #cccccc;
-        }
+    .formulario input[type="text"]:focus,
+    .formulario input[type="password"]:focus {
+      border-color: #007BFF;
+      outline: none;
+    }
 
-        .dark-mode-button img {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 2px solid #ffffff;
-            box-sizing: border-box;
-            transition: transform 0.5s ease-in-out;
-        }
+    .formulario button {
+      background: var(--primary-color);
+      color: black;
+      border: none;
+      border-radius: 4px;
+      padding: 12px 20px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      width: 100%;
+    }
 
-        .dark-mode-button img.rotated {
-            transform: rotate(180deg);
-        }
+    .formulario button:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+    }
 
-        body.dark-mode {
-            background-color: #333;
-            color: #f0f0f0;
-        }
+    .formulario a {
+      display: block;
+      margin-top: 15px;
+      color: black;
+      text-decoration: none;
+      font-weight: bold;
+    }
 
-        .container.dark-mode{
-           background-color: #333;
-       }
-        .login-container.dark-mode,
-        .login-form.dark-mode,
-        footer.dark-mode,
-        #descripcion.dark-mode {
-            background-color: #333;
-            color: #f0f0f0;
-            border-color: #666;
-        }
+    .formulario a:hover {
+      text-decoration: underline;
+    }
 
-        .buttons.dark-mode button {
-            background-color: #666;
-            color: #ffffff;
-        }
+    /* Botón de modo oscuro (solo imagen) */
+    .btn-dark-mode {
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0;
+      width: 40px;
+      height: 40px;
+      display: inline-block;
+      border-radius: 50%;
+      overflow: hidden;
+      transition: transform 0.8s ease-in-out;
+      z-index: 1000;
+      cursor: pointer;
+      top: 20px;
+      left: 20px;
+      position: fixed;
+    }
 
-        .buttons.dark-mode button:hover {
-            background-color: #777;
-        }
+    .btn-dark-mode.rotated {
+      transform: rotate(180deg);
+    }
 
-        #lista.dark-mode {
-            background-color: #555;
-            color: #f0f0f0;
-            border-color: #777;
-        }
+    .btn-dark-mode img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
-        .login-form.dark-mode h2,
-        footer.dark-mode p {
-            color: #f0f0f0;
-        }
+    /* Modo oscuro: se aplica a todo lo que esté dentro del body */
+    body.dark-mode {
+      background-color: var(--dark-gray-bg-base);
+      color: var(--dark-gray-text-primary);
+    }
 
-        .login-form.dark-mode input {
-            background-color: #555;
-            color: #f0f0f0;
-            border-color: #777;
-        }
+    body.dark-mode header,
+    body.dark-mode .container,
+    body.dark-mode .formulario,
+    body.dark-mode .descripcion-contenido {
+      background-color: var(--dark-gray-bg-secondary);
+      color: var(--dark-gray-text-primary);
+      border-color: var(--dark-gray-bg-secondary);
+      box-shadow: 0 2px 6px var(--shadow-color-dark-mode);
+    }
 
-        .login-form.dark-mode button {
-            background-color: #666;
-            color: #ffffff;
-        }
+    body.dark-mode button,
+    body.dark-mode input,
+    body.dark-mode select,
+    body.dark-mode textarea {
+      background-color: var(--dark-gray-bg-secondary);
+      color: var(--dark-gray-text-primary);
+      border-color: var(--dark-gray-text-secondary);
+    }
 
-        .login-form.dark-mode button:hover {
-            background-color: #777;
-        }
+    body.dark-mode button {
+      background-color: var(--dark-gray-accent);
+      color: var(--dark-gray-bg-base);
+    }
 
-        .logout-button.dark-mode:hover {
-            box-shadow: 0 0 10px #a0a0a0;
-        }
+    body.dark-mode a {
+      color: var(--dark-gray-accent);
+    }
 
-        #descripcion.dark-mode {
-           background-color: #444;
-           border: 1px solid #666;
-           color: #f0f0f0;
-           box-shadow: 0 0 5px rgba(100, 100, 100, 0.5);
-        }
+    body.dark-mode * {
+      background: transparent;
+      color: inherit;
+    }
 
-        body.dark-mode .dark-mode-button {
-            box-shadow: 0 0 10px #ffffff;
-        }
-        /* NUEVO: Estilo para el botón de limpiar descripción */
-        .clear-description-button {
-            background-color: transparent; /* Fondo transparente */
-            border: none; /* Sin borde */
-            color: #777; /* Color grisáceo */
-            cursor: pointer; /* Cursor de mano */
-            font-size: 0.9em; /* Tamaño de fuente más pequeño */
-            margin-left: 10px; /* Separación del textarea */
-            vertical-align: top; /* Alineación vertical con la parte superior del textarea */
-            opacity: 0.7; /* Ligeramente transparente */
-            transition: opacity 0.3s ease; /* Transición suave para hover */
-        }
-	.clear-description-button img {
-	    width: 30px; /* Ajusta el ancho si es necesario */
-	    height: 30px; /* Ajusta la altura si es necesario */
-	    vertical-align: top; /* Ajusta la alineación vertical si es necesario */
-	}
+    /* Estilos para las imágenes paralelas (sub-botones 5 y 6) */
+    .imagenes-paralelas {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      border-radius: 10px;
+    }
 
-        .clear-description-button:hover {
-            opacity: 1; /* Opacidad total en hover */
-            color: #555; /* Gris más oscuro en hover */
-        }
-        body.dark-mode .clear-description-button {
-            color: #bbb; /* Color grisáceo claro en modo oscuro */
-        }
+    .imagenes-paralelas img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 10px;
+      width: 350px;
+      height: 350px;
+    }
 
-        body.dark-mode .clear-description-button:hover {
-            color: #ddd; /* Color más claro en hover en modo oscuro */
-        }
-	.register-form {
-	padding: 30px;
-	border: none;
-	background-color: #ffffff;
-	border-radius: 15px;
-	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-	}
-	.register-form h2 {
-	color: #495057;
-	margin-bottom: 20px;
-	}
-	.register-form input {
-	display: block;
-	width: 100%;
-	padding: 12px;
-	margin-bottom: 20px;
-	border-radius: 8px;
-	border: 1px solid #ced4da;
-	}
-	.register-form button {
-	width: 100%;
-	padding: 12px;
-	border-radius: 8px;
-	border: none;
-	background-color: #54eb36;
-	color: #ffffff;
-	font-size: 16px;
-	cursor: pointer;
-	transition: background-color 0.3s ease;
-	}
-	.register-form button:hover {
-	background-color: #4cd831;
-	}
-	body.dark-mode .register-form {
-	background-color: #333;
-	color: #f0f0f0;
-	border-color: #666;
-	}
-	body.dark-mode .register-form input {
-	background-color: #555;
-	color: #f0f0f0;
-	border-color: #777;
-	}
-	body.dark-mode .register-form button {
-	background-color: #666;
-	color: #ffffff;
-	}
-	body.dark-mode .register-form button:hover {
-	background-color: #777;
-	}
-/* Nuevos estilos para el botón de comentarios y el formulario */
-        .feedback-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #54eb36;
-            color: #000;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-        }
+    /* Hora España */
+    .hora-espana {
+      text-align: center;
+      font-size: 1.5em;
+      margin-bottom: 20px;
+      font-family: 'Roboto', sans-serif;
+    }
 
-        .feedback-button:hover {
-            background-color: #4cd831;
-        }
+    /* Ajustar Imagenes CAC */
+    .imagen-cac {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center; /* Asegura el centrado del contenido */
+    }
 
-        .feedback-form {
-            display: none;
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            background-color: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-            padding: 20px;
-            width: 300px;
-            z-index: 1000;
-        }
+    .imagen-cac img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
 
-        .feedback-form input,
-        .feedback-form textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            border: 1px solid #ced4da;
-        }
+    /* Organización en 2 filas de 4 columnas para CAC */
+    #contenido-boton3 .botones-sub-boton {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      justify-items: center;
+    }
 
-        .feedback-form button {
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: none;
-            background-color: #54eb36;
-            color: #000;
-            cursor: pointer;
-        }
-
-        .feedback-form button:hover {
-            background-color: #4cd831;
-        }
-
-        /* Luz Boton Seleccionado*/
-
-	.selected {
-	box-shadow: 0 0 10px 5px rgba(255, 0, 0, 0.7); /* Sombra roja */
-        border-color: red; /* Borde rojo */
-        background-color: #e6e6e6; /* Puedes ajustar el color de fondo si deseas */
-        }
-    </style>
+    /* Ajuste de tamaño para el desplegable y los botones de CAC */
+    #botones-cac-grupo select,
+    #botones-cac-grupo button {
+      width: 250px;
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 5px;
+    }
+  </style>
 </head>
 <body>
-    <button title="Modo Oscuro" id="darkModeButton" class="dark-mode-button">
-        <img src="img/oscuro.ico" alt="Modo Oscuro">
-    </button>
-    <div class="container">
-        <div class="buttons">
-            <button data-imagen="opcion1" class="btn btn-primary" onclick="changeList('opcion1')">DESCO 4K</button>
-            <button data-imagen="opcion2" class="btn btn-primary" onclick="changeList('opcion2')">IMATV</button>
-            <button data-imagen="opcion3" class="btn btn-primary" onclick="changeList('opcion3')">IMATV-VD</button>
-            <button data-imagen="opcion4" class="btn btn-primary" onclick="changeList('opcion4')">IMATV-VDT</button>
-            <button data-imagen="opcion5" class="btn btn-primary" onclick="changeList('opcion5')">AFR</button>
-            <button data-imagen="opcion6" class="btn btn-primary" onclick="changeList('opcion6')">MTV 2</button>
-            <button data-imagen="opcion7" class="btn btn-primary" onclick="changeList('opcion7')">ASOS</button>
-            <button data-imagen="opcion8" class="btn btn-primary" onclick="changeList('opcion8')">HGUW6-P</button>
-        </div>
-        <select id="lista" class="form-control mt-3" onchange="showDescription()">
+  <div id="hora-espana" class="hora-espana"></div>
+  <button id="btnDarkMode" class="btn-dark-mode">
+    <img src="img/oscuro.ico" alt="Modo Oscuro">
+  </button>
+  <div id="logo-empresa" class="logo-empresa">
+    <img src="img/empresa.png" alt="Logo de la Empresa">
+  </div>
+  <h1 id="titulo-boton-seleccionado" class="titulo-boton-seleccionado" style="display:none;"></h1>
+  <div class="container">
+    <!-- Contenedor de los 3 botones principales -->
+    <div id="botones-iniciales" class="botones-iniciales">
+      <button id="boton1" class="boton-inicio">MTV 1</button>
+      <button id="boton2" class="boton-inicio">MTV 2</button>
+      <button id="boton3" class="boton-inicio">CAC</button>
+    </div>
+
+    <!-- Botón de descargar estadísticas -->
+    <div id="boton-descargar" class="boton-descargar" style="margin-top: 20px; text-align: center;">
+      <button id="descargar-estadisticas" class="boton-inicio">Descargar Estadísticas</button>
+    </div>
+
+    <!-- Formularios de inicio y registro -->
+    <div id="formulario-login" class="formulario" style="display:none;">
+      <h2>Iniciar Sesión</h2>
+      <form id="login-form">
+        <label for="usernameLogin">Usuario:</label>
+        <input type="text" id="usernameLogin" name="usernameLogin" required>
+        <label for="passwordLogin">Contraseña:</label>
+        <input type="password" id="passwordLogin" name="passwordLogin" required>
+        <button type="submit">Iniciar Sesión</button>
+        <a href="#" id="enlace-registro">¿No tienes cuenta? Regístrate</a>
+      </form>
+    </div>
+
+    <div id="formulario-registro" class="formulario" style="display:none;">
+      <h2>Registro</h2>
+      <form id="registro-form">
+        <label for="usernameRegistro">Usuario:</label>
+        <input type="text" id="usernameRegistro" name="usernameRegistro" required>
+        <label for="passwordRegistro">Contraseña:</label>
+        <input type="password" id="passwordRegistro" name="passwordRegistro" required>
+        <button type="submit">Registrarse</button>
+        <a href="#" id="enlace-login">¿Ya tienes cuenta? Inicia Sesión</a>
+      </form>
+    </div>
+
+    <!-- Contenido asociado a cada botón principal -->
+    <div id="contenido-boton1" class="contenido-boton" style="display:none;">
+      <div class="botones-sub-boton" id="botones-boton1">
+        <button class="sub-boton-1" data-boton="subBoton1_1" aria-pressed="false">Sub-botón 1.1</button>
+        <button class="sub-boton-1" data-boton="subBoton1_2" aria-pressed="false">Sub-botón 1.2</button>
+        <button class="sub-boton-1" data-boton="subBoton1_3" aria-pressed="false">Sub-botón 1.3</button>
+        <button class="sub-boton-1" data-boton="subBoton1_4" aria-pressed="false">Sub-botón 1.4</button>
+        <button class="sub-boton-1" data-boton="subBoton1_5" aria-pressed="false">Sub-botón 1.5</button>
+        <button class="sub-boton-1" data-boton="subBoton1_6" aria-pressed="false">Sub-botón 1.6</button>
+        <button class="sub-boton-1" data-boton="subBoton1_7" aria-pressed="false">Sub-botón 1.7</button>
+      </div>
+      <div id="selector-contenido-boton1" class="selector-contenido" style="display:none;">
+        <br>
+        <label for="selector-boton1"></label>
+        <select id="selector-boton1">
+          <option value=""></option>
         </select>
-        <div style="display:flex; align-items: center;">  <textarea id="descripcion" class="form-control mt-3" rows="4" placeholder="Descripción..."></textarea>
-            <button type="button" id="clearDescriptionButton" class="clear-description-button" title="Limpiar descripción">
-    		<img src="img/borrar.ico" alt="Limpiar descripción">
-	    </button>
+      </div>
+      <div id="descripcion-contenido-boton1" class="descripcion-contenido" style="display:none;">
+        <p id="texto-descripcion-boton1" class="texto-descripcion" contenteditable="true"></p>
+        <br>
+        <div id="imagen-descripcion-boton1" style="display:none;"></div>
+        <br>
+        <button id="cerrar-sesion-boton1" class="boton-cerrar-sesion" style="display: block; margin: 0 auto;">Cambiar de Skill</button>
+        <div id="mensaje-sin-estadisticas-boton1" class="mensaje-sin-estadisticas" style="display: none;">
+          No hay estadísticas aún para descargar.
         </div>
+      </div>
+    </div>
 
-        <div id="image-container" class="image-container">
+    <div id="contenido-boton2" class="contenido-boton" style="display:none;">
+      <div class="botones-sub-boton" id="botones-boton2">
+        <button class="sub-boton-2" data-boton="subBoton2_1" aria-pressed="false">Sub-botón 2.1</button>
+        <button class="sub-boton-2" data-boton="subBoton2_2" aria-pressed="false">Sub-botón 2.2</button>
+        <button class="sub-boton-2" data-boton="subBoton2_3" aria-pressed="false">Sub-botón 2.3</button>
+        <button class="sub-boton-2" data-boton="subBoton2_4" aria-pressed="false">Sub-botón 2.4</button>
+        <button class="sub-boton-2" data-boton="subBoton2_5" aria-pressed="false">Sub-botón 2.5</button>
+        <button class="sub-boton-2" data-boton="subBoton2_6" aria-pressed="false">Sub-botón 2.6</button>
+        <button class="sub-boton-2" data-boton="subBoton2_7" aria-pressed="false">Sub-botón 2.7</button>
+      </div>
+      <br>
+      <div id="selector-contenido-boton2" class="selector-contenido" style="display:none;">
+        <label for="selector-boton2"></label>
+        <select id="selector-boton2">
+          <option value="">-- Selecciona --</option>
+        </select>
+      </div>
+      <div id="descripcion-contenido-boton2" class="descripcion-contenido" style="display:none;">
+        <p id="texto-descripcion-boton2" class="texto-descripcion" contenteditable="true"></p>
+        <div id="imagen-descripcion-boton2" style="display:none;"></div>
+        <br>
+        <button id="cerrar-sesion-boton2" class="boton-cerrar-sesion" style="display: block; margin: 0 auto;">Cambiar de Skill</button>
+        <div id="mensaje-sin-estadisticas-boton2" class="mensaje-sin-estadisticas" style="display: none;">
+          No hay estadísticas aún para descargar.
         </div>
-        <footer>
-            <br><p>&copy; <span id="currentYear"></span> Ing. Javier Mastrangelo. Todos los derechos reservados.</p>
-        </footer>
-	<button class="feedback-button" onclick="toggleFeedbackForm()">Comentarios/Sugerencias</button>
-
-         <!-- Formulario de comentarios -->
-      <div class="feedback-form" id="feedbackForm">
-        <h3>Envíanos tus comentarios</h3>
-        <input type="text" id="from_name" placeholder="Tu nombre" required>
-        <input type="text" id="walkie_name" placeholder="Nombre Completo Walkie" required>
-        <textarea id="message" placeholder="Tu comentario o sugerencia" rows="4" required></textarea>
-        <button onclick="sendFeedback()">Enviar</button>
+      </div>
     </div>
-        <button title="Cerrar Sesión" id="logoutButton" class="logout-button">
-            <img src="img/logout.ico" alt="Cerrar Sesión">
-        </button>
 
+    <!-- Sección CAC (Botón 3) -->
+    <div id="contenido-boton3" class="contenido-boton" style="display:none;">
+      <!-- Contenedor para el desplegable y los 3 botones, alineados horizontalmente -->
+      <div id="botones-cac-grupo" style="display: flex; gap: 10px; align-items: center; justify-content: center;">
+        <select id="dropdown-cac">
+          <option value="">-- Selecciona una opción --</option>
+          <option value="subBoton3_1">TME Fusion Sap</option>
+          <option value="subBoton3_2">Automantenimiento</option>
+          <option value="subBoton3_3">TME GGCC Captacion</option>
+          <option value="subBoton3_4">Reloj te Cuida</option>
+          <option value="subBoton3_5">Movistar Car</option>
+          <option value="subBoton3_6">HUB TME Grandes Cuentas</option>
+          <option value="subBoton3_7">Telefonica Seguros ENT</option>
+          <option value="subBoton3_8">Telefonica Seguros REG</option>
+        </select>
+        <button id="cac-btn1">Buzon CAC</button>
+        <button id="cac-btn2">Codigos</button>
+        <button id="cac-btn3">O2</button>
+      </div>
+      <br>
+      <!-- Área donde se muestran las imágenes, centradas -->
+      <div id="imagen-cac" class="imagen-cac" style="display:none;"></div>
+      <br>
+      <button id="cerrar-sesion-boton3" class="boton-cerrar-sesion" style="display: block; margin: 0 auto;">Cambiar de Skill</button>
     </div>
-    <div class="login-container">
-    <div class="logo-container">
-        <img src="img/empresa.png" alt="Logo de la Empresa">
-    </div>
-    <form class="login-form">
-        <h2>Iniciar Sesión</h2>
-        <input type="text" id="username" placeholder="Nombre de usuario" required>
-        <input type="password" id="password" placeholder="Contraseña" required>
-        <button type="button" id="loginButton">Iniciar Sesión</button>
-        <div id="errorMessage" class="error-message"></div>
- <div class="form-options">
-                <br><a href="#" id="showRegisterButton">¿No tienes cuenta? Regístrate</a>
-            </div>
-    </form>
-    <form class="register-form" style="display: none;">
-        <h2>Registrarse</h2>
-	<a href="#" id="showLoginButton">¿Ya tienes cuenta? Inicia Sesión</a>
-        <input type="text" id="registerUsername" placeholder="Nombre de usuario" required>
-        <input type="password" id="registerPassword" placeholder="Contraseña" required>
-        <input type="password" id="confirmPassword" placeholder="Confirmar contraseña" required>
-        <button type="button" id="registerButton">Registrarse</button>
-        <div id="registerErrorMessage" class="error-message"></div>
-    </form>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3.2.0/dist/email.min.js"></script>
-    <script>
-        const listas = {
-            opcion1: ["No desea el servicio", "Cliente necesita cable HDMI", "Cliente no necesita cable HDMI", "Cliente INSISTE querer ayuda técnica para la instalación", "Cliente desea cambiar dirección de instalación.", "Aplazamiento de llamada", "Cliente no contesta", "Contestador automático", "Número equivocado. Cliente sí conoce el producto y el destinatario.", "Número equivocado. Cliente no conoce ni el producto ni el destinatario.", "Cliente extranjero", "Actualización de número telefónico", "Abandono"],
-            opcion2: ["No desea el servicio", "Cliente no tiene cerca el router de la TV (Acepta amplificador).", "Cliente no tiene cerca el router de la TV (No acepta amplificador).", "Cliente no cuenta con conexión HDMI", "Cliente INSISTE querer ayuda técnica para la instalación", "Cliente desea el servicio.", "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)", "Aplazamiento de llamada", "Cliente no contesta", "Contestador automático", "Número equivocado. Cliente sí conoce el producto y el destinatario.", "Número equivocado. Cliente no conoce ni el producto ni el destinatario.", "Cliente extranjero", "Actualización de número telefónico", "Abandono"],
-            opcion3: ["No desea el servicio", "Cliente no cuenta con roseta o clavija de fibra óptica","No sabe si tiene roseta en el domicilio","No desea conectar terminal fijo","Cliente INSISTE querer ayuda técnica para la instalación","Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)","Cliente desea el servicio.","Cliente desea cambiar dirección de instalación.","Cliente no contesta","Contestador automático","Número equivocado. Cliente sí conoce el producto y el destinatario.","Número equivocado. Cliente no conoce ni el producto ni el destinatario.","Aplazamiento de llamada","Cliente extranjero","Actualización de número telefónico","Abandono"],
-            opcion4: ["No desea el servicio","Cliente INSISTE querer ayuda técnica para la instalación","Cliente no cuenta con roseta o clavija de fibra óptica","No sabe si tiene roseta en el domicilio","Cliente no tiene cerca el router de la TV (Acepta amplificador).","Cliente no tiene cerca el router de la TV (No acepta amplificador).","Cliente desea el servicio.","Cliente desea cambiar dirección de instalación.","No desea conectar terminal fijo","Cliente no tiene roseta pero acepta amplificador.","Cliente no cuenta con conexión HDMI","Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)","Cliente no contesta","Contestador automático","Número equivocado. Cliente sí conoce el producto y el destinatario.","Número equivocado. Cliente no conoce ni el producto ni el destinatario.","Aplazamiento de llamada","Cliente extranjero","Actualización de número telefónico","Abandono"],
-            opcion5: ["No desea el servicio","Cliente desea el servicio.","Cliente tiene servicio incompatible","Cliente desea cambiar dirección de instalación.","Cliente INSISTE querer ayuda técnica para la instalación","Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)","Cliente no contesta","Contestador automático","Número equivocado. Cliente sí conoce el producto y el destinatario.","Número equivocado. Cliente no conoce ni el producto ni el destinatario.","Aplazamiento de llamada","Cliente extranjero","Actualización de número telefónico","Abandono"],
-            opcion6: ["Cliente asegura que no recibio el paquete (reportar a tu lider)","Ya instalo y realizo configuración del equipo nuevo.","Cliente INSISTE querer ayuda técnica para la instalación","(AFR)Phonebox-migración: Cliente cuenta con servicio incompatible con tecnologia radio.","Material averiado o roto.","Se realizamos varios intentos de instalación y/o configuración pero no se pudo completar el proceso","Cliente rechaza el servicio de instalación y configuración (devolver)","Aplazamiento de llamada","Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)","Contestador automático","Cliente no contesta","Número equivocado. Cliente sí conoce el producto y el destinatario.", "Número equivocado. Cliente no conoce ni el producto ni el destinatario.","Cliente extranjero","Cliente no cuenta con roseta o clavija de fibra óptica","Abandono"],
-            opcion7: ["No desea el servicio", "Cliente no cuenta con roseta o clavija de fibra óptica", "No sabe si tiene roseta en el domicilio", "No desea conectar terminal fijo", "Cliente INSISTE querer ayuda técnica para la instalación", "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)", "Cliente desea el servicio.", "Cliente desea cambiar dirección de instalación.", "Cliente no contesta", "Contestador automático", "Número equivocado. Cliente sí conoce el producto y el destinatario.", "Número equivocado. Cliente no conoce ni el producto ni el destinatario.", "Aplazamiento de llamada", "Cliente extranjero", "Actualización de número telefónico", "Abandono", "Cliente no tiene cerca el router de la TV (Acepta amplificador).", "Cliente no tiene cerca el router de la TV (No acepta amplificador).", "Cliente no tiene roseta pero acepta amplificador.", "Cliente no cuenta con conexión HDMI"],
-            opcion8: ["No desea el servicio","Cliente INSISTE querer ayuda técnica para la instalación", "Cliente desea el servicio.", "Cliente no contesta", "Número equivocado. Cliente sí conoce el producto y el destinatario.", "Número equivocado. Cliente no conoce ni el producto ni el destinatario.", "Aplazamiento de llamada", "Cliente extranjero", "Actualización de número telefónico", "Abandono"]
-        };
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Helper para obtener elementos por ID
+      const $ = id => document.getElementById(id);
 
-        const descripciones = {
-        "No desea el servicio": "Cliente no desea el servicio, se remite a la linea 1004. Hablo con ",
-            "Cliente necesita cable HDMI": "Cliente necesita cable hdmi, confirmo envio. Hablo con ",
-            "Cliente no necesita cable HDMI": "Cliente no necesita cable hdmi, confirmo envio. Hablo con ",
-            "Cliente INSISTE querer ayuda técnica para la instalación": "Cliente insiste en tener ayuda técnica, se deriva a servicio técnico. Hablo con ",
-            "Cliente desea cambiar dirección de instalación.": "Cliente desea cambiar dirección de instalación, se brinda linea 1004. Hablo con ",
-            "Aplazamiento de llamada": "Cliente solicita nueva comunicación, aplazamiento de llamada. Hablo con ",
-            "Cliente no contesta": "Cliente no contesta.",
-            "Contestador automático": "Contestador automático, cliente no contesta.",
-            "Número equivocado. Cliente sí conoce el producto y el destinatario.": "Número equivocado, se actualiza información.",
-            "Número equivocado. Cliente no conoce ni el producto ni el destinatario.": "Número equivocado, se brinda línea 1004.",
-            "Cliente extranjero": "Cliente no habla español, se brinda línea 1004.",
-            "Actualización de número telefónico": "Cliente actualiza teléfono, se genera aplazamiento de llamada. Hablo con ",
-            "Abandono": "Llamada cortada, cliente abandonó la comunicación. Hablo con ",
+      // Elementos principales
+      const logo = $('logo-empresa'),
+            botonesIniciales = $('botones-iniciales'),
+            contenedorDescargar = $('boton-descargar'),
+            formularioLogin = $('formulario-login'),
+            formularioRegistro = $('formulario-registro'),
+            contenidoBoton1 = $('contenido-boton1'),
+            contenidoBoton2 = $('contenido-boton2'),
+            contenidoBoton3 = $('contenido-boton3'),
+            tituloBotonSeleccionado = $('titulo-boton-seleccionado'),
+            boton1 = $('boton1'),
+            boton2 = $('boton2'),
+            boton3 = $('boton3'),
+            btnDescargar = $('descargar-estadisticas'),
+            enlaceRegistro = $('enlace-registro'),
+            enlaceLogin = $('enlace-login');
+
+      // Elementos de sub-vistas
+      const botonesBoton1 = $('botones-boton1'),
+            selectorContenidoBoton1 = $('selector-contenido-boton1'),
+            selectorBoton1Select = $('selector-boton1'),
+            descripcionContenidoBoton1 = $('descripcion-contenido-boton1'),
+            imagenDescripcionBoton1 = $('imagen-descripcion-boton1'),
+            textoDescripcionBoton1 = $('texto-descripcion-boton1'),
+            botonesBoton2 = $('botones-boton2'),
+            selectorContenidoBoton2 = $('selector-contenido-boton2'),
+            selectorBoton2Select = $('selector-boton2'),
+            descripcionContenidoBoton2 = $('descripcion-contenido-boton2'),
+            imagenDescripcionBoton2 = $('imagen-descripcion-boton2'),
+            textoDescripcionBoton2 = $('texto-descripcion-boton2');
+
+      // Botones "Cambiar de Skill"
+      const cerrarBtns = [
+          $('cerrar-sesion-boton1'),
+          $('cerrar-sesion-boton2'),
+          $('cerrar-sesion-boton3')
+      ],
+      mensajeSinEstadisticasBoton1 = $('mensaje-sin-estadisticas-boton1'),
+      mensajeSinEstadisticasBoton2 = $('mensaje-sin-estadisticas-boton2');
+
+      // Variables de IndexedDB
+      let db;
+      const dbName = 'miBaseDeDatos',
+            dbVersion = 3,
+            objectStoreName = 'sesiones',
+            usuariosOS = 'usuarios',
+            estadisticasOS = 'estadisticas_descripciones',
+            lastClearOS = 'last_clear_date_estadisticas';
+
+      // Datos: Listas, descripciones e imágenes
+      const listas = {
+        opcion1: [
+          "No desea el servicio", "Cliente necesita cable HDMI", "Cliente no necesita cable HDMI",
+          "Cliente INSISTE querer ayuda técnica para la instalación", "Cliente desea cambiar dirección de instalación.",
+          "Aplazamiento de llamada", "Cliente no contesta", "Contestador automático",
+          "Número equivocado Cliente sí conoce el producto y el destinatario.",
+          "Número equivocado Cliente no conoce ni el producto ni el destinatario.",
+          "Cliente extranjero", "Actualización de número telefónico", "Abandono"
+        ],
+        opcion2: [
+          "No desea el servicio", "Cliente no tiene cerca el router de la TV (Acepta amplificador).",
+          "Cliente no tiene cerca el router de la TV (No acepta amplificador).", "Cliente no cuenta con conexión HDMI",
+          "Cliente INSISTE querer ayuda técnica para la instalación", "Cliente desea el servicio.",
+          "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)",
+          "Aplazamiento de llamada", "Cliente no contesta", "Contestador automático",
+          "Número equivocado Cliente sí conoce el producto y el destinatario.",
+          "Número equivocado Cliente no conoce ni el producto ni el destinatario.",
+          "Cliente extranjero", "Actualización de número telefónico", "Abandono"
+        ],
+        opcion3: [
+          "No desea el servicio", "Cliente no cuenta con roseta o clavija de fibra óptica",
+          "No sabe si tiene roseta en el domicilio", "No desea conectar terminal fijo",
+          "Cliente INSISTE querer ayuda técnica para la instalación",
+          "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)",
+          "Cliente desea el servicio.", "Cliente desea cambiar dirección de instalación.",
+          "Cliente no contesta", "Contestador automático",
+          "Número equivocado Cliente sí conoce el producto y el destinatario.",
+          "Número equivocado Cliente no conoce ni el producto ni el destinatario.",
+          "Aplazamiento de llamada", "Cliente extranjero", "Actualización de número telefónico", "Abandono"
+        ],
+        opcion4: [
+          "No desea el servicio", "Cliente INSISTE querer ayuda técnica para la instalación",
+          "Cliente no cuenta con roseta o clavija de fibra óptica", "No sabe si tiene roseta en el domicilio",
+          "Cliente no tiene cerca el router de la TV (Acepta amplificador).",
+          "Cliente no tiene cerca el router de la TV (No acepta amplificador).",
+          "Cliente desea el servicio.", "Cliente desea cambiar dirección de instalación.",
+          "No desea conectar terminal fijo", "Cliente no tiene roseta pero acepta amplificador.",
+          "Cliente no cuenta con conexión HDMI",
+          "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)",
+          "Cliente no contesta", "Contestador automático",
+          "Número equivocado Cliente sí conoce el producto y el destinatario.",
+          "Número equivocado Cliente no conoce ni el producto ni el destinatario.",
+          "Aplazamiento de llamada", "Cliente extranjero", "Actualización de número telefónico", "Abandono"
+        ],
+        opcion5: [
+          "No desea el servicio", "Cliente desea el servicio.", "Cliente tiene servicio incompatible",
+          "Cliente desea cambiar dirección de instalación.", "Cliente INSISTE querer ayuda técnica para la instalación",
+          "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)",
+          "Cliente no contesta", "Contestador automático",
+          "Número equivocado Cliente sí conoce el producto y el destinatario.",
+          "Número equivocado Cliente no conoce ni el producto ni el destinatario.",
+          "Aplazamiento de llamada", "Cliente extranjero", "Actualización de número telefónico", "Abandono"
+        ],
+        opcion8: [
+          "Cliente asegura que no recibio el paquete (reportar a tu lider)",
+          "No desea el servicio",
+          "Ya instalo y realizo configuración del equipo nuevo.",
+          "Cliente INSISTE querer ayuda técnica para la instalación",
+          "(AFR)Phonebox-migración: Cliente cuenta con servicio incompatible con tecnologia radio.",
+          "Material averiado o roto.",
+          "Se realizamos varios intentos de instalación y/o configuración pero no se pudo completar el proceso",
+          "Cliente rechaza el servicio de instalación y configuración (devolver)",
+          "Aplazamiento de llamada",
+          "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)",
+          "Contestador automático", "Cliente no contesta",
+          "Número equivocado Cliente sí conoce el producto y el destinatario.",
+          "Número equivocado Cliente no conoce ni el producto ni el destinatario.",
+          "Cliente extranjero", "Cliente no cuenta con roseta o clavija de fibra óptica", "Abandono"
+        ],
+        opcion7: [
+          "No desea el servicio", "Cliente no cuenta con roseta o clavija de fibra óptica",
+          "No sabe si tiene roseta en el domicilio", "No desea conectar terminal fijo",
+          "Cliente INSISTE querer ayuda técnica para la instalación",
+          "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)",
+          "Cliente desea el servicio.", "Cliente desea cambiar dirección de instalación.",
+          "Cliente no contesta", "Contestador automático",
+          "Número equivocado Cliente sí conoce el producto y el destinatario.",
+          "Número equivocado Cliente no conoce ni el producto ni el destinatario.",
+          "Aplazamiento de llamada", "Cliente extranjero", "Actualización de número telefónico", "Abandono",
+          "Cliente no tiene cerca el router de la TV (Acepta amplificador).",
+          "Cliente no tiene cerca el router de la TV (No acepta amplificador).",
+          "Cliente no tiene roseta pero acepta amplificador.",
+          "Cliente no cuenta con conexión HDMI"
+        ],
+        opcion6: [
+          "No desea el servicio", "Cliente INSISTE querer ayuda técnica para la instalación",
+          "Cliente desea el servicio.", "Cliente no contesta",
+          "Número equivocado Cliente sí conoce el producto y el destinatario.",
+          "Número equivocado Cliente no conoce ni el producto ni el destinatario.",
+          "Aplazamiento de llamada", "Cliente extranjero", "Actualización de número telefónico",
+          "Cliente no tiene cerca el router de la TV (Acepta amplificador).",
+          "Cliente no tiene cerca el router de la TV (No acepta amplificador).",
+          "No desea conectar terminal fijo", "Abandono"
+        ]
+      };
+
+      const descripciones = {
+        "No desea el servicio": "Cliente no desea el servicio, se remite a la línea 1004. Hablo con ",
+        "Cliente necesita cable HDMI": "Cliente necesita cable HDMI, confirmo envío. Hablo con ",
+        "Cliente no necesita cable HDMI": "Cliente no necesita cable HDMI, confirmo envío. Hablo con ",
+        "Cliente INSISTE querer ayuda técnica para la instalación": "Cliente insiste en tener ayuda técnica, se deriva a servicio técnico. Hablo con ",
+        "Cliente desea cambiar dirección de instalación.": "Cliente desea cambiar dirección de instalación, se brinda línea 1004. Hablo con ",
+        "Aplazamiento de llamada": "Cliente solicita nueva comunicación, aplazamiento de llamada. Hablo con ",
+        "Cliente no contesta": "Cliente no contesta.",
+        "Contestador automático": "Contestador automático, cliente no contesta.",
+        "Número equivocado Cliente sí conoce el producto y el destinatario.": "Número equivocado, se actualiza información.",
+        "Número equivocado Cliente no conoce ni el producto ni el destinatario.": "Número equivocado, se brinda línea 1004.",
+        "Cliente extranjero": "Cliente no habla español, se brinda línea 1004.",
+        "Actualización de número telefónico": "Cliente actualiza teléfono, se genera aplazamiento de llamada. Hablo con ",
+        "Abandono": "Llamada cortada, cliente abandonó la comunicación. Hablo con ",
         "Cliente no tiene cerca el router de la TV (Acepta amplificador).": "Router no está cerca de la TV, cliente acepta amplificador, se confirma envío. Hablo con ",
-            "Cliente no tiene cerca el router de la TV (No acepta amplificador).": "Router no está cerca de la TV, cliente no acepta amplificador, se deriva a servicio técnico. Hablo con ",
-            "Cliente no cuenta con conexión HDMI": "Cliente no tiene conexión HDMI, brindo la línea 1004. Hablo con ",
-            "Cliente desea el servicio.": "Cliente autoinstalable, confirmo envío. Hablo con ",
-            "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)": "Cliente manifiesta xxx, se genera retención. Hablo con ",
-            "Cliente no cuenta con roseta o clavija de fibra óptica": "Cliente no cuenta con roseta de fibra óptica, se deriva a servicio técnico. Hablo con ",
-            "No sabe si tiene roseta en el domicilio": "Se aplaza llamada porque cliente no sabe si tiene roseta. Hablo con ",
-            "No desea conectar terminal fijo": "Cliente no conectará terminal fijo, se confirma envío. Hablo con ",
-            "Cliente no tiene roseta pero acepta amplificador.": "Cliente no tiene roseta pero acepta amplificador, se deriva a servicio técnico. Hablo con ",
-            "Cliente tiene servicio incompatible":"Cliente tiene servicio incompatible, se brinda línea 1004.Hablo con ",
-            "Cliente asegura que no recibio el paquete (reportar a tu lider)":"Cliente asegura que no recibió el paquete, se brinda línea 1004.Hablo con ",
-            "Ya instalo y realizo configuración del equipo nuevo.":"Equipo instalado y configurado, se espera comprobación de Arce y Magia.Hablo con ",
-            "(AFR)Phonebox-migración: Cliente cuenta con servicio incompatible con tecnologia radio.":"Cliente tiene servicio incompatible con tecnología radio, se brinda línea 1004. Hablo con ",
-            "Material averiado o roto.":"Cliente tiene el equipo dañado y/o roto. Hablo con ",
-            "Se realizamos varios intentos de instalación y/o configuración pero no se pudo completar el proceso":"No se puede generar instalación y configuración por xxx, se deriva a servicio técnico.Hablo con ",
-            "Cliente rechaza el servicio de instalación y configuración (devolver)":"Cliente rechaza el servicio por xxx, se brinda línea 1002.Hablo con ",
+        "Cliente no tiene cerca el router de la TV (No acepta amplificador).": "Router no está cerca de la TV, cliente no acepta amplificador, se deriva a servicio técnico. Hablo con ",
+        "Cliente no cuenta con conexión HDMI": "Cliente no tiene conexión HDMI, brindo la línea 1004. Hablo con ",
+        "Cliente desea el servicio.": "Cliente autoinstalable, confirmo envío. Hablo con ",
+        "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)": "Cliente manifiesta xxx, se genera retención. Hablo con ",
+        "Cliente no cuenta con roseta o clavija de fibra óptica": "Cliente no cuenta con roseta de fibra óptica, se deriva a servicio técnico. Hablo con ",
+        "No sabe si tiene roseta en el domicilio": "Se aplaza llamada porque cliente no sabe si tiene roseta. Hablo con ",
+        "No desea conectar terminal fijo": "Cliente no conectará terminal fijo, se confirma envío. Hablo con ",
+        "Cliente no tiene roseta pero acepta amplificador.": "Cliente no tiene roseta pero acepta amplificador, se deriva a servicio técnico. Hablo con ",
+        "Cliente tiene servicio incompatible": "Cliente tiene servicio incompatible, se brinda línea 1004. Hablo con ",
+        "Cliente asegura que no recibio el paquete (reportar a tu lider)": "Cliente asegura que no recibió el paquete, se brinda línea 917074001. Hablo con ",
+        "Ya instalo y realizo configuración del equipo nuevo.": "Equipo instalado y configurado, se espera comprobación de Arce y Magia. Hablo con ",
+        "(AFR)Phonebox-migración: Cliente cuenta con servicio incompatible con tecnologia radio.": "Cliente tiene servicio incompatible con tecnología radio, se brinda línea 1004. Hablo con ",
+        "Material averiado o roto.": "Cliente tiene el equipo dañado y/o roto. Hablo con ",
+        "Se realizamos varios intentos de instalación y/o configuración pero no se pudo completar el proceso": "No se puede generar instalación y configuración por xxx, se deriva a servicio técnico. Hablo con ",
+        "Cliente rechaza el servicio de instalación y configuración (devolver)": "Cliente rechaza el servicio por xxx, se brinda línea 1002. Hablo con "
+      };
 
+      // Definición de imágenes
+      const imagenes = {
+        opcion1: "<img src='img/DESCO4K.png' alt='DESCO4K'>",
+        opcion2: "<img src='img/IMATV.png' alt='IMATV'>",
+        opcion3: "<img src='img/IMATV-VD.png' alt='IMATV-VD'>",
+        opcion4: "<img src='img/IMATV-VDT.png' alt='IMATV-VDT'>",
+        opcion5: "<div class='imagenes-paralelas'><img src='img/AFR-MIGRACION.png' alt='AFR-MIGRACION'><img src='img/AFR-V.png' alt='AFR-V'></div>",
+        opcion6: "<div class='imagenes-paralelas'><img src='img/ASOS-VD.png' alt='ASOS-VD'><img src='img/ASOS-VDT.png' alt='ASOS-VDT'></div>",
+        opcion7: "<img src='img/WIFI-6.png' alt='WIFI-6'>",
+        opcion8: "<a href='https://padlet.com/NICO333/multiconsulta-formaci-n-25ks0qamr4j4vhy6/wish/dMA1W8X3bJY1W4OV' target='_blank'><img src='img/MTV-2.png' alt='MTV-2'></a>"
+      };
 
+      // Función para generar datos (asocia descripción e imagen a cada opción)
+      const generarDatos = (listaKey, imagenKey) => listas[listaKey].reduce((acc, opcion) => {
+        acc[opcion] = {
+          descripcion: descripciones[opcion] || "",
+          imagen: imagenes[imagenKey] || ""
         };
+        return acc;
+      }, {});
 
-        const imagenes = {
-            opcion1: "<img src='img/DESCO4K.png' alt='DESCO4K'>",
-            opcion2: "<img src='img/IMATV.png' alt='IMATV'>",
-            opcion3: "<img src='img/IMATV-VD.png' alt='IMATV-VD'>",
-            opcion4: "<img src='img/IMATV-VDT.png' alt='IMATV-VDT'>",
-            opcion5: "<div class='imagenes-paralelas'><img src='img/AFR-MIGRACION.png' alt='AFR-MIGRACION'><img src='img/AFR-V.png' alt='AFR-V'></div>",
-            opcion6: "<a href='https://padlet.com/NICO333/multiconsulta-formaci-n-25ks0qamr4j4vhy6/wish/dMA1W8X3bJY1W4OV' target='_blank'><img src='img/MTV-2.png' alt='MTV-2'></a>",
-            opcion7: "<div class='imagenes-paralelas'><img src='img/ASOS-VD.png' alt='ASOS-VD'><img src='img/ASOS-VDT.png' alt='ASOS-VDT'></div>",
-            opcion8: "<img src='img/WIFI-6.png' alt='WIFI-6'>",
-
-
-        };
-
-        document.querySelectorAll('button[data-imagen]').forEach(button => {
-            button.addEventListener('click', function() {
-                const opcion = this.getAttribute('data-imagen');
-                const imagenSeleccionada = imagenes[opcion];
-                document.getElementById('image-container').innerHTML = imagenSeleccionada;
-            });
-        });
-
-        // Lógica para la selección de botones y manejo de la interfaz
-        function changeList(opcion) {
-            const buttons = document.querySelectorAll('.buttons button');
-            buttons.forEach(button => {
-                button.classList.remove('selected');
-            });
-
-            const selectedButton = document.querySelector(`button[data-imagen='${opcion}']`);
-            selectedButton.classList.add('selected');
-
-            const lista = document.getElementById('lista');
-            lista.innerHTML = '';
-
-            listas[opcion].forEach(item => {
-                const option = document.createElement('option');
-                option.value = item;
-                option.textContent = item;
-                lista.appendChild(option);
-            });
-
-            lista.selectedIndex = 0;
-            showDescription();
-            showImage(opcion);
-
-            localStorage.setItem('lastSelectedOption', opcion);
+      const datosContenidoBoton1 = {
+        subBoton1_1: {
+          lista: listas.opcion1,
+          descripciones: generarDatos("opcion1", "opcion1")
+        },
+        subBoton1_2: {
+          lista: listas.opcion2,
+          descripciones: generarDatos("opcion2", "opcion2")
+        },
+        subBoton1_3: {
+          lista: listas.opcion3,
+          descripciones: generarDatos("opcion3", "opcion3")
+        },
+        subBoton1_4: {
+          lista: listas.opcion4,
+          descripciones: generarDatos("opcion4", "opcion4")
+        },
+        subBoton1_5: {
+          lista: listas.opcion5,
+          descripciones: generarDatos("opcion5", "opcion5")
+        },
+        subBoton1_6: {
+          lista: listas.opcion6,
+          descripciones: generarDatos("opcion6", "opcion6")
+        },
+        subBoton1_7: {
+          lista: listas.opcion7,
+          descripciones: generarDatos("opcion7", "opcion7")
         }
+      };
 
-        function showDescription() {
-            const lista = document.getElementById('lista');
-            const item = lista.value;
-            document.getElementById('descripcion').value = descripciones[item];
-            localStorage.setItem('lastDescriptionText', document.getElementById('descripcion').value);
+      const datosContenidoBoton2 = {
+        subBoton2_1: {
+          lista: listas.opcion8,
+          descripciones: generarDatos("opcion8", "opcion8")
+        },
+        subBoton2_2: {
+          lista: listas.opcion8,
+          descripciones: generarDatos("opcion8", "opcion8")
+        },
+        subBoton2_3: {
+          lista: listas.opcion8,
+          descripciones: generarDatos("opcion8", "opcion8")
+        },
+        subBoton2_4: {
+          lista: listas.opcion8,
+          descripciones: generarDatos("opcion8", "opcion8")
+        },
+        subBoton2_5: {
+          lista: listas.opcion8,
+          descripciones: generarDatos("opcion8", "opcion8")
+        },
+        subBoton2_6: {
+          lista: listas.opcion8,
+          descripciones: generarDatos("opcion8", "opcion8")
+        },
+        subBoton2_7: {
+          lista: listas.opcion8,
+          descripciones: generarDatos("opcion8", "opcion8")
         }
+      };
 
-        function showImage(opcion) {
-            const imageContainer = document.getElementById('image-container');
-            imageContainer.innerHTML = imagenes[opcion] || '';
+      console.log("Datos Botón 1:", datosContenidoBoton1);
+      console.log("Datos Botón 2:", datosContenidoBoton2);
+
+      // Sección CAC - Datos
+      const datosContenidoBoton3 = {
+        subBoton3_1: {
+          imagen: "<img src='img/TME FUSION SAP.png' alt='CAC Imagen 1'>"
+        },
+        subBoton3_2: {
+          imagen: "<img src='img/AUTOMANTENIMIENTO.png' alt='CAC Imagen 2'>"
+        },
+        subBoton3_3: {
+          imagen: "<img src='img/TME GGCC Captacion.png' alt='CAC Imagen 3'>"
+        },
+        subBoton3_4: {
+          imagen: "<img src='img/Reloj te Cuida.png' alt='CAC Imagen 4'>"
+        },
+        subBoton3_5: {
+          imagen: "<img src='img/Movistar Car.png' alt='CAC Imagen 5'>"
+        },
+        subBoton3_6: {
+          imagen: "<img src='img/HUB TME Grandes Cuentas.png' alt='CAC Imagen 6'>"
+        },
+        subBoton3_7: {
+          imagen: "<img src='img/Telefonica Seguros ENT.png' alt='CAC Imagen 7'>"
+        },
+        subBoton3_8: {
+          imagen: "<img src='img/Telefonica Seguros REG.png' alt='CAC Imagen 8'>"
         }
+      };
 
-        document.getElementById('loginButton').addEventListener('click', function() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const errorMessageDiv = document.getElementById('errorMessage');
+      // Dropdown para CAC e identificación de la zona de imagen
+      const dropdownCAC = $('dropdown-cac');
+      const imagenCAC = $('imagen-cac');
 
-            if (username === 'uujjpm' && password === '223363') {
-                document.querySelector('.container').style.display = 'block';
-                document.querySelector('.login-container').style.display = 'none';
-                errorMessageDiv.style.display = 'none';
-
-            } else {
-                errorMessageDiv.textContent = 'Nombre de usuario o contraseña incorrectos.';
-                errorMessageDiv.style.display = 'block';
-            }
-        });
-
-        document.getElementById('logoutButton').addEventListener('click', function() {
-            document.querySelector('.container').style.display = 'none';
-            document.querySelector('.login-container').style.display = 'flex';
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-        });
-
-        document.getElementById('password').addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
-                document.getElementById('loginButton').click();
-                event.preventDefault();
-            }
-        });
-
-        const darkModeButton = document.getElementById('darkModeButton');
-        const body = document.body;
-        const container = document.querySelector('.container');
-        const loginContainer = document.querySelector('.login-container');
-        const loginForm = document.querySelector('.login-form');
-        const footerElem = document.querySelector('footer');
-        const buttonsContainer = document.querySelector('.buttons');
-        const listaSelect = document.getElementById('lista');
-        const descripcionTextarea = document.getElementById('descripcion');
-        const logoutButtonElem = document.getElementById('logoutButton');
-        const clearDescriptionButton = document.getElementById('clearDescriptionButton'); // NUEVO: Botón limpiar descripción
-
-
-        function toggleDarkMode() {
-            body.classList.toggle('dark-mode');
-            container.classList.toggle('dark-mode');
-            loginContainer.classList.toggle('dark-mode');
-            loginForm.classList.toggle('dark-mode');
-            footerElem.classList.toggle('dark-mode');
-            buttonsContainer.classList.toggle('dark-mode');
-            listaSelect.classList.toggle('dark-mode');
-            descripcionTextarea.classList.toggle('dark-mode');
-            logoutButtonElem.classList.toggle('dark-mode');
-
-            const darkModeImage = darkModeButton.querySelector('img');
-            darkModeImage.classList.toggle('rotated');
-
-
-            if (body.classList.contains('dark-mode')) {
-                localStorage.setItem('darkMode', 'enabled');
-            } else {
-                localStorage.setItem('darkMode', 'disabled');
-            }
-        }
-
-        darkModeButton.addEventListener('click', toggleDarkMode);
-
-        // NUEVO: Evento para el botón de limpiar descripción
-        clearDescriptionButton.addEventListener('click', function() {
-            descripcionTextarea.value = ''; // Limpiar el textarea
-            localStorage.removeItem('lastDescriptionText'); // Opcional: limpiar también de localStorage
-            showDescription(); // Actualizar la descripción (en este caso, estará vacía)
-        });
-
-
-        //  Carga inicial de la página:
-        document.addEventListener('DOMContentLoaded', function() {
-            // Restaurar el modo oscuro desde localStorage (si está guardado)
-            if (localStorage.getItem('darkMode') === 'enabled') {
-                toggleDarkMode();
-            }
-
-            // NUEVO: Restaurar la última opción de producto seleccionada desde localStorage
-            const lastOption = localStorage.getItem('lastSelectedOption');
-            if (lastOption) {
-                changeList(lastOption);
-                // Opcional:  Si quieres que el botón de producto se vea visualmente "activo" o seleccionado, podrías añadirle una clase aquí también.
-            } else {
-                changeList('opcion1'); // Establecer 'opcion1' como predeterminado si no hay opción guardada.
-            }
-
-            // NUEVO: Restaurar el texto del área de descripción desde localStorage
-            const lastDescription = localStorage.getItem('lastDescriptionText');
-            if (lastDescription) {
-                descripcionTextarea.value = lastDescription;
-                showDescription(); // Asegurar que la descripción se actualice (aunque ya debería estar actualizada con textarea.value = lastDescription;)
-            }
-        });
-
-    document.addEventListener('DOMContentLoaded', function() {
-    const loginForm = document.querySelector('.login-form');
-    const registerForm = document.querySelector('.register-form');
-    const showRegisterButton = document.getElementById('showRegisterButton');
-    const showLoginButton = document.getElementById('showLoginButton');
-    const loginButton = document.getElementById('loginButton');
-    const registerButton = document.getElementById('registerButton');
-    const errorMessageDiv = document.getElementById('errorMessage');
-    const registerErrorMessageDiv = document.getElementById('registerErrorMessage');
-
-    showRegisterButton.addEventListener('click', function() {
-        loginForm.style.display = 'none';
-        registerForm.style.display = 'block';
-    });
-
-    showLoginButton.addEventListener('click', function() {
-        registerForm.style.display = 'none';
-        loginForm.style.display = 'block';
-    });
-
-    loginButton.addEventListener('click', function() {
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        const user = users.find(u => u.username === username && u.password === password);
-
-        if (user) {
-            document.querySelector('.container').style.display = 'block';
-            document.querySelector('.login-container').style.display = 'none';
-            errorMessageDiv.style.display = 'none';
+      dropdownCAC.addEventListener('change', () => {
+        const key = dropdownCAC.value;
+        if (datosContenidoBoton3[key]) {
+          imagenCAC.innerHTML = datosContenidoBoton3[key].imagen;
+          imagenCAC.style.display = 'flex';
         } else {
-            errorMessageDiv.textContent = 'Nombre de usuario o contraseña incorrectos.';
-            errorMessageDiv.style.display = 'block';
+          imagenCAC.innerHTML = "";
+          imagenCAC.style.display = 'none';
         }
-    });
+      });
 
-    registerButton.addEventListener('click', function() {
-        const username = document.getElementById('registerUsername').value;
-        const password = document.getElementById('registerPassword').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
+      // Nuevos botones para CAC (integrados en 'botones-cac-grupo')
+      const cacBtn1 = $('cac-btn1'),
+            cacBtn2 = $('cac-btn2'),
+            cacBtn3 = $('cac-btn3');
 
-        if (password !== confirmPassword) {
-            registerErrorMessageDiv.textContent = 'Las contraseñas no coinciden.';
-            registerErrorMessageDiv.style.display = 'block';
-            return;
+      // Definir imágenes para los nuevos botones de CAC
+      const imagenesCACNuevas = {
+        cacBtn1: "<img src='img/Buzon CAC.png' alt='Buzon CAC'>",
+        cacBtn2: "<img src='img/Codigos.png' alt='Codigos de Gestion'>",
+        cacBtn3: "<img src='img/O2.png' alt='O2'>"
+      };
+
+      cacBtn1.addEventListener('click', () => {
+        imagenCAC.innerHTML = imagenesCACNuevas.cacBtn1;
+        imagenCAC.style.display = 'flex';
+      });
+
+      cacBtn2.addEventListener('click', () => {
+        imagenCAC.innerHTML = imagenesCACNuevas.cacBtn2;
+        imagenCAC.style.display = 'flex';
+      });
+
+      cacBtn3.addEventListener('click', () => {
+        imagenCAC.innerHTML = imagenesCACNuevas.cacBtn3;
+        imagenCAC.style.display = 'flex';
+      });
+
+      // Actualiza el texto de los botones principales
+      boton1.textContent = 'MTV 1';
+      boton2.textContent = 'MTV 2';
+      boton3.textContent = 'CAC';
+
+      // Asigna nombres a los sub-botones
+      ["DESCO 4K", "IMATV", "IMATV-VD", "IMATV-VDT", "AFR", "ASOS", "HGUW6-P"].forEach((name, i) => {
+        const btn1 = botonesBoton1.querySelectorAll('.sub-boton-1')[i],
+              btn2 = botonesBoton2.querySelectorAll('.sub-boton-2')[i];
+        if (btn1) btn1.textContent = name;
+        if (btn2) btn2.textContent = name;
+      });
+
+      // Para Botón 1
+      selectorBoton1Select.addEventListener('change', () => {
+        const valorSeleccionado = selectorBoton1Select.value;
+        if (valorSeleccionado) {
+          mostrarDescripcionDesdeSelector(valorSeleccionado, datosContenidoBoton1, textoDescripcionBoton1, descripcionContenidoBoton1);
         }
+      });
 
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        const userExists = users.some(u => u.username === username);
-
-        if (userExists) {
-            registerErrorMessageDiv.textContent = 'El nombre de usuario ya existe.';
-            registerErrorMessageDiv.style.display = 'block';
-            return;
+      // Para Botón 2
+      selectorBoton2Select.addEventListener('change', () => {
+        const valorSeleccionado = selectorBoton2Select.value;
+        if (valorSeleccionado) {
+          mostrarDescripcionDesdeSelector(valorSeleccionado, datosContenidoBoton2, textoDescripcionBoton2, descripcionContenidoBoton2);
         }
+      });
 
-        users.push({ username, password });
-        localStorage.setItem('users', JSON.stringify(users));
-
-        registerErrorMessageDiv.textContent = 'Registro exitoso. Por favor, inicie sesión.';
-        registerErrorMessageDiv.style.display = 'block';
-
-        registerForm.style.display = 'none';
-        loginForm.style.display = 'block';
-    });
-});
-document.getElementById("currentYear").innerHTML = new Date().getFullYear();
-
-function ordenarListasAlfabeticamente(listas) {
-    for (const opcion in listas) {
-        if (Array.isArray(listas[opcion])) {
-            listas[opcion].sort();
-        }
-    }
-    return listas;
-}
-
-const listasOrdenadas = ordenarListasAlfabeticamente(listas);
-
-console.log(listasOrdenadas);// Inicializa EmailJS con tu User ID
-        (function() {
-            emailjs.init("y-HHCtNBV2WfEoijB"); // Reemplaza con tu User ID de EmailJS
-        })();
-
-        // Función para mostrar/ocultar el formulario de comentarios
-        function toggleFeedbackForm() {
-            const form = document.getElementById("feedbackForm");
-            form.style.display = form.style.display === "none" ? "block" : "none";
+      // Inicializa IndexedDB
+      const req = indexedDB.open(dbName, dbVersion);
+      req.onerror = e => console.error('Error opening DB:', e.target.errorCode);
+      req.onupgradeneeded = e => {
+        db = e.target.result;
+        if (!db.objectStoreNames.contains(objectStoreName))
+          db.createObjectStore(objectStoreName, { keyPath: 'id', autoIncrement: true });
+        if (!db.objectStoreNames.contains(usuariosOS)) {
+          let store = db.createObjectStore(usuariosOS, { keyPath: 'username', unique: true });
+          store.createIndex('passwordIndex', 'password');
         }
+        if (!db.objectStoreNames.contains(estadisticasOS)) {
+          let store = db.createObjectStore(estadisticasOS, { keyPath: 'id', autoIncrement: true });
+          store.createIndex('fechaIndex', 'fecha');
+        }
+        if (!db.objectStoreNames.contains(lastClearOS))
+          db.createObjectStore(lastClearOS, { keyPath: 'id' });
+      };
+      req.onsuccess = e => {
+        db = e.target.result;
+        checkSession();
+        checkDailyClearance();
+        setupCopyEventListeners();
+      };
 
-        // Función para enviar el formulario usando EmailJS
-        function sendFeedback() {
-            const name = document.getElementById("from_name").value;
-            const walkieName = document.getElementById("walkie_name").value;
-            const message = document.getElementById("message").value;
+      // Función para verificar la sesión
+      const checkSession = () => {
+        const txn = db.transaction([objectStoreName], 'readonly'),
+              store = txn.objectStore(objectStoreName),
+              reqGet = store.get(1);
+        reqGet.onsuccess = () => {
+          console.log(reqGet.result ? 'Sesión activa:' + reqGet.result : 'No hay sesión activa.');
+        };
+        reqGet.onerror = e => console.error('Error en checkSession:', e.target.errorCode);
+      };
 
-            if (!name || !walkieName || !message) {
-                alert("Por favor, completa todos los campos.");
-                return;
+      // Funciones para ocultar/mostrar vistas
+      const hideAll = () => {
+        [logo, botonesIniciales, contenedorDescargar, formularioLogin, formularioRegistro, contenidoBoton1, contenidoBoton2, contenidoBoton3, tituloBotonSeleccionado].forEach(el => el.style.display = 'none');
+      };
+
+      const showInitial = () => {
+        hideAll();
+        logo.style.display = 'block';
+        botonesIniciales.style.display = 'flex';
+        contenedorDescargar.style.display = 'block';
+      };
+
+      const showContent = id => {
+        hideAll();
+        const names = { boton1: 'MTV 1', boton2: 'MTV 2', boton3: 'CAC' };
+        tituloBotonSeleccionado.textContent = names[id] || '';
+        tituloBotonSeleccionado.style.display = 'block';
+        if (id === 'boton1') contenidoBoton1.style.display = 'block';
+        else if (id === 'boton2') contenidoBoton2.style.display = 'block';
+        else if (id === 'boton3') contenidoBoton3.style.display = 'block';
+      };
+
+      const showLogin = () => { hideAll(); formularioLogin.style.display = 'block'; };
+      const showRegister = () => { hideAll(); formularioRegistro.style.display = 'block'; };
+
+      // Eventos de botones principales
+      [boton1, boton2, boton3].forEach(btn => {
+        btn.addEventListener('click', () => verifySessionAndShow(btn.id));
+      });
+
+      const verifySessionAndShow = id => {
+        const txn = db.transaction([objectStoreName], 'readonly'),
+              store = txn.objectStore(objectStoreName),
+              reqGet = store.get(1);
+        reqGet.onsuccess = () => reqGet.result ? showContent(id) : (showLogin(), formularioLogin.dataset.redirectTo = id);
+        reqGet.onerror = e => console.error('Error verifying session:', e.target.errorCode);
+      };
+
+      // Eventos de login y registro
+      formularioLogin.addEventListener('submit', e => {
+        e.preventDefault();
+        iniciarSesion($('usernameLogin').value, $('passwordLogin').value, formularioLogin.dataset.redirectTo);
+      });
+      formularioRegistro.addEventListener('submit', e => {
+        e.preventDefault();
+        registrarUsuario($('usernameRegistro').value, $('passwordRegistro').value);
+      });
+
+      const iniciarSesion = (u, p, redir) => {
+        const txn = db.transaction([usuariosOS], 'readonly'),
+              store = txn.objectStore(usuariosOS),
+              reqGet = store.get(u);
+        reqGet.onsuccess = () => {
+          if (reqGet.result && reqGet.result.password === p) {
+            guardarSesion(u);
+            formularioLogin.style.display = 'none';
+            showContent(redir);
+          } else alert('Credenciales incorrectas');
+        };
+        reqGet.onerror = e => console.error('Error en login:', e.target.errorCode);
+      };
+
+      const registrarUsuario = (u, p) => {
+        const txn = db.transaction([usuariosOS], 'readwrite'),
+              store = txn.objectStore(usuariosOS),
+              reqAdd = store.add({ username: u, password: p });
+        reqAdd.onsuccess = () => { alert('Registro exitoso. Ahora puedes iniciar sesión.'); showLogin(); };
+        reqAdd.onerror = e => console.error('Error en registro:', e.target.errorCode);
+      };
+
+      const guardarSesion = u => {
+        const txn = db.transaction([objectStoreName], 'readwrite'),
+              store = txn.objectStore(objectStoreName),
+              reqPut = store.put({ id: 1, usuario: u, fechaLogin: new Date() });
+        reqPut.onsuccess = () => console.log('Sesión guardada');
+        reqPut.onerror = e => console.error('Error guardando sesión:', e.target.errorCode);
+      };
+
+      enlaceRegistro.addEventListener('click', e => { e.preventDefault(); showRegister(); });
+      enlaceLogin.addEventListener('click', e => { e.preventDefault(); showLogin(); });
+
+      // Botón "Cambiar de Skill"
+      cerrarBtns.forEach(btn => btn.addEventListener('click', cambiarSkill));
+      function cambiarSkill() {
+        const txn = db.transaction([objectStoreName], 'readwrite'),
+              store = txn.objectStore(objectStoreName),
+              reqDel = store.delete(1);
+        reqDel.onsuccess = () => { 
+          console.log('Skill cambiado'); 
+          showInitial(); 
+        };
+        reqDel.onerror = e => console.error('Error cambiando skill:', e.target.errorCode);
+      }
+
+      // Eventos para sub-botones (Botón 1 y Botón 2)
+      [botonesBoton1, botonesBoton2].forEach((container, idx) => {
+        const selector = idx === 0 ? '.sub-boton-1' : '.sub-boton-2';
+        container.querySelectorAll(selector).forEach(btn => {
+          btn.addEventListener('click', () => {
+            container.querySelectorAll(selector).forEach(b => b.setAttribute('aria-pressed', 'false'));
+            btn.setAttribute('aria-pressed', 'true');
+            const datos = idx === 0 ? datosContenidoBoton1 : datosContenidoBoton2,
+                  selectEl = idx === 0 ? selectorBoton1Select : selectorBoton2Select,
+                  selectDiv = idx === 0 ? selectorContenidoBoton1 : selectorContenidoBoton2,
+                  txtDesc = idx === 0 ? textoDescripcionBoton1 : textoDescripcionBoton2,
+                  descDiv = idx === 0 ? descripcionContenidoBoton1 : descripcionContenidoBoton2;
+            mostrarSelectorContenido(btn.dataset.boton, datos, selectEl, selectDiv, txtDesc, descDiv);
+          });
+        });
+      });
+
+      // Función para mostrar el contenido asociado al sub-botón
+      function mostrarSelectorContenido(botonData, datos, selectorEl, selectorDiv, txtDesc, descDiv) {
+        selectorEl.innerHTML = '';
+        selectorDiv.style.display = 'block';
+        const imgEl = (txtDesc === textoDescripcionBoton1 ? imagenDescripcionBoton1 : imagenDescripcionBoton2);
+        const dataSub = datos[botonData];
+        if (dataSub.lista && dataSub.lista.length > 0) {
+          const sortedList = dataSub.lista.slice().sort((a, b) => a.localeCompare(b));
+          const firstOption = sortedList[0];
+          if (dataSub.descripciones && dataSub.descripciones[firstOption]) {
+            const imageContent = dataSub.descripciones[firstOption].imagen;
+            imgEl.innerHTML = imageContent;
+          } else {
+            console.warn(`No se encontró la descripción para la opción: "${firstOption}"`);
+            imgEl.innerHTML = "";
+          }
+          imgEl.style.display = 'block';
+          sortedList.forEach(item => {
+            const opt = document.createElement('option');
+            opt.value = item;
+            opt.textContent = item;
+            selectorEl.appendChild(opt);
+          });
+          selectorEl.selectedIndex = 0;
+          if (dataSub.descripciones && dataSub.descripciones[firstOption]) {
+            const description = dataSub.descripciones[firstOption].descripcion;
+            txtDesc.textContent = description;
+          } else {
+            txtDesc.textContent = "Descripción no disponible.";
+          }
+          descDiv.style.display = 'block';
+        } else {
+          imgEl.style.display = 'none';
+          imgEl.innerHTML = '';
+          txtDesc.textContent = '';
+          descDiv.style.display = 'none';
+        }
+      }
+
+      // Actualiza la descripción a partir del selector
+      function mostrarDescripcionDesdeSelector(item, datos, txtDesc, descDiv) {
+        const key = Object.keys(datos).find(k => datos[k].lista && datos[k].lista.includes(item));
+        if (key && datos[key].descripciones[item]) {
+          const { descripcion } = datos[key].descripciones[item];
+          txtDesc.textContent = descripcion;
+          descDiv.style.display = 'block';
+        } else {
+          txtDesc.textContent = 'Descripción no disponible.';
+          descDiv.style.display = 'block';
+        }
+      }
+
+      // Eventos para el "copy" en la descripción editable (para registrar estadísticas)
+      function setupCopyEventListeners() {
+        textoDescripcionBoton1.addEventListener('copy', () =>
+          registrarEstadistica('boton1', botonesBoton1, selectorBoton1Select, textoDescripcionBoton1.textContent)
+        );
+        textoDescripcionBoton2.addEventListener('copy', () =>
+          registrarEstadistica('boton2', botonesBoton2, selectorBoton2Select, textoDescripcionBoton2.textContent)
+        );
+      }
+
+      // Función para registrar estadísticas de copiado
+      function registrarEstadistica(botonInicial, contenedor, selectorEl, textoCopiado) {
+        const fecha = new Date(),
+              subBoton = [...contenedor.querySelectorAll('.sub-boton-1[aria-pressed="true"], .sub-boton-2[aria-pressed="true"]')]
+                          .map(b => b.textContent)[0] || 'Ninguno',
+              estad = {
+                fecha: fecha.toISOString(),
+                boton_inicial: botonInicial,
+                sub_boton: subBoton,
+                seleccion_lista: selectorEl.value,
+                texto_copiado: textoCopiado
+              },
+              txn = db.transaction([estadisticasOS], 'readwrite'),
+              store = txn.objectStore(estadisticasOS),
+              req = store.add(estad);
+        req.onsuccess = () => console.log('Estadística registrada:', estad);
+        req.onerror = e => console.error('Error registrando estadística:', e.target.errorCode);
+      }
+
+      // Funciones para descargar estadísticas
+      const pad = n => n < 10 ? '0' + n : n;
+      const formatearFecha = () => {
+        const f = new Date();
+        return `${pad(f.getDate())}-${pad(f.getMonth() + 1)}-${f.getFullYear()}_${pad(f.getHours())}-${pad(f.getMinutes())}`;
+      };
+
+      function descargarEstadisticas() {
+        const txn = db.transaction([estadisticasOS], 'readonly'),
+              store = txn.objectStore(estadisticasOS),
+              reqAll = store.getAll();
+        reqAll.onsuccess = () => {
+          const est = reqAll.result;
+          if (est?.length) {
+            const contenido = formatearEstadisticasTXT(est),
+                  nombreArchivo = `${formatearFecha()}.txt`;
+            descargarArchivoTXT(contenido, nombreArchivo);
+            mensajeSinEstadisticasBoton1.style.display = 'none';
+            mensajeSinEstadisticasBoton2.style.display = 'none';
+          } else {
+            const visible = contenidoBoton1.style.display === 'block' ? 'boton1' : contenidoBoton2.style.display === 'block' ? 'boton2' : null;
+            if (visible === 'boton1') { 
+              mensajeSinEstadisticasBoton1.style.display = 'block'; 
+              setTimeout(() => mensajeSinEstadisticasBoton1.style.display = 'none', 3000); 
+            } else if (visible === 'boton2') { 
+              mensajeSinEstadisticasBoton2.style.display = 'block'; 
+              setTimeout(() => mensajeSinEstadisticasBoton2.style.display = 'none', 3000); 
             }
+          }
+        };
+        reqAll.onerror = e => console.error('Error obteniendo estadísticas:', e.target.errorCode);
+      }
 
-            // Parámetros para la plantilla de EmailJS
-            const templateParams = {
-                from_name: name,
-                walkie_name: walkieName,
-                message: message,
-            };
-
-            // Envía el correo usando EmailJS
-            emailjs.send("MTV1/MTV2", "Template_MTV", templateParams)
-                .then(function(response) {
-                    alert("¡Gracias por tus comentarios!");
-                    toggleFeedbackForm(); // Oculta el formulario después de enviar
-                }, function(error) {
-                    alert("Hubo un error al enviar tu mensaje. Por favor, inténtalo de nuevo.");
-                    console.error("Error al enviar el correo:", error);
-                });
-        }
-// Objeto para almacenar las estadísticas
-    const estadisticas = {
-        totalCopias: 0, // Contador total de copias
-        copiasConBoton: {}, // Contador de copias por botón
-        copiasConLista: {}, // Contador de copias por lista
-        detallesCopias: [] // Array para almacenar detalles de cada copia
-    };
-
-    // Variables para almacenar el botón y la lista seleccionada actualmente
-    let botonSeleccionado = null;
-    let listaSeleccionada = null;
-
-    // Función para registrar el botón seleccionado
-    document.querySelectorAll('.buttons button').forEach(button => {
-        button.addEventListener('click', () => {
-            botonSeleccionado = button.textContent.trim(); // Almacenar el texto del botón
+      function formatearEstadisticasTXT(est) {
+        let txt = `Estadísticas de copias de texto:\n\n- Total de copias: ${est.length}\n\n- Copias por botón:\n`;
+        const porSub = {};
+        est.forEach(e => { 
+          const k = e.sub_boton || 'Ninguno'; 
+          porSub[k] = (porSub[k] || 0) + 1; 
         });
-    });
-
-    // Función para registrar la lista seleccionada
-    const lista = document.getElementById('lista');
-    lista.addEventListener('change', () => {
-        listaSeleccionada = lista.options[lista.selectedIndex].text; // Almacenar el texto de la opción seleccionada
-    });
-
-    // Función para registrar copias de texto
-    const textarea = document.getElementById('descripcion');
-    textarea.addEventListener('copy', () => {
-        // Incrementar el contador de copias
-        estadisticas.totalCopias++;
-
-        // Actualizar contador de copias por botón
-        if (botonSeleccionado) {
-            estadisticas.copiasConBoton[botonSeleccionado] = (estadisticas.copiasConBoton[botonSeleccionado] || 0) + 1;
-        }
-
-        // Actualizar contador de copias por lista
-        if (listaSeleccionada) {
-            estadisticas.copiasConLista[listaSeleccionada] = (estadisticas.copiasConLista[listaSeleccionada] || 0) + 1;
-        }
-
-        // Almacenar detalles de la copia
-        estadisticas.detallesCopias.push({
-            fechaHora: new Date().toLocaleString(),
-            boton: botonSeleccionado || 'Ninguno',
-            lista: listaSeleccionada || 'Ninguna'
+        for (let k in porSub) txt += `  - ${k}: ${porSub[k]}\n`;
+        txt += "\n- Copias por lista:\n";
+        const porLista = {};
+        est.forEach(e => { 
+          const k = e.seleccion_lista || 'Ninguna'; 
+          porLista[k] = (porLista[k] || 0) + 1; 
         });
+        for (let k in porLista) txt += `  - ${k}: ${porLista[k]}\n`;
+        txt += "\n- Detalles de copias:\n";
+        const nombres = { boton1: 'MTV 1', boton2: 'MTV 2', boton3: 'CAC' };
+        est.forEach(e => {
+          const f = new Date(e.fecha);
+          txt += `  - Fecha/Hora: ${f.toLocaleDateString('es-ES', { month: 'numeric', day: 'numeric', year: 'numeric' })}, ${f.toLocaleTimeString('es-ES', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true })}, Botón: ${e.sub_boton || 'Ninguno'}, Lista: ${e.seleccion_lista || 'Ninguna'}, Skill: ${nombres[e.boton_inicial] || e.boton_inicial}\n`;
+        });
+        return txt;
+      }
 
-        console.log('Total de copias:', estadisticas.totalCopias);
-        console.log('Copias por botón:', estadisticas.copiasConBoton);
-        console.log('Copias por lista:', estadisticas.copiasConLista);
-        console.log('Detalles de copias:', estadisticas.detallesCopias);
+      function descargarArchivoTXT(contenido, nombreArchivo) {
+        const blob = new Blob([contenido], { type: 'text/plain' }),
+              url = URL.createObjectURL(blob),
+              a = document.createElement('a');
+        a.href = url;
+        a.download = nombreArchivo;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      // Limpieza diaria de estadísticas
+      function checkDailyClearance() {
+        const txn = db.transaction([lastClearOS, estadisticasOS], 'readwrite'),
+              lastClearStore = txn.objectStore(lastClearOS),
+              estStore = txn.objectStore(estadisticasOS),
+              req = lastClearStore.get('lastClearDate');
+        req.onsuccess = () => {
+          const last = req.result ? new Date(req.result.date) : null,
+                current = new Date();
+          if (!last || current.toDateString() > last.toDateString())
+            limpiarEstadisticas(estStore, lastClearStore, current);
+          else console.log('Estadísticas ya se limpiaron hoy.');
+        };
+        req.onerror = e => console.error('Error en checkDailyClearance:', e.target.errorCode);
+      }
+
+      function limpiarEstadisticas(estStore, lastClearStore, current) {
+        const reqClear = estStore.clear();
+        reqClear.onsuccess = () => actualizarFechaUltimoBorrado(lastClearStore, current);
+        reqClear.onerror = e => console.error('Error limpiando estadísticas:', e.target.errorCode);
+      }
+
+      function actualizarFechaUltimoBorrado(lastClearStore, current) {
+        const reqUpd = lastClearStore.put({ id: 'lastClearDate', date: current.toISOString() });
+        reqUpd.onsuccess = () => console.log('Fecha actualizada');
+        reqUpd.onerror = e => console.error('Error actualizando fecha:', e.target.errorCode);
+      }
+
+      btnDescargar.addEventListener('click', descargarEstadisticas);
+
+      // Modo Oscuro
+      const btnDarkMode = $('btnDarkMode');
+      btnDarkMode.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        btnDarkMode.classList.toggle('rotated');
+      });
+
+      // Hora España
+      function actualizarHoraEspana() {
+        const opciones = {
+          timeZone: 'Europe/Madrid',
+          hour: 'numeric',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: true
+        };
+        const horaEspana = new Intl.DateTimeFormat('es-ES', opciones).format(new Date());
+        $('hora-espana').textContent = `Hora en España: ${horaEspana}`;
+      }
+      setInterval(actualizarHoraEspana, 1000);
     });
-
-    // Función para guardar las estadísticas en un archivo de texto
-    function guardarEstadisticas() {
-    const datos = [];
-    datos.push("Estadísticas de copias de texto:\n");
-
-    // Agregar el total de copias
-    datos.push(`- Total de copias: ${estadisticas.totalCopias}`);
-
-    // Agregar estadísticas por botón
-    datos.push("\n- Copias por botón:");
-    for (const boton in estadisticas.copiasConBoton) {
-        datos.push(`  - ${boton}: ${estadisticas.copiasConBoton[boton]}`);
-    }
-
-    // Agregar estadísticas por lista
-    datos.push("\n- Copias por lista:");
-    for (const lista in estadisticas.copiasConLista) {
-        datos.push(`  - ${lista}: ${estadisticas.copiasConLista[lista]}`);
-    }
-
-    // Agregar detalles de cada copia
-    datos.push("\n- Detalles de copias:");
-    estadisticas.detallesCopias.forEach(copia => {
-        datos.push(`  - Fecha/Hora: ${copia.fechaHora}, Botón: ${copia.boton}, Lista: ${copia.lista}`);
-    });
-
-    // Convertir a texto
-    const texto = datos.join("\n");
-
-    // Obtener la fecha y hora actual en formato DD-MM-AAAA_HH-MM
-    const fechaActual = new Date();
-    const dia = String(fechaActual.getDate()).padStart(2, '0'); // Día con dos dígitos
-    const mes = String(fechaActual.getMonth() + 1).padStart(2, '0'); // Mes con dos dígitos
-    const año = fechaActual.getFullYear(); // Año con cuatro dígitos
-    const horas = String(fechaActual.getHours()).padStart(2, '0'); // Horas con dos dígitos
-    const minutos = String(fechaActual.getMinutes()).padStart(2, '0'); // Minutos con dos dígitos
-    const fechaHoraFormateada = `${dia}-${mes}-${año}_${horas}-${minutos}`; // Formato DD-MM-AAAA_HH-MM
-
-    // Crear un archivo de texto y permitir su descarga
-    const blob = new Blob([texto], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${fechaHoraFormateada}.txt`; // Nombre del archivo con la fecha y hora en formato DD-MM-AAAA_HH-MM
-    a.click();
-    URL.revokeObjectURL(url);
-}
-
-    // Guardar estadísticas al cerrar sesión
-    document.getElementById('logoutButton').addEventListener('click', () => {
-        guardarEstadisticas(); // Guardar estadísticas en un archivo de texto
-    });
-
-
-</script>
+  </script>
 </body>
 </html>

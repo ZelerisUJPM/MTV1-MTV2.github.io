@@ -333,6 +333,7 @@
       font-size: 1.5em;
       margin-bottom: 20px;
       font-family: 'Roboto', sans-serif;
+      cursor: pointer;
     }
 
     /* Ajustar Imagenes CAC */
@@ -365,10 +366,34 @@
       font-size: 1em;
       border-radius: 5px;
     }
+/* Transicion Hora*/
+
+/* CSS para la transición de la hora en España */
+#hora-dinamica {
+  display: inline-block; /* Permite la transformación */
+  transition: transform 0.5s ease, opacity 0.5s ease;
+  transform: translateX(0);
+  opacity: 1;
+}
+
+/* Cuando se oculta: desliza hacia la izquierda y se vuelve invisible */
+#hora-dinamica.slide-hidden {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+/* Clase temporal para mostrar la hora: se inicia desplazada a la derecha */
+#hora-dinamica.slide-from-right {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
   </style>
 </head>
 <body>
-  <div id="hora-espana" class="hora-espana"></div>
+  <!-- Se modificó la estructura para incluir un elemento <span> que contendrá la hora -->
+  <div id="hora-espana" class="hora-espana">Hora en España: <span id="hora-dinamica"></span></div>
+  
   <button id="btnDarkMode" class="btn-dark-mode">
     <img src="img/oscuro.ico" alt="Modo Oscuro">
   </button>
@@ -474,7 +499,7 @@
 
     <!-- Sección CAC (Botón 3) -->
     <div id="contenido-boton3" class="contenido-boton" style="display:none;">
-      <!-- Contenedor para el desplegable y los 3 botones, alineados horizontalmente -->
+      <!-- Contenedor para el desplegable y los 4 botones, alineados horizontalmente -->
       <div id="botones-cac-grupo" style="display: flex; gap: 10px; align-items: center; justify-content: center;">
         <select id="dropdown-cac">
           <option value="">-- Selecciona una opción --</option>
@@ -490,7 +515,7 @@
         <button id="cac-btn1">Buzon CAC</button>
         <button id="cac-btn4">Abreviaturas</button>
         <button id="cac-btn2">Codigos</button>
-        <button id="cac-btn3">O2</button>
+        <button id="cac-btn3">O2</button>       
       </div>
       <br>
       <!-- Área donde se muestran las imágenes, centradas -->
@@ -691,7 +716,7 @@
         opcion5: "<div class='imagenes-paralelas'><img src='img/AFR-MIGRACION.png' alt='AFR-MIGRACION'><img src='img/AFR-V.png' alt='AFR-V'></div>",
         opcion6: "<div class='imagenes-paralelas'><img src='img/ASOS-VD.png' alt='ASOS-VD'><img src='img/ASOS-VDT.png' alt='ASOS-VDT'></div>",
         opcion7: "<img src='img/WIFI-6.png' alt='WIFI-6'>",
-        opcion8: "<a href='https://zeleris.abaigroup.co/formacion/' target='_blank'><img src='img/MTV-2.png' alt='MTV-2'></a>"
+        opcion8: "<a href='https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf' target='_blank'><img src='img/MTV-2.png' alt='MTV-2'></a>"
       };
 
       // Función para generar datos (asocia descripción e imagen a cada opción)
@@ -815,7 +840,7 @@
       const cacBtn1 = $('cac-btn1'),
             cacBtn2 = $('cac-btn2'),
             cacBtn3 = $('cac-btn3'),
-            cacBtn4 = $('cac-btn4');
+            cacBtn4 = $('cac-btn4'); // Nuevo botón de Abreviaturas
 
       // Definir imágenes para los nuevos botones de CAC
       const imagenesCACNuevas = {
@@ -839,6 +864,7 @@
         imagenCAC.innerHTML = imagenesCACNuevas.cacBtn3;
         imagenCAC.style.display = 'flex';
       });
+
       cacBtn4.addEventListener('click', () => {
         imagenCAC.innerHTML = imagenesCACNuevas.cacBtn4;
         imagenCAC.style.display = 'flex';
@@ -1216,10 +1242,36 @@
           second: '2-digit',
           hour12: true
         };
-        const horaEspana = new Intl.DateTimeFormat('es-ES', opciones).format(new Date());
-        $('hora-espana').textContent = `Hora en España: ${horaEspana}`;
+        // Actualiza solo el contenido del span que contiene la hora
+        $('hora-dinamica').textContent = new Intl.DateTimeFormat('es-ES', opciones).format(new Date());
       }
       setInterval(actualizarHoraEspana, 1000);
+      
+      // Evento para ocultar/mostrar solo la hora (el <span id="hora-dinamica">)
+      $('hora-espana').addEventListener('click', function() {
+  const timeSpan = $('hora-dinamica');
+
+  // Si el elemento no está oculto, agregamos la clase para desplazarlo a la izquierda (ocultar)
+  if (!timeSpan.classList.contains('slide-hidden')) {
+    timeSpan.classList.add('slide-hidden');
+  } else {
+    // Si ya está oculto, lo mostramos:
+    // Primero, removemos la clase de oculto
+    timeSpan.classList.remove('slide-hidden');
+
+    // Para que se deslize desde la derecha, se añade temporalmente la clase 'slide-from-right'
+    timeSpan.classList.add('slide-from-right');
+    
+    // Forzamos un reflow para asegurarnos que el navegador aplique la clase inicial
+    void timeSpan.offsetWidth;
+    
+    // Luego, se remueve la clase temporal para que la transición lo lleve a su posición natural
+    timeSpan.classList.remove('slide-from-right');
+  }
+});
+
+
+      // Fin de la configuración y eventos iniciales.
     });
   </script>
 </body>

@@ -488,6 +488,7 @@
           <option value="subBoton3_8">Telefonica Seguros REG</option>
         </select>
         <button id="cac-btn1">Buzon CAC</button>
+        <button id="cac-btn4">Abreviaturas</button>
         <button id="cac-btn2">Codigos</button>
         <button id="cac-btn3">O2</button>
       </div>
@@ -813,13 +814,15 @@
       // Nuevos botones para CAC (integrados en 'botones-cac-grupo')
       const cacBtn1 = $('cac-btn1'),
             cacBtn2 = $('cac-btn2'),
-            cacBtn3 = $('cac-btn3');
+            cacBtn3 = $('cac-btn3'),
+            cacBtn4 = $('cac-btn4');
 
       // Definir imágenes para los nuevos botones de CAC
       const imagenesCACNuevas = {
         cacBtn1: "<img src='img/Buzon CAC.png' alt='Buzon CAC'>",
         cacBtn2: "<img src='img/Codigos.png' alt='Codigos de Gestion'>",
-        cacBtn3: "<img src='img/O2.png' alt='O2'>"
+        cacBtn3: "<img src='img/O2.png' alt='O2'>",
+        cacBtn4: "<img src='img/Abreviaturas.png' alt='Abreviaturas'>"
       };
 
       cacBtn1.addEventListener('click', () => {
@@ -834,6 +837,10 @@
 
       cacBtn3.addEventListener('click', () => {
         imagenCAC.innerHTML = imagenesCACNuevas.cacBtn3;
+        imagenCAC.style.display = 'flex';
+      });
+      cacBtn4.addEventListener('click', () => {
+        imagenCAC.innerHTML = imagenesCACNuevas.cacBtn4;
         imagenCAC.style.display = 'flex';
       });
 

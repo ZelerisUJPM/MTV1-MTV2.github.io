@@ -326,6 +326,20 @@
       width: 350px;
       height: 350px;
     }
+    .imagenes-paralelas-2 {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      border-radius: 10px;
+    }
+    .imagenes-paralelas-2 img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 10px;
+      width: 600px;
+      height: 400px;
+    }
 
     /* Hora España */
     .hora-espana {
@@ -392,6 +406,15 @@ body.dark-mode .logo-empresa img {
   filter: drop-shadow(0 0 10px WHITE);
 }
 
+
+/* Estilos para las imágenes con clase mtv2-image */
+.mtv2-image {
+  display: block;
+  margin: 0 auto;
+  border-radius: 10px;
+  width: 600px;
+  height: 400px;
+}
   </style>
 </head>
 <body>
@@ -490,7 +513,7 @@ body.dark-mode .logo-empresa img {
           <option value="">-- Selecciona --</option>
         </select>
       </div>
-      <div id="descripcion-contenido-boton2" class="descripcion-contenido" style="display:none;">
+      <div id="descripcion-contenido-boton2" class="descripcion-contenido-2" style="display:none;">
         <p id="texto-descripcion-boton2" class="texto-descripcion" contenteditable="true"></p>
         <div id="imagen-descripcion-boton2" style="display:none;"></div>
         <br>
@@ -720,11 +743,11 @@ body.dark-mode .logo-empresa img {
         opcion5: "<div class='imagenes-paralelas'><img src='img/AFR-MIGRACION.png' alt='AFR-MIGRACION'><img src='img/AFR-V.png' alt='AFR-V'></div>",
         opcion6: "<div class='imagenes-paralelas'><img src='img/ASOS-VD.png' alt='ASOS-VD'><img src='img/ASOS-VDT.png' alt='ASOS-VDT'></div>",
         opcion7: "<img src='img/WIFI-6.png' alt='WIFI-6'>",
-        opcion8: "<a href='https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=8' target='_blank'><img src='img/Desco.png' alt='Desco'></a>",
-        opcion9: "<div class='imagenes-paralelas'><a href='https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=5' target='_blank'><img src='img/HGU.png' alt='HGU'></a><a href='https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=5' target='_blank'><img src='img/WIFI6.png' alt='WIFI6'></a></div>",
-        opcion10: "<div class='imagenes-paralelas'><a href='https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=5' target='_blank'><img src='img/WIFI6.png' alt='MTV-2'></a><a href='https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=8' target='_blank'><img src='img/Desco.png' alt='Desco'></a></div>",
-        opcion11: "<a href='https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=13' target='_blank'><img src='img/Radio.png' alt='Radio'></a>",
-        opcion12: "<a href='https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=5' target='_blank'><img src='img/WIFI6.png' alt='WIFI 6'></a>"
+        opcion8: "<a href='https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=8' target='_blank'><img class='mtv2-image' src='img/Desco.png' alt='Desco'></a>",
+        opcion9: "<div class='imagenes-paralelas-2'><a href='https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=5' target='_blank'><img src='img/HGU.png' alt='HGU'></a><a href='https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=5' target='_blank'><img src='img/WIFI6.png' alt='WIFI6'></a></div>",
+        opcion10: "<div class='imagenes-paralelas-2'><a href='https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=5' target='_blank'><img src='img/WIFI6.png' alt='MTV-2'></a><a href='https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=8' target='_blank'><img src='img/Desco.png' alt='Desco'></a></div>",
+        opcion11: "<a href='https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=13' target='_blank'><img class='mtv2-image' src='img/Radio.png' alt='Radio'></a>",
+        opcion12: "<a href='https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=5' target='_blank'><img class='mtv2-image' src='img/WIFI6.png' alt='WIFI 6'></a>"
       };
 
       // Función para generar datos (asocia descripción e imagen a cada opción)
@@ -1282,7 +1305,7 @@ body.dark-mode .logo-empresa img {
       // Fin de la configuración y eventos iniciales.
     });
   </script>
-  <footer>
+<footer>
             <br><p>&copy; <span id="currentYear"></span> Ing. Javier Mastrangelo. Todos los derechos reservados.</p>
         </footer>
 </body>

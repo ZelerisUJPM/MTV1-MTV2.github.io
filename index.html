@@ -380,41 +380,57 @@
       font-size: 1em;
       border-radius: 5px;
     }
-/* Transicion Hora*/
 
-/* CSS para la transición de la hora en España */
-#hora-dinamica {
-  display: inline-block; /* Permite la transformación */
-  transition: transform 0.5s ease, opacity 0.5s ease;
-  transform: translateX(0);
-  opacity: 1;
-}
+    /* Transicion Hora */
+    /* CSS para la transición de la hora en España */
+    #hora-dinamica {
+      display: inline-block; /* Permite la transformación */
+      transition: transform 0.5s ease, opacity 0.5s ease;
+      transform: translateX(0);
+      opacity: 1;
+    }
 
-/* Cuando se oculta: desliza hacia la izquierda y se vuelve invisible */
-#hora-dinamica.slide-hidden {
-  transform: translateX(-100%);
-  opacity: 0;
-}
+    /* Cuando se oculta: desliza hacia la izquierda y se vuelve invisible */
+    #hora-dinamica.slide-hidden {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
 
-/* Clase temporal para mostrar la hora: se inicia desplazada a la derecha */
-#hora-dinamica.slide-from-right {
-  transform: translateX(100%);
-  opacity: 0;
-}
+    /* Clase temporal para mostrar la hora: se inicia desplazada a la derecha */
+    #hora-dinamica.slide-from-right {
+      transform: translateX(100%);
+      opacity: 0;
+    }
 
-body.dark-mode .logo-empresa img {
-  filter: drop-shadow(0 0 10px WHITE);
-}
+    body.dark-mode .logo-empresa img {
+      filter: drop-shadow(0 0 10px WHITE);
+    }
 
+    /* Estilos para las imágenes con clase mtv2-image */
+    .mtv2-image {
+      display: block;
+      margin: 0 auto;
+      border-radius: 10px;
+      width: 600px;
+      height: 400px;
+    }
+    
+    /* ===================== */
+    /* Estilos para CAC con shadow box al seleccionar un botón */
+    /* ===================== */
+    #botones-cac-grupo button {
+      transition: box-shadow 0.3s ease-in-out;
+    }
+    #botones-cac-grupo button.seleccionado {
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+      border: 2px solid red;
+    }
+    
+    .dropdown-shadow {
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+    }
 
-/* Estilos para las imágenes con clase mtv2-image */
-.mtv2-image {
-  display: block;
-  margin: 0 auto;
-  border-radius: 10px;
-  width: 600px;
-  height: 400px;
-}
+    
   </style>
 </head>
 <body>
@@ -857,15 +873,26 @@ body.dark-mode .logo-empresa img {
       const imagenCAC = $('imagen-cac');
 
       dropdownCAC.addEventListener('change', () => {
-        const key = dropdownCAC.value;
-        if (datosContenidoBoton3[key]) {
-          imagenCAC.innerHTML = datosContenidoBoton3[key].imagen;
-          imagenCAC.style.display = 'flex';
-        } else {
-          imagenCAC.innerHTML = "";
-          imagenCAC.style.display = 'none';
-        }
-      });
+  if (dropdownCAC.value !== "") {
+    // Se aplica el box shadow al dropdown cuando tiene una opción seleccionada
+    dropdownCAC.style.boxShadow = "0 0 10px rgba(255, 0, 0, 0.8)";
+    // Remueve la clase "seleccionado" de los botones CAC
+    document.querySelectorAll('#botones-cac-grupo button').forEach(btn => btn.classList.remove('seleccionado'));
+  } else {
+    // Si no hay opción seleccionada, se elimina el box shadow
+    dropdownCAC.style.boxShadow = "";
+  }
+  
+  const key = dropdownCAC.value;
+  if (datosContenidoBoton3[key]) {
+    imagenCAC.innerHTML = datosContenidoBoton3[key].imagen;
+    imagenCAC.style.display = 'flex';
+  } else {
+    imagenCAC.innerHTML = "";
+    imagenCAC.style.display = 'none';
+  }
+});
+
 
       // Nuevos botones para CAC (integrados en 'botones-cac-grupo')
       const cacBtn1 = $('cac-btn1'),
@@ -881,29 +908,49 @@ body.dark-mode .logo-empresa img {
         cacBtn4: "<img src='img/Abreviaturas.png' alt='Abreviaturas'>"
       };
 
+      // Listener para cada botón de CAC: al hacer clic se elimina la clase 'seleccionado' de los demás y se añade al botón clickeado
       cacBtn1.addEventListener('click', () => {
-        imagenCAC.innerHTML = imagenesCACNuevas.cacBtn1;
-        imagenCAC.style.display = 'flex';
-        dropdownCAC.value = "";
-      });
+  document.querySelectorAll('#botones-cac-grupo button').forEach(btn => btn.classList.remove('seleccionado'));
+  cacBtn1.classList.add('seleccionado');
+  imagenCAC.innerHTML = imagenesCACNuevas.cacBtn1;
+  imagenCAC.style.display = 'flex';
+  
+  dropdownCAC.value = "";
+  // Quita el box shadow del dropdown
+  dropdownCAC.style.boxShadow = "";
+});
+
 
       cacBtn2.addEventListener('click', () => {
-        imagenCAC.innerHTML = imagenesCACNuevas.cacBtn2;
-        imagenCAC.style.display = 'flex';
-        dropdownCAC.value = "";
-      });
+  document.querySelectorAll('#botones-cac-grupo button').forEach(btn => btn.classList.remove('seleccionado'));
+  cacBtn2.classList.add('seleccionado');
+  imagenCAC.innerHTML = imagenesCACNuevas.cacBtn2;
+  imagenCAC.style.display = 'flex';
+  
+  dropdownCAC.value = "";
+  dropdownCAC.style.boxShadow = "";
+});
 
-      cacBtn3.addEventListener('click', () => {
-        imagenCAC.innerHTML = imagenesCACNuevas.cacBtn3;
-        imagenCAC.style.display = 'flex';
-        dropdownCAC.value = "";
-      });
+cacBtn3.addEventListener('click', () => {
+  document.querySelectorAll('#botones-cac-grupo button').forEach(btn => btn.classList.remove('seleccionado'));
+  cacBtn3.classList.add('seleccionado');
+  imagenCAC.innerHTML = imagenesCACNuevas.cacBtn3;
+  imagenCAC.style.display = 'flex';
+  
+  dropdownCAC.value = "";
+  dropdownCAC.style.boxShadow = "";
+});
 
-      cacBtn4.addEventListener('click', () => {
-        imagenCAC.innerHTML = imagenesCACNuevas.cacBtn4;
-        imagenCAC.style.display = 'flex';
-        dropdownCAC.value = "";
-      });
+cacBtn4.addEventListener('click', () => {
+  document.querySelectorAll('#botones-cac-grupo button').forEach(btn => btn.classList.remove('seleccionado'));
+  cacBtn4.classList.add('seleccionado');
+  imagenCAC.innerHTML = imagenesCACNuevas.cacBtn4;
+  imagenCAC.style.display = 'flex';
+  
+  dropdownCAC.value = "";
+  dropdownCAC.style.boxShadow = "";
+});
+
 
       // Actualiza el texto de los botones principales
       boton1.textContent = 'MTV 1';
@@ -1284,33 +1331,33 @@ body.dark-mode .logo-empresa img {
       
       // Evento para ocultar/mostrar solo la hora (el <span id="hora-dinamica">)
       $('hora-espana').addEventListener('click', function() {
-  const timeSpan = $('hora-dinamica');
-
-  // Si el elemento no está oculto, agregamos la clase para desplazarlo a la izquierda (ocultar)
-  if (!timeSpan.classList.contains('slide-hidden')) {
-    timeSpan.classList.add('slide-hidden');
-  } else {
-    // Si ya está oculto, lo mostramos:
-    // Primero, removemos la clase de oculto
-    timeSpan.classList.remove('slide-hidden');
-
-    // Para que se deslize desde la derecha, se añade temporalmente la clase 'slide-from-right'
-    timeSpan.classList.add('slide-from-right');
-    
-    // Forzamos un reflow para asegurarnos que el navegador aplique la clase inicial
-    void timeSpan.offsetWidth;
-    
-    // Luego, se remueve la clase temporal para que la transición lo lleve a su posición natural
-    timeSpan.classList.remove('slide-from-right');
-  }
-});
-
+        const timeSpan = $('hora-dinamica');
+        if (!timeSpan.classList.contains('slide-hidden')) {
+          timeSpan.classList.add('slide-hidden');
+        } else {
+          timeSpan.classList.remove('slide-hidden');
+          timeSpan.classList.add('slide-from-right');
+          void timeSpan.offsetWidth;
+          timeSpan.classList.remove('slide-from-right');
+        }
+      });
 
       // Fin de la configuración y eventos iniciales.
     });
+
+
+	if (dropdownCAC.value !== "") {
+	  dropdownCAC.classList.add("dropdown-shadow");
+	} else {
+	  dropdownCAC.classList.remove("dropdown-shadow");
+	}
+	// Al seleccionar un botón:
+	dropdownCAC.classList.remove("dropdown-shadow");
+
+
   </script>
 <footer>
-            <br><p>&copy; <span id="currentYear"></span> Ing. Javier Mastrangelo. Todos los derechos reservados.</p>
-        </footer>
+  <br><p>&copy; <span id="currentYear"></span> Ing. Javier Mastrangelo. Todos los derechos reservados.</p>
+</footer>
 </body>
 </html>

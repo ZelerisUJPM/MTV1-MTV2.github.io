@@ -152,6 +152,29 @@
       width: 400px;
       height: 380px;
     }
+    
+    .descripcion-contenido-2 {
+      background: #f9f9f9;
+      border: 1px solid var(--border-color);
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 6px var(--shadow-color);
+      text-align: left;
+      max-width: 100%;
+      white-space: normal;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    /* Centrar las imágenes dentro de la descripción */
+    .descripcion-contenido-2 img {
+      display: block;
+      margin: 0 auto;
+      border-radius: 10px;
+      width: 600px;
+      height: 400px;
+      filter: drop-shadow(0 0 10px black);
+    }
 
     /* Mensaje sin estadísticas */
     .mensaje-sin-estadisticas {
@@ -330,7 +353,8 @@
       display: flex;
       justify-content: center;
       gap: 10px;
-      border-radius: 10px;
+      border-radius: 10px;      
+      filter: drop-shadow(0 0 10px black);
     }
     .imagenes-paralelas-2 img {
       max-width: 100%;
@@ -429,8 +453,6 @@
     .dropdown-shadow {
     box-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
     }
-
-    
   </style>
 </head>
 <body>
@@ -1353,8 +1375,6 @@ cacBtn4.addEventListener('click', () => {
 	}
 	// Al seleccionar un botón:
 	dropdownCAC.classList.remove("dropdown-shadow");
-
-
   </script>
 <footer>
   <br><p>&copy; <span id="currentYear"></span> Ing. Javier Mastrangelo. Todos los derechos reservados.</p>

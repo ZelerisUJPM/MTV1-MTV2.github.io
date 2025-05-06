@@ -354,7 +354,9 @@
       justify-content: center;
       gap: 10px;
       border-radius: 10px;      
-      filter: drop-shadow(0 0 10px black);
+      filter: drop-shadow(0 0 1px black);
+      pointer-events: auto; /* Restablece los eventos sobre la imagen */
+      cursor: default; /* Mantiene el cursor normal por defecto */
     }
     .imagenes-paralelas-2 img {
       max-width: 100%;
@@ -437,6 +439,11 @@
       border-radius: 10px;
       width: 600px;
       height: 400px;
+      pointer-events: auto; /* Restablece los eventos sobre la imagen */
+      cursor: default; /* Mantiene el cursor normal por defecto */
+    }
+    .mtv2-image:hover {
+      cursor: pointer; /* Cambia el cursor cuando pasa sobre la imagen */
     }
     
     /* ===================== */
@@ -452,6 +459,9 @@
     
     .dropdown-shadow {
     box-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+    }
+    .imagen-descripcion-boton2 {
+      pointer-events: none; /* Evita que el contenedor afecte el comportamiento del cursor */
     }
   </style>
 </head>
@@ -553,7 +563,7 @@
       </div>
       <div id="descripcion-contenido-boton2" class="descripcion-contenido-2" style="display:none;">
         <p id="texto-descripcion-boton2" class="texto-descripcion" contenteditable="true"></p>
-        <div id="imagen-descripcion-boton2" style="display:none;"></div>
+        <div id="imagen-descripcion-boton2" class="imagen-descripcion-boton2"></div>
         <br>
         <button id="cerrar-sesion-boton2" class="boton-cerrar-sesion" style="display: block; margin: 0 auto;">Cambiar de Skill</button>
         <div id="mensaje-sin-estadisticas-boton2" class="mensaje-sin-estadisticas" style="display: none;">

@@ -600,7 +600,7 @@
     </div>
   </div>
   <script>
-   document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', () => {
       // Helper para obtener elementos por ID
       const $ = id => document.getElementById(id);
 
@@ -713,6 +713,21 @@
           "Ya instalo y realizo configuración del equipo nuevo.",
           "Cliente INSISTE querer ayuda técnica para la instalación",
           "(AFR)Phonebox-migración: Cliente cuenta con servicio incompatible con tecnologia radio.",
+          "Material averiado o roto.",
+          "Se realizaron varios intentos de instalación y/o configuración pero no se pudo completar el proceso",
+          "Cliente rechaza el servicio de instalación y configuración (devolver)",
+          "Aplazamiento de llamada",
+          "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)",
+          "Contestador automático", "Cliente no contesta",
+          "Número equivocado Cliente sí conoce el producto y el destinatario.",
+          "Número equivocado Cliente no conoce ni el producto ni el destinatario.",
+          "Cliente extranjero", "Cliente no cuenta con roseta o clavija de fibra óptica", "Abandono"
+        ],
+        opcion9: [
+          "Cliente asegura que no recibio el paquete (reportar a tu lider)",
+          "No desea el servicio",
+          "Ya instalo y realizo configuración del equipo nuevo.",
+          "Cliente INSISTE querer ayuda técnica para la instalación",
           "Material averiado o roto.",
           "Se realizaron varios intentos de instalación y/o configuración pero no se pudo completar el proceso",
           "Cliente rechaza el servicio de instalación y configuración (devolver)",
@@ -837,32 +852,32 @@
 
       const datosContenidoBoton2 = {
         subBoton2_1: {
-          lista: listas.opcion8,
-          descripciones: generarDatos("opcion8", "opcion8")
+          lista: listas.opcion9,
+          descripciones: generarDatos("opcion9", "opcion8")
         },
         subBoton2_2: {
-          lista: listas.opcion8,
-          descripciones: generarDatos("opcion8", "opcion8")
+          lista: listas.opcion9,
+          descripciones: generarDatos("opcion9", "opcion8")
         },
         subBoton2_3: {
-          lista: listas.opcion8,
-          descripciones: generarDatos("opcion8", "opcion9")
+          lista: listas.opcion9,
+          descripciones: generarDatos("opcion9", "opcion9")
         },
         subBoton2_4: {
-          lista: listas.opcion8,
-          descripciones: generarDatos("opcion8", "opcion10")
+          lista: listas.opcion9,
+          descripciones: generarDatos("opcion9", "opcion10")
         },
         subBoton2_5: {
           lista: listas.opcion8,
           descripciones: generarDatos("opcion8", "opcion11")
         },
         subBoton2_6: {
-          lista: listas.opcion8,
-          descripciones: generarDatos("opcion8", "opcion10")
+          lista: listas.opcion9,
+          descripciones: generarDatos("opcion9", "opcion10")
         },
         subBoton2_7: {
-          lista: listas.opcion8,
-          descripciones: generarDatos("opcion8", "opcion12")
+          lista: listas.opcion9,
+          descripciones: generarDatos("opcion9", "opcion12")
         }
       };
 

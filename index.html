@@ -6,8 +6,8 @@
   <title>Zeleris</title>
   <link rel="icon" href="img/logo.ico" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
+<style>
+:root {
       /* ====================================== */
       /*          PALETA DE COLORES MODO CLARO          */
       /* ====================================== */
@@ -463,10 +463,39 @@
     .imagen-descripcion-boton2 {
       pointer-events: none; /* Evita que el contenedor afecte el comportamiento del cursor */
     }
-  </style>
+
+    /* Nuevos estilos para el botón de restablecer */
+    .boton-restablecer {
+      background: #f0f0f0;
+      color: #333;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .boton-restablecer:hover {
+      background: #e0e0e0;
+    }
+
+    body.dark-mode .boton-restablecer {
+      background: var(--dark-gray-bg-secondary);
+      color: var(--dark-gray-text-primary);
+      border-color: var(--dark-gray-text-secondary);
+    }
+
+
+#texto-descripcion-boton1 {
+    width: 900px; /* Un poco más pequeño que el contenedor */
+    height: auto;
+    overflow: auto; /* Para permitir desplazamiento si el contenido es mayor */
+}
+
+</style>
 </head>
 <body>
-  <!-- Se modificó la estructura para incluir un elemento <span> que contendrá la hora -->
+<!-- Se modificó la estructura para incluir un elemento <span> que contendrá la hora -->
   <div id="hora-espana" class="hora-espana">Hora en España: <span id="hora-dinamica"></span></div>
   
   <button id="btnDarkMode" class="btn-dark-mode">
@@ -533,7 +562,10 @@
         </select>
       </div>
       <div id="descripcion-contenido-boton1" class="descripcion-contenido" style="display:none;">
-        <p id="texto-descripcion-boton1" class="texto-descripcion" contenteditable="true"></p>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p id="texto-descripcion-boton1" class="texto-descripcion" contenteditable="true"></p>
+          <button id="restablecer-boton1" class="boton-restablecer" style="margin-left: 10px;">↻</button>
+        </div>
         <br>
         <div id="imagen-descripcion-boton1" style="display:none;"></div>
         <br>
@@ -562,8 +594,11 @@
         </select>
       </div>
       <div id="descripcion-contenido-boton2" class="descripcion-contenido-2" style="display:none;">
-        <p id="texto-descripcion-boton2" class="texto-descripcion" contenteditable="true"></p>
-        <div id="imagen-descripcion-boton2" class="imagen-descripcion-boton2"></div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p id="texto-descripcion-boton2" class="texto-descripcion" contenteditable="true"></p>
+          <button id="restablecer-boton2" class="boton-restablecer" style="margin-left: 10px;">↻</button>
+        </div>
+        <div id="imagen-descripcion-boton2" style="display:none;"></div>
         <br>
         <button id="cerrar-sesion-boton2" class="boton-cerrar-sesion" style="display: block; margin: 0 auto;">Cambiar de Skill</button>
         <div id="mensaje-sin-estadisticas-boton2" class="mensaje-sin-estadisticas" style="display: none;">
@@ -599,8 +634,8 @@
       <button id="cerrar-sesion-boton3" class="boton-cerrar-sesion" style="display: block; margin: 0 auto;">Cambiar de Skill</button>
     </div>
   </div>
-  <script>
-  document.addEventListener('DOMContentLoaded', () => {
+ <script>
+document.addEventListener('DOMContentLoaded', () => {
       // Helper para obtener elementos por ID
       const $ = id => document.getElementById(id);
 
@@ -619,9 +654,11 @@
             boton3 = $('boton3'),
             btnDescargar = $('descargar-estadisticas'),
             enlaceRegistro = $('enlace-registro'),
-            enlaceLogin = $('enlace-login');
+            enlaceLogin = $('enlace-login'),
+            restablecerBoton1 = $('restablecer-boton1'),
+            restablecerBoton2 = $('restablecer-boton2');
 
-      // Elementos de sub-vistas
+         // Elementos de sub-vistas
       const botonesBoton1 = $('botones-boton1'),
             selectorContenidoBoton1 = $('selector-contenido-boton1'),
             selectorBoton1Select = $('selector-boton1'),
@@ -1199,6 +1236,12 @@ cacBtn4.addEventListener('click', () => {
           if (dataSub.descripciones && dataSub.descripciones[firstOption]) {
             const description = dataSub.descripciones[firstOption].descripcion;
             txtDesc.textContent = description;
+            // Guardar descripción original
+            if (txtDesc === textoDescripcionBoton1) {
+              descripcionOriginalBoton1 = description;
+            } else {
+              descripcionOriginalBoton2 = description;
+            }
           } else {
             txtDesc.textContent = "Descripción no disponible.";
           }
@@ -1386,6 +1429,34 @@ cacBtn4.addEventListener('click', () => {
         }
       });
 
+      // Eventos para los botones de restablecer
+      // Modificar los event listeners de los botones de restablecer
+restablecerBoton1.addEventListener('click', () => {
+  const opcionSeleccionada = selectorBoton1Select.value;
+  if (opcionSeleccionada) {
+    const subBotonActivo = document.querySelector('#botones-boton1 .sub-boton-1[aria-pressed="true"]');
+    if (subBotonActivo) {
+      const datos = datosContenidoBoton1[subBotonActivo.dataset.boton];
+      if (datos && datos.descripciones[opcionSeleccionada]) {
+        textoDescripcionBoton1.textContent = datos.descripciones[opcionSeleccionada].descripcion;
+      }
+    }
+  }
+});
+
+restablecerBoton2.addEventListener('click', () => {
+  const opcionSeleccionada = selectorBoton2Select.value;
+  if (opcionSeleccionada) {
+    const subBotonActivo = document.querySelector('#botones-boton2 .sub-boton-2[aria-pressed="true"]');
+    if (subBotonActivo) {
+      const datos = datosContenidoBoton2[subBotonActivo.dataset.boton];
+      if (datos && datos.descripciones[opcionSeleccionada]) {
+        textoDescripcionBoton2.textContent = datos.descripciones[opcionSeleccionada].descripcion;
+      }
+    }
+  }
+});
+
       // Fin de la configuración y eventos iniciales.
     });
 
@@ -1397,9 +1468,9 @@ cacBtn4.addEventListener('click', () => {
 	}
 	// Al seleccionar un botón:
 	dropdownCAC.classList.remove("dropdown-shadow");
-  </script>
+</script>
 <footer>
-  <br><p>&copy; <span id="currentYear"></span> Ing. Javier Mastrangelo. Todos los derechos reservados.</p>
-</footer>
+            <br><p>&copy; Ing. Javier Mastrangelo. Todos los derechos reservados.</p>
+        </footer>
 </body>
 </html>

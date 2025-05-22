@@ -515,31 +515,6 @@
       <button id="descargar-estadisticas" class="boton-inicio">Descargar Estadísticas</button>
     </div>
 
-    <!-- Formularios de inicio y registro -->
-    <div id="formulario-login" class="formulario" style="display:none;">
-      <h2>Iniciar Sesión</h2>
-      <form id="login-form">
-        <label for="usernameLogin">Usuario:</label>
-        <input type="text" id="usernameLogin" name="usernameLogin" required>
-        <label for="passwordLogin">Contraseña:</label>
-        <input type="password" id="passwordLogin" name="passwordLogin" required>
-        <button type="submit">Iniciar Sesión</button>
-        <a href="#" id="enlace-registro">¿No tienes cuenta? Regístrate</a>
-      </form>
-    </div>
-
-    <div id="formulario-registro" class="formulario" style="display:none;">
-      <h2>Registro</h2>
-      <form id="registro-form">
-        <label for="usernameRegistro">Usuario:</label>
-        <input type="text" id="usernameRegistro" name="usernameRegistro" required>
-        <label for="passwordRegistro">Contraseña:</label>
-        <input type="password" id="passwordRegistro" name="passwordRegistro" required>
-        <button type="submit">Registrarse</button>
-        <a href="#" id="enlace-login">¿Ya tienes cuenta? Inicia Sesión</a>
-      </form>
-    </div>
-
     <!-- Contenido asociado a cada botón principal -->
     <div id="contenido-boton1" class="contenido-boton" style="display:none;">
       <div class="botones-sub-boton" id="botones-boton1">
@@ -563,7 +538,6 @@
           <p id="texto-descripcion-boton1" class="texto-descripcion" contenteditable="true"></p>
           <button id="restablecer-boton1" class="boton-restablecer" style="margin-left: 10px;">↻</button>
         </div>
-        <br>
         <div id="imagen-descripcion-boton1" style="display:none;"></div>
         <br>
         <button id="cerrar-sesion-boton1" class="boton-cerrar-sesion" style="display: block; margin: 0 auto;">Cambiar de Skill</button>
@@ -640,8 +614,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const logo = $('logo-empresa'),
             botonesIniciales = $('botones-iniciales'),
             contenedorDescargar = $('boton-descargar'),
-            formularioLogin = $('formulario-login'),
-            formularioRegistro = $('formulario-registro'),
             contenidoBoton1 = $('contenido-boton1'),
             contenidoBoton2 = $('contenido-boton2'),
             contenidoBoton3 = $('contenido-boton3'),
@@ -650,8 +622,6 @@ document.addEventListener('DOMContentLoaded', () => {
             boton2 = $('boton2'),
             boton3 = $('boton3'),
             btnDescargar = $('descargar-estadisticas'),
-            enlaceRegistro = $('enlace-registro'),
-            enlaceLogin = $('enlace-login'),
             restablecerBoton1 = $('restablecer-boton1'),
             restablecerBoton2 = $('restablecer-boton2');
 
@@ -682,11 +652,11 @@ document.addEventListener('DOMContentLoaded', () => {
       mensajeSinEstadisticasBoton1 = $('mensaje-sin-estadisticas-boton1'),
       mensajeSinEstadisticasBoton2 = $('mensaje-sin-estadisticas-boton2');
 
-      // Variables de IndexedDB
-      let db;
+      // IndexedDB: Solo para estadísticas
+let db;
       const dbName = 'miBaseDeDatos',
             dbVersion = 3,
-            objectStoreName = 'sesiones',
+            
             usuariosOS = 'usuarios',
             estadisticasOS = 'estadisticas_descripciones',
             lastClearOS = 'last_clear_date_estadisticas';
@@ -1083,25 +1053,15 @@ cacBtn4.addEventListener('click', () => {
       };
       req.onsuccess = e => {
         db = e.target.result;
-        checkSession();
         checkDailyClearance();
         setupCopyEventListeners();
       };
 
-      // Función para verificar la sesión
-      const checkSession = () => {
-        const txn = db.transaction([objectStoreName], 'readonly'),
-              store = txn.objectStore(objectStoreName),
-              reqGet = store.get(1);
-        reqGet.onsuccess = () => {
-          console.log(reqGet.result ? 'Sesión activa:' + reqGet.result : 'No hay sesión activa.');
-        };
-        reqGet.onerror = e => console.error('Error en checkSession:', e.target.errorCode);
-      };
+            
 
       // Funciones para ocultar/mostrar vistas
       const hideAll = () => {
-        [logo, botonesIniciales, contenedorDescargar, formularioLogin, formularioRegistro, contenidoBoton1, contenidoBoton2, contenidoBoton3, tituloBotonSeleccionado].forEach(el => el.style.display = 'none');
+        [logo, botonesIniciales, contenedorDescargar, contenidoBoton1, contenidoBoton2, contenidoBoton3, tituloBotonSeleccionado].forEach(el => el.style.display = 'none');
       };
 
       const showInitial = () => {
@@ -1119,79 +1079,28 @@ cacBtn4.addEventListener('click', () => {
         if (id === 'boton1') contenidoBoton1.style.display = 'block';
         else if (id === 'boton2') contenidoBoton2.style.display = 'block';
         else if (id === 'boton3') contenidoBoton3.style.display = 'block';
-      };
-
-      const showLogin = () => { hideAll(); formularioLogin.style.display = 'block'; };
-      const showRegister = () => { hideAll(); formularioRegistro.style.display = 'block'; };
+      }
 
       // Eventos de botones principales
       [boton1, boton2, boton3].forEach(btn => {
         btn.addEventListener('click', () => verifySessionAndShow(btn.id));
       });
 
-      const verifySessionAndShow = id => {
-        const txn = db.transaction([objectStoreName], 'readonly'),
-              store = txn.objectStore(objectStoreName),
-              reqGet = store.get(1);
-        reqGet.onsuccess = () => reqGet.result ? showContent(id) : (showLogin(), formularioLogin.dataset.redirectTo = id);
-        reqGet.onerror = e => console.error('Error verifying session:', e.target.errorCode);
-      };
+      const verifySessionAndShow = id => showContent(id);
 
-      // Eventos de login y registro
-      formularioLogin.addEventListener('submit', e => {
-        e.preventDefault();
-        iniciarSesion($('usernameLogin').value, $('passwordLogin').value, formularioLogin.dataset.redirectTo);
-      });
-      formularioRegistro.addEventListener('submit', e => {
-        e.preventDefault();
-        registrarUsuario($('usernameRegistro').value, $('passwordRegistro').value);
-      });
+    
+      
+      
 
-      const iniciarSesion = (u, p, redir) => {
-        const txn = db.transaction([usuariosOS], 'readonly'),
-              store = txn.objectStore(usuariosOS),
-              reqGet = store.get(u);
-        reqGet.onsuccess = () => {
-          if (reqGet.result && reqGet.result.password === p) {
-            guardarSesion(u);
-            formularioLogin.style.display = 'none';
-            showContent(redir);
-          } else alert('Credenciales incorrectas');
-        };
-        reqGet.onerror = e => console.error('Error en login:', e.target.errorCode);
-      };
-
-      const registrarUsuario = (u, p) => {
-        const txn = db.transaction([usuariosOS], 'readwrite'),
-              store = txn.objectStore(usuariosOS),
-              reqAdd = store.add({ username: u, password: p });
-        reqAdd.onsuccess = () => { alert('Registro exitoso. Ahora puedes iniciar sesión.'); showLogin(); };
-        reqAdd.onerror = e => console.error('Error en registro:', e.target.errorCode);
-      };
-
-      const guardarSesion = u => {
-        const txn = db.transaction([objectStoreName], 'readwrite'),
-              store = txn.objectStore(objectStoreName),
-              reqPut = store.put({ id: 1, usuario: u, fechaLogin: new Date() });
-        reqPut.onsuccess = () => console.log('Sesión guardada');
-        reqPut.onerror = e => console.error('Error guardando sesión:', e.target.errorCode);
-      };
-
-      enlaceRegistro.addEventListener('click', e => { e.preventDefault(); showRegister(); });
-      enlaceLogin.addEventListener('click', e => { e.preventDefault(); showLogin(); });
-
+            
       // Botón "Cambiar de Skill"
       cerrarBtns.forEach(btn => btn.addEventListener('click', cambiarSkill));
       function cambiarSkill() {
-        const txn = db.transaction([objectStoreName], 'readwrite'),
-              store = txn.objectStore(objectStoreName),
-              reqDel = store.delete(1);
-        reqDel.onsuccess = () => { 
-          console.log('Skill cambiado'); 
+        
           showInitial(); 
         };
-        reqDel.onerror = e => console.error('Error cambiando skill:', e.target.errorCode);
-      }
+        
+      
 
       // Eventos para sub-botones (Botón 1 y Botón 2)
       [botonesBoton1, botonesBoton2].forEach((container, idx) => {
@@ -1458,6 +1367,7 @@ restablecerBoton2.addEventListener('click', () => {
   }
 });
 
+ 
       // Fin de la configuración y eventos iniciales.
     });
 
@@ -1471,7 +1381,7 @@ restablecerBoton2.addEventListener('click', () => {
 	dropdownCAC.classList.remove("dropdown-shadow");
 </script>
 <footer>
-            <br><p>&copy; Ing. Javier Mastrangelo. Todos los derechos reservados.</p>
-        </footer>
+  <p>&copy; Ing. Javier Mastrangelo. Todos los derechos reservados.</p>
+</footer>
 </body>
 </html>

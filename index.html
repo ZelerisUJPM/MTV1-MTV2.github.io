@@ -489,9 +489,49 @@
     height: auto;
     overflow: auto; /* Para permitir desplazamiento si el contenido es mayor */
     }
+
+
+  /* Área invisible para activar/desactivar el detector */
+  #btnInactividad {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 50px;           /* Tamaño del área clickeable */
+    height: 50px;
+    opacity: 0;            /* Invisible */
+    background: transparent;
+    cursor: pointer;
+    z-index: 9999;
+  }
+
+  /* Mensaje temporal */
+  #mensajeTemporal {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #54eb36;
+    color: #000;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    z-index: 10000;
+  }
+  #mensajeTemporal.mostrar {
+    opacity: 1;
+  }
 </style>
 </head>
 <body>
+
+<button id="btnInactividad">Activar Detector</button>
+<div id="mensajeTemporal"></div>
+
 <!-- Se modificó la estructura para incluir un elemento <span> que contendrá la hora -->
   <div id="hora-espana" class="hora-espana">Hora en España: <span id="hora-dinamica"></span></div>
   
@@ -606,6 +646,80 @@
     </div>
   </div>
  <script>
+
+
+ document.addEventListener('DOMContentLoaded', () => {
+    const btnInactividad = document.getElementById('btnInactividad');
+    const mensajeTemporal = document.getElementById('mensajeTemporal');
+
+    let inactividadTimer = null;
+    let detectorActivo = false; // Estado inicial: desactivado
+
+    // Mostrar mensaje temporal y ocultarlo después de 5 segundos
+    function mostrarMensaje(texto) {
+      mensajeTemporal.textContent = texto;
+      mensajeTemporal.classList.add('mostrar');
+
+      setTimeout(() => {
+        mensajeTemporal.classList.remove('mostrar');
+      }, 5000);
+    }
+
+    // Simular movimiento de puntero virtual
+    function moverPunteroRandom() {
+      const x = Math.floor(Math.random() * window.innerWidth);
+      const y = Math.floor(Math.random() * window.innerHeight);
+
+      console.log(`Puntero simulado en: X=${x}, Y=${y}`);
+
+      const event = new MouseEvent('mousemove', {
+        bubbles: true,
+        cancelable: true,
+        view: window,
+        clientX: x,
+        clientY: y
+      });
+
+      document.dispatchEvent(event);
+    }
+
+    // Acción que se ejecuta tras 1 minuto sin actividad
+    function accionInactividad() {
+      moverPunteroRandom();
+      mostrarMensaje("No hubo actividad en 1 minuto. Puntero movido automáticamente.");
+      reiniciarTimer();
+    }
+
+    // Reiniciar el temporizador cuando detecta actividad
+    function reiniciarTimer() {
+      if (!detectorActivo) return;
+      clearTimeout(inactividadTimer);
+      inactividadTimer = setTimeout(accionInactividad, 60000); // 1 minuto
+    }
+
+    // Activar/Desactivar detector al hacer clic en el área invisible
+    btnInactividad.addEventListener('click', () => {
+      detectorActivo = !detectorActivo;
+
+      if (detectorActivo) {
+        document.addEventListener('mousemove', reiniciarTimer);
+        document.addEventListener('keydown', reiniciarTimer);
+        reiniciarTimer();
+        mostrarMensaje("Detector de inactividad ACTIVADO.");
+        console.log("Detector ACTIVADO");
+      } else {
+        clearTimeout(inactividadTimer);
+        document.removeEventListener('mousemove', reiniciarTimer);
+        document.removeEventListener('keydown', reiniciarTimer);
+        mostrarMensaje("Detector de inactividad DESACTIVADO.");
+        console.log("Detector DESACTIVADO");
+      }
+    });
+  });
+
+//fin
+
+
 document.addEventListener('DOMContentLoaded', () => {
       // Helper para obtener elementos por ID
       const $ = id => document.getElementById(id);
@@ -1385,3 +1499,4 @@ restablecerBoton2.addEventListener('click', () => {
 </footer>
 </body>
 </html>
+

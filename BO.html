@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tipificaciones Back Office</title>
+
+<style>
+:root{
+  --primary:#54eb36;
+  --primary-hover:#42ba2c;
+  --bg:#eef2f5;
+  --card:#fff;
+  --text:#1a1a1a;
+  --border:#ddd;
+  --active:red;
+}
+
+*{box-sizing:border-box}
+
+body{
+  font-family:'Segoe UI',Arial,sans-serif;
+  background:linear-gradient(135deg,#e6f7e3,#eef2f5);
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+.app{
+  background:var(--card);
+  width:100%;
+  max-width:720px;
+  padding:32px;
+  border-radius:16px;
+  box-shadow:0 10px 30px rgba(0,0,0,.12);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:26px;
+}
+
+h1{margin:0;font-size:1.8rem;text-align:center}
+
+.buttons,
+.buttons-secondary{
+  width:100%;
+  max-width:520px;
+  display:grid;
+  gap:14px;
+}
+
+.buttons{
+  grid-template-columns:repeat(auto-fit,minmax(90px,1fr));
+}
+
+.buttons-secondary{
+  grid-template-columns:1fr 1fr;
+}
+
+button{
+  background:var(--primary);
+  border:none;
+  padding:14px 0;
+  border-radius:10px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.2s;
+  box-shadow:0 4px 10px rgba(0,0,0,.12);
+}
+
+button:hover{
+  background:var(--primary-hover);
+  transform:translateY(-2px);
+}
+
+button.active{
+  box-shadow:0 0 12px var(--active);
+  border:2px solid var(--active);
+}
+
+.selector{
+  width:100%;
+  max-width:520px;
+  display:none;
+  flex-direction:column;
+  gap:14px;
+}
+
+select{
+  padding:12px;
+  border-radius:8px;
+  border:1px solid var(--border);
+}
+
+textarea{
+  width:100%;
+  height:160px;
+  max-height:300px;
+  padding:14px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  resize:none;
+  overflow-y:auto;
+}
+
+.actions{
+  display:flex;
+  justify-content:center;
+}
+
+.actions button{
+  padding:10px 24px;
+  font-size:.9rem;
+}
+
+.toast{
+  position:fixed;
+  bottom:30px;
+  left:50%;
+  transform:translateX(-50%);
+  background:var(--primary);
+  padding:12px 22px;
+  border-radius:999px;
+  font-weight:600;
+  opacity:0;
+  pointer-events:none;
+  transition:.3s;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(-10px);
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+<h1>Tipificaciones Back Office</h1>
+
+<div class="buttons">
+  <button data-t="T01">T01</button>
+  <button data-t="T05">T05</button>
+  <button data-t="T11">T11</button>
+  <button data-t="T12">T12</button>
+  <button data-t="T40">T40</button>
+</div>
+
+<div class="buttons-secondary">
+  <button data-t="Agil">Agil</button>
+  <button data-t="FPO">Fuera de Plazo Otros</button>
+</div>
+
+<div class="selector" id="selector">
+  <select id="tipSelect"></select>
+  <textarea id="tipText"></textarea>
+  <div class="actions">
+    <button id="copyBtn">Copiar</button>
+  </div>
+</div>
+
+<div id="toast" class="toast">Tipificación copiada</div>
+</div>
+
+<script>
+const data={
+  T01: [
+      "SE SOLICITA ALBARAN",
+      "OK ALBARAN ENVIADO",
+      "IMPROCEDENTE: MAL TABULADO",
+      "IMPROCEDENTE: FALTA DE INFORMACION INDICAR CORREO",
+      "IMPROCEDENTE: FUERA DE PLAZO",
+      "IMPROCEDENTE: PEDIDO DEVUELTO",
+      "SE RECLAMA DE NUEVO",
+      "IMPROCEDENTE: FALTA DEF",
+      "IMPROCEDENTE: SE INFORMA PEDIDO IMEI XXXXX - ABONO",
+      "SE SOLICITA DE NUEVO",
+      "IMPROCEDENTE: TABULAR INCIDENCIA SOLICITUD ALBARAN SIN REPOSICIÓN."
+      ],
+    T05: [
+      "IMPROCEDENTE: AL SER UN EQUIPAMIENTO MÓVIL DE RENT EL DESISTIMIENTO TIENE QUE GESTIONARSE EN CUALQUIER TIENDA DE MOVISTAR",
+      "ENTREGADO",
+      "IMPROCEDENTE: PEDIDO DEVUELTO",
+      "PENDIENTE DE RECOGIDA",
+      "TEXTO LIBRE",
+      "IMPROCEDENTE: MAL TABULADO",
+      "IMPROCEDENTE: FALTAN DATOS",
+      "IMPROCEDENTE: ESCALAR A WF DE GAMA BLANCA (SE USA CUANDO APARECE 9014)",
+      "Improcedente: escalar a posventa"
+       ],
+    T11: [
+      "PEDIDO EN REPARTO", "SE ACTUALIZAN LOS DATOS", "ENTREGADO", "IMPROCEDENTE: NO ES POSIBLE CAMBIO DE TELEFONO POR TELCO",
+      "DEVUELTO", "PEDIDO EN PROCESO DE DEVOLUCION", "IMPROCEDENTE: NO ES POSIBLE CAMBIO DE DIRECCION",
+      "IMPROCEDENTE: NO PERMITE CAMBIO DE NUMERO TELCO", "IMPROCEDENTE: FALTA DEF"
+      ],
+    T12: ["ENTREGADO", "IMPROCEDENTE: PEDIDO NO CONSTA DEVUELTO", "SOLICITADO REENVÍO"],
+    T40: [
+      "ENTREGADO", "DEVUELTO", "OK ALBARAN ENVIADO", "ALBARAN ENVIADO",
+      "PENDIENTE DE CONCERTAR CITA CON EL CLIENTE PARA SU RECOGIDA", "IMPROCEDENTE: FALTAN DATOS"
+      ],
+    Agil:[
+      "IMPROCEDENTE: PEDIDO CON INCIDENCIA DE TRANSPORTES", 
+      "IMPROCEDENTE: PEDIDO CONTABILIZADO", "IMPROCEDENTE: PEDIDO EN DISTRIBUCIÓN O REPARTO",
+      "IMPROCEDENTE: PEDIDO CON FALTA DE STOCK", "IMPROCEDENTE: PEDIDO EN PROCESO DE DEVOLUCION",
+      "IMPROCEDENTE: PEDIDO ENTREGADO", "IMPROCEDENTE: PEDIDO CON BLOQUEO DE ENTREGA / MANIPULACION PEDIDO",
+      "IMPROCEDENTE:PEDIDO INCOMPLETO FALTA TECNICO COMERCIAL", 
+      "PEDIDO INCOMPLETO: IMPROCEDENTE: PEDIDO INCOMPLETO FALTA DETERMINACION DE PRECIO"
+      ],
+     FPO:[
+      "IMPROCEDENTE: DENEGADO NO CONTACTO CON DTT", "IMPROCEDENTE: DENEGADO CLIENTE NO DESEA EL ALBARAN",
+      "IMPROCEDENTE: DENEGADO CLIENTE NO LO NECESITA",
+      "IMPROCEDENTE: DENEGADO NO PLAZAS/ ARIL (CUANDO SE BUSCA EN TODOS LOS APLICATIVOS Y NO APARECE NADA)", 
+      "IMPROCEDENTE: NO HAY EVIDENCIAS"
+     ] 
+  };
+
+
+  const descriptions = {
+
+    "IMPROCEDENTE: DENEGADO NO CONTACTO CON DTT":"IMPROCEDENTE: DENEGADO NO CONTACTO CON DTT",
+    "IMPROCEDENTE: DENEGADO CLIENTE NO DESEA EL ALBARAN":"IMPROCEDENTE: DENEGADO CLIENTE NO DESEA EL ALBARAN",
+    "IMPROCEDENTE: DENEGADO CLIENTE NO LO NECESITA":"IMPROCEDENTE: DENEGADO CLIENTE NO LO NECESITA",
+    "IMPROCEDENTE: DENEGADO NO PLAZAS/ ARIL (CUANDO SE BUSCA EN TODOS LOS APLICATIVOS Y NO APARECE NADA)":"IMPROCEDENTE: DENEGADO NO PLAZAS/ ARIL (CUANDO SE BUSCA EN TODOS LOS APLICATIVOS Y NO APARECE NADA)", 
+    "IMPROCEDENTE: NO HAY EVIDENCIAS":"IMPROCEDENTE: NO HAY EVIDENCIAS",
+    "IMPROCEDENTE: PEDIDO CON INCIDENCIA DE TRANSPORTES":"IMPROCEDENTE: PEDIDO CON INCIDENCIA DE TRANSPORTES", 
+    "IMPROCEDENTE: PEDIDO CONTABILIZADO":"IMPROCEDENTE: PEDIDO CONTABILIZADO",
+    "IMPROCEDENTE: PEDIDO EN DISTRIBUCIÓN O REPARTO":"IMPROCEDENTE: PEDIDO EN DISTRIBUCIÓN O REPARTO",
+    "IMPROCEDENTE: PEDIDO CON FALTA DE STOCK":"IMPROCEDENTE: PEDIDO CON FALTA DE STOCK",
+    "IMPROCEDENTE: PEDIDO EN PROCESO DE DEVOLUCION":"IMPROCEDENTE: PEDIDO EN PROCESO DE DEVOLUCION",
+    "IMPROCEDENTE: PEDIDO ENTREGADO":"IMPROCEDENTE: PEDIDO ENTREGADO",
+    "IMPROCEDENTE: PEDIDO CON BLOQUEO DE ENTREGA / MANIPULACION PEDIDO":"IMPROCEDENTE: PEDIDO CON BLOQUEO DE ENTREGA / MANIPULACION PEDIDO",
+    "IMPROCEDENTE:PEDIDO INCOMPLETO FALTA TECNICO COMERCIAL":"IMPROCEDENTE:PEDIDO INCOMPLETO FALTA TECNICO COMERCIAL", 
+    "PEDIDO INCOMPLETO: IMPROCEDENTE: PEDIDO INCOMPLETO FALTA DETERMINACION DE PRECIO":"PEDIDO INCOMPLETO: IMPROCEDENTE: PEDIDO INCOMPLETO FALTA DETERMINACION DE PRECIO",
+    "SE SOLICITA ALBARAN": "SE SOLICITA ALBARAN","ALBARAN ENVIADO":"ALBARAN ENVIADO",
+    "OK ALBARAN ENVIADO": "OK ALBARAN ENVIADO",
+    "PENDIENTE DE CONCERTAR CITA CON EL CLIENTE PARA SU RECOGIDA":"PENDIENTE DE CONCERTAR CITA CON EL CLIENTE PARA SU RECOGIDA",
+    "IMPROCEDENTE: MAL TABULADO": "IMPROCEDENTE: MAL TABULADO",
+    "IMPROCEDENTE: FALTA DE INFORMACION INDICAR CORREO": "IMPROCEDENTE: FALTA DE INFORMACION INDICAR CORREO",
+    "IMPROCEDENTE: FUERA DE PLAZO": "IMPROCEDENTE: FUERA DE PLAZO",
+    "IMPROCEDENTE: PEDIDO DEVUELTO": "IMPROCEDENTE: PEDIDO DEVUELTO",
+    "SE RECLAMA DE NUEVO": "SE RECLAMA DE NUEVO",
+    "IMPROCEDENTE: FALTA DEF": "IMPROCEDENTE: FALTA DEF",
+    "IMPROCEDENTE: SE INFORMA PEDIDO IMEI XXXXX - ABONO": "IMPROCEDENTE: SE INFORMA PEDIDO IMEI XXXXX - ABONO",
+    "SE SOLICITA DE NUEVO": "SE SOLICITA DE NUEVO",
+    "IMPROCEDENTE: TABULAR INCIDENCIA SOLICITUD ALBARAN SIN REPOSICIÓN.": "IMPROCEDENTE: TABULAR INCIDENCIA SOLICITUD ALBARAN SIN REPOSICIÓN.",
+    "IMPROCEDENTE: AL SER UN EQUIPAMIENTO MÓVIL DE RENT EL DESISTIMIENTO TIENE QUE GESTIONARSE EN CUALQUIER TIENDA DE MOVISTAR": "IMPROCEDENTE: AL SER UN EQUIPAMIENTO MÓVIL DE RENT EL DESISTIMIENTO TIENE QUE GESTIONARSE EN CUALQUIER TIENDA DE MOVISTAR",
+    "ENTREGADO": "ENTREGADO",
+    "IMPROCEDENTE: PEDIDO DEVUELTO": "IMPROCEDENTE: PEDIDO DEVUELTO",
+    "PENDIENTE DE RECOGIDA": "PENDIENTE DE RECOGIDA",
+    "IMPROCEDENTE: MAL TABULADO": "IMPROCEDENTE: MAL TABULADO",
+    "IMPROCEDENTE: FALTAN DATOS": "IMPROCEDENTE: FALTAN DATOS", "DEVUELTO":"DEVUELTO",
+    "IMPROCEDENTE: NO ES POSIBLE CAMBIO DE DIRECCION":"IMPROCEDENTE: NO ES POSIBLE CAMBIO DE DIRECCION",
+    "IMPROCEDENTE: ESCALAR A WF DE GAMA BLANCA (SE USA CUANDO APARECE 9014)": "IMPROCEDENTE: ESCALAR A WF DE GAMA BLANCA (SE USA CUANDO APARECE 9014)",
+    "IMPROCEDENTE: ESCALAR A POSVENTA": "IMPROCEDENTE: ESCALAR A POSVENTA",
+    "IMPROCEDENTE: NO ES POSIBLE CAMBIO DE TELEFONO POR TELCO":"IMPROCEDENTE: NO ES POSIBLE CAMBIO DE TELEFONO POR TELCO",
+    "IMPROCEDENTE: NO PERMITE CAMBIO DE NUMERO TELCO":"IMPROCEDENTE: NO PERMITE CAMBIO DE NUMERO TELCO",
+    "PEDIDO EN PROCESO DE DEVOLUCION":"PEDIDO EN PROCESO DE DEVOLUCION",
+    "PEDIDO EN REPARTO":"PEDIDO EN REPARTO","SE ACTUALIZAN LOS DATOS":"SE ACTUALIZAN LOS DATOS",
+    "TEXTO LIBRE": "10-12-2025 NOMBRE TRAMITADA RECOGIDA POR DESISTIMIENTO INC ", "IMPROCEDENTE: PEDIDO NO CONSTA DEVUELTO":"IMPROCEDENTE: PEDIDO NO CONSTA DEVUELTO", "SOLICITADO REENVÍO":"SOLICITADO REENVÍO"
+  };
+
+/* ========================= */
+/* MEMORIA TEMPORAL EN RAM   */
+/* ========================= */
+const editedTexts = {};
+let currentKey = "";
+let currentTip = "";
+
+const selector=document.getElementById('selector');
+const select=document.getElementById('tipSelect');
+const textarea=document.getElementById('tipText');
+const toast=document.getElementById('toast');
+
+const allButtons=document.querySelectorAll('.buttons button,.buttons-secondary button');
+
+/* CLICK BOTONES */
+allButtons.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    allButtons.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+
+    currentKey = btn.dataset.t;
+    const sorted = data[currentKey]
+      .slice()
+      .sort((a,b)=>a.localeCompare(b,'es'));
+
+    select.innerHTML='';
+    sorted.forEach(item=>{
+      const opt=document.createElement('option');
+      opt.value=item;
+      opt.textContent=item;
+      select.appendChild(opt);
+    });
+
+    select.selectedIndex=0;
+    currentTip = sorted[0];
+
+    const memKey = `${currentKey}|${currentTip}`;
+    textarea.value = editedTexts[memKey] 
+      ?? descriptions[currentTip] 
+      ?? '';
+
+    selector.style.display='flex';
+  });
+});
+
+/* CAMBIO DE SELECT */
+select.addEventListener('change',()=>{
+  currentTip = select.value;
+  const memKey = `${currentKey}|${currentTip}`;
+
+  textarea.value = editedTexts[memKey] 
+    ?? descriptions[currentTip] 
+    ?? textarea.value;
+});
+
+/* GUARDAR EDICIÓN EN MEMORIA */
+textarea.addEventListener('input',()=>{
+  if(!currentKey || !currentTip) return;
+  const memKey = `${currentKey}|${currentTip}`;
+  editedTexts[memKey] = textarea.value;
+});
+
+/* COPIAR */
+document.getElementById('copyBtn').addEventListener('click',()=>{
+  textarea.select();
+  document.execCommand('copy');
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),2000);
+});
+</script>
+
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tipificaciones Back Office</title>
+<title>Tipificaciones Zeleris</title>
 
 <style>
 :root{
@@ -24,11 +24,26 @@ body{
   margin:0;
   min-height:100vh;
   display:flex;
-  justify-content:center;
+  flex-direction:column;
   align-items:center;
-  padding:20px;
+  padding:20px 20px 60px;
 }
 
+/* LOGO */
+.logo-empresa{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  margin-bottom:20px;
+}
+
+.logo-empresa img{
+  max-width:800px;
+  width:100%;
+  height:auto;
+}
+
+/* CONTENEDOR PRINCIPAL */
 .app{
   background:var(--card);
   width:100%;
@@ -42,8 +57,14 @@ body{
   gap:26px;
 }
 
-h1{margin:0;font-size:1.8rem;text-align:center}
+/* TITULO */
+h1{
+  margin:0;
+  font-size:1.8rem;
+  text-align:center;
+}
 
+/* BOTONES */
 .buttons,
 .buttons-secondary{
   width:100%;
@@ -81,6 +102,7 @@ button.active{
   border:2px solid var(--active);
 }
 
+/* SELECTOR */
 .selector{
   width:100%;
   max-width:520px;
@@ -116,9 +138,10 @@ textarea{
   font-size:.9rem;
 }
 
+/* TOAST */
 .toast{
   position:fixed;
-  bottom:30px;
+  bottom:70px;
   left:50%;
   transform:translateX(-50%);
   background:var(--primary);
@@ -128,6 +151,7 @@ textarea{
   opacity:0;
   pointer-events:none;
   transition:.3s;
+  z-index:999;
 }
 
 .toast.show{
@@ -150,32 +174,38 @@ footer{
 
 <body>
 
+<!-- LOGO SUPERIOR -->
+<div id="logo-empresa" class="logo-empresa">
+  <img src="img/empresa.png" alt="Logo de la Empresa">
+</div>
+
 <div class="app">
-<h1>Tipificaciones Back Office</h1>
+  
+  <h1>Tipificaciones ZContactos</h1>
 
-<div class="buttons">
-  <button data-t="T01">T01</button>
-  <button data-t="T05">T05</button>
-  <button data-t="T11">T11</button>
-  <button data-t="T12">T12</button>
-  <button data-t="T40">T40</button>
-</div>
+  <div class="buttons">
+    <button data-t="T01">T01</button>
+    <button data-t="T05">T05</button>
+    <button data-t="T11">T11</button>
+    <button data-t="T12">T12</button>
+    <button data-t="T40">T40</button>
+  </div>
 
-<div class="buttons-secondary">
-  <button data-t="Agil">Agil</button>
-  <button data-t="FPO">Fuera de Plazo Otros</button>
-</div>
+  <div class="buttons-secondary">
+    <button data-t="Agil">Agil</button>
+    <button data-t="FPO">Fuera de Plazo Otros</button>
+  </div>
 
-<div class="selector" id="selector">
-  <select id="tipSelect"></select>
-  <textarea id="tipText"></textarea>
-  <div class="actions">
-    <button id="copyBtn">Copiar</button>
+  <div class="selector" id="selector">
+    <select id="tipSelect"></select>
+    <textarea id="tipText"></textarea>
+    <div class="actions">
+      <button id="copyBtn">Copiar</button>
+    </div>
   </div>
 </div>
 
 <div id="toast" class="toast">Tipificación copiada</div>
-</div>
 
 <footer>
   © Ing. Javier Mastrangelo. Todos los derechos reservados.
@@ -278,9 +308,6 @@ const data={
     "TEXTO LIBRE": "10-12-2025 NOMBRE TRAMITADA RECOGIDA POR DESISTIMIENTO INC ", "IMPROCEDENTE: PEDIDO NO CONSTA DEVUELTO":"IMPROCEDENTE: PEDIDO NO CONSTA DEVUELTO", "SOLICITADO REENVÍO":"SOLICITADO REENVÍO"
   };
 
-/* ========================= */
-/* MEMORIA TEMPORAL EN RAM   */
-/* ========================= */
 const editedTexts = {};
 let currentKey = "";
 let currentTip = "";
@@ -292,16 +319,13 @@ const toast=document.getElementById('toast');
 
 const allButtons=document.querySelectorAll('.buttons button,.buttons-secondary button');
 
-/* CLICK BOTONES */
 allButtons.forEach(btn=>{
   btn.addEventListener('click',()=>{
     allButtons.forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
 
     currentKey = btn.dataset.t;
-    const sorted = data[currentKey]
-      .slice()
-      .sort((a,b)=>a.localeCompare(b,'es'));
+    const sorted=data[currentKey].slice().sort((a,b)=>a.localeCompare(b,'es'));
 
     select.innerHTML='';
     sorted.forEach(item=>{
@@ -315,32 +339,22 @@ allButtons.forEach(btn=>{
     currentTip = sorted[0];
 
     const memKey = `${currentKey}|${currentTip}`;
-    textarea.value = editedTexts[memKey] 
-      ?? descriptions[currentTip] 
-      ?? '';
-
+    textarea.value = editedTexts[memKey] ?? descriptions[currentTip] ?? '';
     selector.style.display='flex';
   });
 });
 
-/* CAMBIO DE SELECT */
 select.addEventListener('change',()=>{
   currentTip = select.value;
   const memKey = `${currentKey}|${currentTip}`;
-
-  textarea.value = editedTexts[memKey] 
-    ?? descriptions[currentTip] 
-    ?? textarea.value;
+  textarea.value = editedTexts[memKey] ?? descriptions[currentTip] ?? textarea.value;
 });
 
-/* GUARDAR EDICIÓN EN MEMORIA */
 textarea.addEventListener('input',()=>{
   if(!currentKey || !currentTip) return;
-  const memKey = `${currentKey}|${currentTip}`;
-  editedTexts[memKey] = textarea.value;
+  editedTexts[`${currentKey}|${currentTip}`] = textarea.value;
 });
 
-/* COPIAR */
 document.getElementById('copyBtn').addEventListener('click',()=>{
   textarea.select();
   document.execCommand('copy');

@@ -134,6 +134,17 @@ textarea{
   opacity:1;
   transform:translateX(-50%) translateY(-10px);
 }
+
+/* FOOTER */
+footer{
+  position:fixed;
+  bottom:15px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:0.85rem;
+  color:#555;
+  text-align:center;
+}
 </style>
 </head>
 
@@ -165,6 +176,10 @@ textarea{
 
 <div id="toast" class="toast">Tipificación copiada</div>
 </div>
+
+<footer>
+  © Ing. Javier Mastrangelo. Todos los derechos reservados.
+</footer>
 
 <script>
 const data={
@@ -333,10 +348,6 @@ document.getElementById('copyBtn').addEventListener('click',()=>{
   setTimeout(()=>toast.classList.remove('show'),2000);
 });
 </script>
+
 </body>
-  <footer>
-  <p>&copy; Ing. Javier Mastrangelo. Todos los derechos reservados.</p>
-</footer>
 </html>
-
-

@@ -137,6 +137,9 @@ textarea{
 .actions button{
   padding:10px 24px;
   font-size:.9rem;
+  display:flex;
+  gap:12px;
+  justify-content:center;
 }
 
 /* TOAST */
@@ -170,6 +173,7 @@ footer{
   color:#555;
   text-align:center;
 }
+
 </style>
 </head>
 
@@ -201,7 +205,8 @@ footer{
     <select id="tipSelect"></select>
     <textarea id="tipText"></textarea>
     <div class="actions">
-      <button id="copyBtn">Copiar</button>
+  <button id="copyBtn">Copiar</button>
+  <button id="resetBtn">Restablecer</button>
     </div>
   </div>
 </div>
@@ -317,10 +322,31 @@ document.getElementById('copyBtn').addEventListener('click',()=>{
   toast.classList.add('show');
   setTimeout(()=>toast.classList.remove('show'),2000);
 });
+  document.getElementById('resetBtn').addEventListener('click',()=>{
+  if(!currentKey || !currentTip) return;
+
+  const memKey = `${currentKey}|${currentTip}`;
+
+  // Elimina el texto editado guardado
+  delete editedTexts[memKey];
+
+  // Restaura texto por defecto o vacío
+  textarea.value = descriptions[currentTip] ?? '';
+
+  // Feedback visual
+  toast.textContent = "Tipificación restablecida";
+  toast.classList.add('show');
+  setTimeout(()=>{
+    toast.classList.remove('show');
+    toast.textContent = "Tipificación copiada";
+  },2000);
+});
+
 </script>
 
 </body>
 </html>
+
 
 
 

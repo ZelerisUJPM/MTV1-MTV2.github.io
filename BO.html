@@ -187,6 +187,60 @@ footer{
   text-align:center;
 }
 
+/* Contenedor del validador */
+#validadorPlazo {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Labels */
+#validadorPlazo label {
+  font-weight: 600;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+/* Inputs de fecha */
+#validadorPlazo input[type="date"] {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+/* Efecto al enfocar */
+#validadorPlazo input[type="date"]:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0,123,255,0.3);
+}
+
+/* Botón calcular */
+#validadorPlazo button {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#validadorPlazo button:hover {
+  background-color: #0056b3;
+}
+
+/* Resultado */
+#resultadoDias {
+  margin-top: 10px;
+  font-size: 15px;
+}
+
+
 </style>
 </head>
 
@@ -217,11 +271,11 @@ footer{
 
 <div id="validadorPlazo" style="display:none; width:100%; max-width:520px; flex-direction:column; gap:10px;">
   
-  <label>Fecha entrega:</label>
-  <input type="date" id="fechaEntrega">
+  <label>📅 Fecha entrega:</label>
+<input type="date" id="fechaEntrega">
 
-  <label>Fecha actual:</label>
-  <input type="date" id="fechaActual">
+<label>📆 Fecha actual:</label>
+<input type="date" id="fechaActual">
 
   <button onclick="calcularDias()">Calcular días</button>
 

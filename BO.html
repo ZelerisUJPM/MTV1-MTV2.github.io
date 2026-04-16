@@ -66,13 +66,25 @@ h1{
 }
 
 /* BOTONES */
-.buttons,
-.buttons-secondary{
+.buttons{
   width:100%;
   max-width:520px;
   display:grid;
   gap:14px;
 }
+
+.buttons-secondary {
+  display: flex;
+  gap: 10px;
+}
+
+.buttons-secondary button {
+  flex: 1;              /* TODOS ocupan el mismo espacio */
+  padding: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
 
 .buttons{
   grid-template-columns:repeat(auto-fit,minmax(90px,1fr));
@@ -199,8 +211,23 @@ footer{
 
   <div class="buttons-secondary">
     <button data-t="Agil">Agilizaciones</button>
+    <button onclick="mostrarValidador()">Validar Plazo</button>
     <button data-t="FPO">Fuera de Plazo Otros</button>
   </div>
+
+<div id="validadorPlazo" style="display:none; width:100%; max-width:520px; flex-direction:column; gap:10px;">
+  
+  <label>Fecha entrega:</label>
+  <input type="date" id="fechaEntrega">
+
+  <label>Fecha actual:</label>
+  <input type="date" id="fechaActual">
+
+  <button onclick="calcularDias()">Calcular días</button>
+
+  <p id="resultadoDias" style="font-weight:bold;"></p>
+
+</div>
 
   <div class="selector" id="selector">
     <select id="tipSelect"></select>
@@ -342,17 +369,32 @@ document.getElementById('copyBtn').addEventListener('click',()=>{
 
 </script>
 
+<script>
+function mostrarValidador(){
+  const div = document.getElementById("validadorPlazo");
+  div.style.display = div.style.display === "none" ? "flex" : "none";
+
+  // Autocompletar fecha actual
+  const hoy = new Date().toISOString().split('T')[0];
+  document.getElementById("fechaActual").value = hoy;
+}
+
+function calcularDias(){
+  const fechaEntrega = new Date(document.getElementById("fechaEntrega").value);
+  const fechaActual = new Date(document.getElementById("fechaActual").value);
+
+  if(!fechaEntrega || !fechaActual){
+    document.getElementById("resultadoDias").innerText = "Selecciona ambas fechas";
+    return;
+  }
+
+  const diferencia = fechaActual - fechaEntrega;
+  const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+
+  document.getElementById("resultadoDias").innerText = 
+    `Han transcurrido ${dias} días`;
+}
+</script>
+
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-

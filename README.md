@@ -156,7 +156,66 @@ Este manual se actualizará a medida que se introduzcan nuevas funcionalidades. 
 
 Para reportar incidencias o sugerencias, contacta al equipo de soporte.
 
-8. Conclusión
-El uso de “Zeleris” está diseñado para ser intuitivo y amigable, combinando funciones de gestión de contenidos, estadísticas y configuraciones visuales (como el modo oscuro). Con este manual, se espera que puedas navegar y aprovechar todas las funcionalidades que ofrece la aplicación.
+SECCIÓN BO (Back Office) 🆕
 
-Si tienes cualquier duda adicional o encuentras algún inconveniente, no dudes en consultar el área de ayuda o contactar a soporte técnico para recibir asistencia personalizada.
+La sección BO ha sido integrada para ampliar las capacidades operativas del sistema, permitiendo validaciones, consultas y herramientas adicionales.
+
+Funcionalidades principales:
+
+Validar Plazo
+Permite calcular los días transcurridos entre una fecha de entrega y la fecha actual.
+Incluye dos campos:
+Fecha de entrega
+Fecha actual (autocompletada)
+Muestra el número de días transcurridos.
+Indicador visual por color:
+Verde: dentro de plazo
+Naranja: advertencia
+Rojo: fuera de plazo
+
+Comportamiento:
+
+Al seleccionar “Validar Plazo”, se ocultan las tipificaciones.
+Al desactivar, las tipificaciones vuelven a mostrarse.
+Tipificaciones
+Incluyen opciones como:
+T0
+T1
+T2
+Se mantienen en una sección separada de los botones secundarios.
+Botones Operativos Se agrupan en dos categorías:
+
+3.1 Primarios:
+
+T0
+T1
+T2
+
+3.2 Secundarios:
+
+Agilización
+Validar Plazo
+Fuera de plazo
+
+Todos los botones secundarios tienen el mismo tamaño y están alineados en una sola fila.
+
+Reloj Interactivo
+Muestra la hora de España en formato 12 horas (AM/PM).
+Comportamiento interactivo:
+El texto "Hora España:" permanece fijo
+La hora puede ocultarse/deslizarse hacia la izquierda al hacer clic
+Actualización en tiempo real
+MEJORAS VISUALES IMPLEMENTADAS
+Inputs de fecha estilizados (bordes redondeados, focus dinámico)
+Animaciones suaves en la interfaz
+Botones alineados y consistentes
+Separación clara entre secciones primarias y secundarias
+Contenedores tipo “card” con sombra
+
+CONCLUSIÓN
+
+El uso de “Zeleris” está diseñado para ser intuitivo y amigable, integrando funcionalidades de gestión de contenidos, estadísticas y configuraciones visuales como el modo oscuro. La incorporación de la sección BO refuerza significativamente la operatividad del sistema, permitiendo realizar validaciones rápidas, consultas visuales y ofreciendo una mejor experiencia de usuario.
+
+Este módulo, junto con el resto de la aplicación, está pensado para ser dinámico, eficiente y adaptable a futuras mejoras. Con este manual, se espera que puedas navegar y aprovechar todas las funcionalidades disponibles de manera sencilla.
+
+Si tienes cualquier duda adicional o encuentras algún inconveniente, puedes consultar el área de ayuda o contactar a soporte técnico para recibir asistencia personalizada.

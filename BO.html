@@ -241,10 +241,31 @@ footer{
 }
 
 
+#horaTexto {
+  display: inline-block;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.oculto {
+  transform: translateX(-50px);
+  opacity: 0;
+}
+
 </style>
 </head>
 
 <body>
+
+<div id="relojEspaña" onclick="toggleHora()" style="
+  width:100%;
+  text-align:center;
+  color:BLACK;
+  padding:10px;
+  font-weight:bold;
+  cursor:pointer;
+">
+  Hora España: <span id="horaTexto">--:--:--</span>
+</div>
 
 <!-- LOGO SUPERIOR -->
 <div id="logo-empresa" class="logo-empresa">
@@ -281,6 +302,15 @@ footer{
 
   <p id="resultadoDias" style="font-weight:bold;"></p>
 
+</div>
+
+<div style="margin-top:15px;">
+  <input type="text" id="busquedaImg" placeholder="Ej: perro">
+  <button onclick="buscarImagen()">Buscar Imagen</button>
+
+  <div style="margin-top:10px;">
+    <img id="resultadoImg" style="max-width:100%; border-radius:10px; display:none;">
+  </div>
 </div>
 
   <div class="selector" id="selector">
@@ -447,6 +477,55 @@ function calcularDias(){
 
   document.getElementById("resultadoDias").innerText = 
     `Han transcurrido ${dias} días`;
+}
+</script>
+
+
+<script>
+function buscarImagen(){
+  const query = document.getElementById("busquedaImg").value.trim();
+
+  if(!query){
+    alert("Escribe algo");
+    return;
+  }
+
+  // URL de imagen aleatoria basada en búsqueda
+  const url = `https://source.unsplash.com/600x400/?${query}`;
+
+  const img = document.getElementById("resultadoImg");
+  img.src = url;
+  img.style.display = "block";
+}
+</script>
+
+<script>
+let horaVisible = true;
+
+function actualizarHora(){
+  const ahora = new Date();
+
+  const hora = ahora.toLocaleTimeString("es-ES", {
+    timeZone: "Europe/Madrid",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true   // 👈 clave para formato 12h
+  });
+
+  document.getElementById("horaTexto").innerText = hora;
+}
+
+// Actualiza cada segundo
+setInterval(actualizarHora, 1000);
+actualizarHora();
+
+// Mostrar / ocultar SOLO la hora
+function toggleHora(){
+  const hora = document.getElementById("horaTexto");
+
+  hora.classList.toggle("oculto");
+  horaVisible = !horaVisible;
 }
 </script>
 

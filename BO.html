@@ -242,7 +242,7 @@ footer{
 
 
 #relojEspaña {
-  font-size: 30px;       /* 👈 tamaño general más grande */
+  font-size: 18px;       /* 👈 tamaño general más grande */
 }
 
 #horaTexto {
@@ -308,15 +308,6 @@ footer{
 
   <p id="resultadoDias" style="font-weight:bold;"></p>
 
-</div>
-
-<div style="margin-top:15px;">
-  <input type="text" id="busquedaImg" placeholder="Ej: perro">
-  <button onclick="buscarImagen()">Buscar Imagen</button>
-
-  <div style="margin-top:10px;">
-    <img id="resultadoImg" style="max-width:100%; border-radius:10px; display:none;">
-  </div>
 </div>
 
   <div class="selector" id="selector">
@@ -483,25 +474,6 @@ function calcularDias(){
 
   document.getElementById("resultadoDias").innerText = 
     `Han transcurrido ${dias} días`;
-}
-</script>
-
-
-<script>
-function buscarImagen(){
-  const query = document.getElementById("busquedaImg").value.trim();
-
-  if(!query){
-    alert("Escribe algo");
-    return;
-  }
-
-  // URL de imagen aleatoria basada en búsqueda
-  const url = `https://source.unsplash.com/600x400/?${query}`;
-
-  const img = document.getElementById("resultadoImg");
-  img.src = url;
-  img.style.display = "block";
 }
 </script>
 

@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-JN37NFW5XH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-JN37NFW5XH');
+</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zeleris</title>
+  <link rel="icon" href="img/logo.ico" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+      /* ====================================== */
+      /*          PALETA DE COLORES MODO CLARO          */
+      /* ====================================== */
+      --primary-color: #54eb36;
+      --primary-hover: #42ba2c;
+      --text-color: #000;
+      --background-color: #fff;
+      --border-color: #ddd;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+      --highlight-color: #f00;
+
+      /* ====================================== */
+      /*    PALETA DE COLORES MODO OSCURO - ESCALA DE GRISES   */
+      /* ====================================== */
+      --dark-gray-bg-base: #282828;
+      --dark-gray-bg-secondary: #383838;
+      --dark-gray-text-primary: #E0E0E0;
+      --dark-gray-text-secondary: #B0B0B0;
+      --dark-gray-accent: #A0A0A0;
+      --shadow-color-dark-mode: rgba(255, 255, 255, 0.03);
+    }
+
+    /* Estilos generales */
+    body {
+      font-family: Arial, sans-serif;
+      background: #e0e7ec;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--text-color);
+    }
+
+    .logo-empresa {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .container {
+      background: var(--background-color);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px var(--shadow-color);
+      width: 100%;
+      max-width: 870px;
+      margin-bottom: 20px;
+    }
+
+    header,
+    h1,
+    h2 {
+      text-align: center;
+      color: var(--text-color);
+    }
+
+    header {
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--border-color);
+      margin-bottom: 20px;
+    }
+
+    /* Botones y contenedores */
+    .botones-sub-boton,
+    .botones-iniciales {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .botones-iniciales {
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    button {
+      background: var(--primary-color);
+      color: var(--text-color);
+      border: none;
+      border-radius: 5px;
+      padding: 12px 20px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    button:hover {
+      background: var(--primary-hover);
+      transform: scale(1.05);
+    }
+
+    .botones-sub-boton button[aria-pressed="true"] {
+      box-shadow: 0 0 10px var(--highlight-color);
+      border: 2px solid var(--highlight-color);
+    }
+
+    /* Inputs, selects y formularios */
+    input[type="text"],
+    input[type="password"],
+    select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      margin-bottom: 15px;
+      box-sizing: border-box;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      border-color: #007BFF;
+      outline: none;
+    }
+
+    /* Selector y descripción */
+    .selector-contenido {
+      margin-bottom: 20px;
+    }
+
+    .descripcion-contenido {
+      background: #f9f9f9;
+      border: 1px solid var(--border-color);
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 6px var(--shadow-color);
+      text-align: left;
+      max-width: 100%;
+      white-space: normal;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    /* Centrar las imágenes dentro de la descripción */
+    .descripcion-contenido img {
+      display: block;
+      margin: 0 auto;
+      border-radius: 10px;
+      width: 400px;
+      height: 380px;
+    }
+    
+    .descripcion-contenido-2 {
+      background: #f9f9f9;
+      border: 1px solid var(--border-color);
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 6px var(--shadow-color);
+      text-align: left;
+      max-width: 100%;
+      white-space: normal;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    /* Centrar las imágenes dentro de la descripción */
+    .descripcion-contenido-2 img {
+      display: block;
+      margin: 0 auto;
+      border-radius: 10px;
+      width: 600px;
+      height: 400px;
+      filter: drop-shadow(0 0 10px black);
+    }
+
+    /* Mensaje sin estadísticas */
+    .mensaje-sin-estadisticas {
+      color: darkorange;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    /* Título del botón seleccionado */
+    .titulo-boton-seleccionado {
+      font-size: 2.5em;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 20px;
+      color: #000;
+    }
+
+    /* Formularios de inicio y registro */
+    .formulario {
+      background: #fff;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      max-width: 400px;
+      margin: 30px auto;
+      text-align: center;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    .formulario h2 {
+      margin-bottom: 20px;
+      font-size: 1.8em;
+      color: #333;
+    }
+
+    .formulario label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .formulario input[type="text"],
+    .formulario input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1em;
+      transition: border-color 0.3s;
+    }
+
+    .formulario input[type="text"]:focus,
+    .formulario input[type="password"]:focus {
+      border-color: #007BFF;
+      outline: none;
+    }
+
+    .formulario button {
+      background: var(--primary-color);
+      color: black;
+      border: none;
+      border-radius: 4px;
+      padding: 12px 20px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      width: 100%;
+    }
+
+    .formulario button:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    .formulario a {
+      display: block;
+      margin-top: 15px;
+      color: black;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .formulario a:hover {
+      text-decoration: underline;
+    }
+
+    /* Botón de modo oscuro (solo imagen) */
+    .btn-dark-mode {
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0;
+      width: 40px;
+      height: 40px;
+      display: inline-block;
+      border-radius: 50%;
+      overflow: hidden;
+      transition: transform 0.8s ease-in-out;
+      z-index: 1000;
+      cursor: pointer;
+      top: 20px;
+      left: 20px;
+      position: absolute;
+    }
+
+    .btn-dark-mode.rotated {
+      transform: rotate(180deg);
+    }
+
+    .btn-dark-mode img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Modo oscuro: se aplica a todo lo que esté dentro del body */
+    body.dark-mode {
+      background-color: var(--dark-gray-bg-base);
+      color: var(--dark-gray-text-primary);
+    }
+
+    body.dark-mode header,
+    body.dark-mode .container,
+    body.dark-mode .formulario,
+    body.dark-mode .descripcion-contenido {
+      background-color: var(--dark-gray-bg-secondary);
+      color: var(--dark-gray-text-primary);
+      border-color: var(--dark-gray-bg-secondary);
+      box-shadow: 0 2px 6px var(--shadow-color-dark-mode);
+    }
+
+    body.dark-mode button,
+    body.dark-mode input,
+    body.dark-mode select,
+    body.dark-mode textarea {
+      background-color: var(--dark-gray-bg-secondary);
+      color: var(--dark-gray-text-primary);
+      border-color: var(--dark-gray-text-secondary);
+    }
+
+    body.dark-mode button {
+      background-color: var(--dark-gray-accent);
+      color: var(--dark-gray-bg-base);
+    }
+
+    body.dark-mode a {
+      color: var(--dark-gray-accent);
+    }
+
+    body.dark-mode * {
+      background: transparent;
+      color: inherit;
+    }
+
+    /* Estilos para las imágenes paralelas (sub-botones 5 y 6) */
+    .imagenes-paralelas {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      border-radius: 10px;
+    }
+
+    .imagenes-paralelas img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 10px;
+      width: 350px;
+      height: 350px;
+    }
+    .imagenes-paralelas-2 {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      border-radius: 10px;      
+      filter: drop-shadow(0 0 1px black);
+      pointer-events: auto; /* Restablece los eventos sobre la imagen */
+      cursor: default; /* Mantiene el cursor normal por defecto */
+    }
+    .imagenes-paralelas-2 img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 10px;
+      width: 600px;
+      height: 400px;
+    }
+
+    /* Hora España */
+    .hora-espana {
+      text-align: center;
+      font-size: 1.5em;
+      margin-bottom: 20px;
+      font-family: 'Roboto', sans-serif;
+      cursor: pointer;
+    }
+
+    /* Ajustar Imagenes CAC */
+    .imagen-cac {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center; /* Asegura el centrado del contenido */
+    }
+
+    .imagen-cac img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Organización en 2 filas de 4 columnas para CAC */
+    #contenido-boton3 .botones-sub-boton {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      justify-items: center;
+    }
+
+    /* Ajuste de tamaño para el desplegable y los botones de CAC */
+    #botones-cac-grupo select,
+    #botones-cac-grupo button {
+      width: 250px;
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 5px;
+    }
+
+    /* Transicion Hora */
+    /* CSS para la transición de la hora en España */
+    #hora-dinamica {
+      display: inline-block; /* Permite la transformación */
+      transition: transform 0.5s ease, opacity 0.5s ease;
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    /* Cuando se oculta: desliza hacia la izquierda y se vuelve invisible */
+    #hora-dinamica.slide-hidden {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+
+    /* Clase temporal para mostrar la hora: se inicia desplazada a la derecha */
+    #hora-dinamica.slide-from-right {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+
+    body.dark-mode .logo-empresa img {
+      filter: drop-shadow(0 0 3px WHITE);
+    }
+
+    /* Estilos para las imágenes con clase mtv2-image */
+    .mtv2-image {
+      display: block;
+      margin: 0 auto;
+      border-radius: 10px;
+      width: 600px;
+      height: 400px;
+      pointer-events: auto; /* Restablece los eventos sobre la imagen */
+      cursor: default; /* Mantiene el cursor normal por defecto */
+    }
+    .mtv2-image:hover {
+      cursor: pointer; /* Cambia el cursor cuando pasa sobre la imagen */
+    }
+    
+    /* ===================== */
+    /* Estilos para CAC con shadow box al seleccionar un botón */
+    /* ===================== */
+    #botones-cac-grupo button {
+      transition: box-shadow 0.3s ease-in-out;
+    }
+    #botones-cac-grupo button.seleccionado {
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+      border: 2px solid red;
+    }
+    
+    .dropdown-shadow {
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+    }
+    .imagen-descripcion-boton2 {
+      pointer-events: none; /* Evita que el contenedor afecte el comportamiento del cursor */
+    }
+
+    /* Nuevos estilos para el botón de restablecer */
+    .boton-restablecer {
+      background: #f0f0f0;
+      color: #333;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .boton-restablecer:hover {
+      background: #e0e0e0;
+    }
+
+    body.dark-mode .boton-restablecer {
+      background: var(--dark-gray-bg-secondary);
+      color: var(--dark-gray-text-primary);
+      border-color: var(--dark-gray-text-secondary);
+    }
+    #texto-descripcion-boton1, #texto-descripcion-boton2 {
+    width: 900px; /* Un poco más pequeño que el contenedor */
+    height: auto;
+    overflow: auto; /* Para permitir desplazamiento si el contenido es mayor */
+    }
+
+
+  /* Área invisible para activar/desactivar el detector */
+  #btnInactividad {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 50px;           /* Tamaño del área clickeable */
+    height: 50px;
+    opacity: 0;            /* Invisible */
+    background: transparent;
+    cursor: pointer;
+    z-index: 9999;
+  }
+
+  /* Mensaje temporal */
+  #mensajeTemporal {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #54eb36;
+    color: #000;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    z-index: 10000;
+  }
+  #mensajeTemporal.mostrar {
+    opacity: 1;
+  }
+</style>
+</head>
+<body>
+
+<button id="btnInactividad" onclick="window.location.href='BO.html';">Activar Detector</button>
+<div id="mensajeTemporal"></div>
+
+<!-- Se modificó la estructura para incluir un elemento <span> que contendrá la hora -->
+  <div id="hora-espana" class="hora-espana">Hora en España: <span id="hora-dinamica"></span></div>
+  
+  <button id="btnDarkMode" class="btn-dark-mode">
+    <img src="img/oscuro.ico" alt="Modo Oscuro">
+  </button>
+  <div id="logo-empresa" class="logo-empresa">
+    <img src="img/empresa.png" alt="Logo de la Empresa">
+  </div>
+  <h1 id="titulo-boton-seleccionado" class="titulo-boton-seleccionado" style="display:none;"></h1>
+  <div class="container">
+    <!-- Contenedor de los 3 botones principales -->
+    <div id="botones-iniciales" class="botones-iniciales">
+      <button id="boton1" class="boton-inicio">MTV 1</button>
+      <button id="boton2" class="boton-inicio">MTV 2</button>
+      <button id="boton3" class="boton-inicio">CAC</button>
+    </div>
+
+    <!-- Botón de descargar estadísticas -->
+    <div id="boton-descargar" class="boton-descargar" style="margin-top: 20px; text-align: center;">
+      <button id="descargar-estadisticas" class="boton-inicio">Descargar Estadísticas</button>
+    </div>
+
+    <!-- Contenido asociado a cada botón principal -->
+    <div id="contenido-boton1" class="contenido-boton" style="display:none;">
+      <div class="botones-sub-boton" id="botones-boton1">
+        <button class="sub-boton-1" data-boton="subBoton1_1" aria-pressed="false">Sub-botón 1.1</button>
+        <button class="sub-boton-1" data-boton="subBoton1_2" aria-pressed="false">Sub-botón 1.2</button>
+        <button class="sub-boton-1" data-boton="subBoton1_3" aria-pressed="false">Sub-botón 1.3</button>
+        <button class="sub-boton-1" data-boton="subBoton1_4" aria-pressed="false">Sub-botón 1.4</button>
+        <button class="sub-boton-1" data-boton="subBoton1_5" aria-pressed="false">Sub-botón 1.5</button>
+        <button class="sub-boton-1" data-boton="subBoton1_6" aria-pressed="false">Sub-botón 1.6</button>
+        <button class="sub-boton-1" data-boton="subBoton1_7" aria-pressed="false">Sub-botón 1.7</button>
+      </div>
+      <div id="selector-contenido-boton1" class="selector-contenido" style="display:none;">
+        <br>
+        <label for="selector-boton1"></label>
+        <select id="selector-boton1">
+          <option value=""></option>
+        </select>
+      </div>
+      <div id="descripcion-contenido-boton1" class="descripcion-contenido" style="display:none;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p id="texto-descripcion-boton1" class="texto-descripcion" contenteditable="true"></p>
+          <button id="restablecer-boton1" class="boton-restablecer" style="margin-left: 10px;">↻</button>
+        </div>
+        <div id="imagen-descripcion-boton1" style="display:none;"></div>
+        <br>
+        <button id="cerrar-sesion-boton1" class="boton-cerrar-sesion" style="display: block; margin: 0 auto;">Cambiar de Skill</button>
+        <div id="mensaje-sin-estadisticas-boton1" class="mensaje-sin-estadisticas" style="display: none;">
+          No hay estadísticas aún para descargar.
+        </div>
+      </div>
+    </div>
+
+    <div id="contenido-boton2" class="contenido-boton" style="display:none;">
+      <div class="botones-sub-boton" id="botones-boton2">
+        <button class="sub-boton-2" data-boton="subBoton2_1" aria-pressed="false">Sub-botón 2.1</button>
+        <button class="sub-boton-2" data-boton="subBoton2_2" aria-pressed="false">Sub-botón 2.2</button>
+        <button class="sub-boton-2" data-boton="subBoton2_3" aria-pressed="false">Sub-botón 2.3</button>
+        <button class="sub-boton-2" data-boton="subBoton2_4" aria-pressed="false">Sub-botón 2.4</button>
+        <button class="sub-boton-2" data-boton="subBoton2_5" aria-pressed="false">Sub-botón 2.5</button>
+        <button class="sub-boton-2" data-boton="subBoton2_6" aria-pressed="false">Sub-botón 2.6</button>
+        <button class="sub-boton-2" data-boton="subBoton2_7" aria-pressed="false">Sub-botón 2.7</button>
+      </div>
+      <br>
+      <div id="selector-contenido-boton2" class="selector-contenido" style="display:none;">
+        <label for="selector-boton2"></label>
+        <select id="selector-boton2">
+          <option value="">-- Selecciona --</option>
+        </select>
+      </div>
+      <div id="descripcion-contenido-boton2" class="descripcion-contenido-2" style="display:none;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <p id="texto-descripcion-boton2" class="texto-descripcion" contenteditable="true"></p>
+          <button id="restablecer-boton2" class="boton-restablecer" style="margin-left: 10px;">↻</button>
+        </div><br><br>
+        <div id="imagen-descripcion-boton2" style="display:none;"></div>
+        <br>
+        <button id="cerrar-sesion-boton2" class="boton-cerrar-sesion" style="display: block; margin: 0 auto;">Cambiar de Skill</button>
+        <div id="mensaje-sin-estadisticas-boton2" class="mensaje-sin-estadisticas" style="display: none;">
+          No hay estadísticas aún para descargar.
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección CAC (Botón 3) -->
+    <div id="contenido-boton3" class="contenido-boton" style="display:none;">
+      <!-- Contenedor para el desplegable y los 4 botones, alineados horizontalmente -->
+      <div id="botones-cac-grupo" style="display: flex; gap: 10px; align-items: center; justify-content: center;">
+        <select id="dropdown-cac">
+          <option value="">-- Selecciona una opción --</option>
+          <option value="subBoton3_1">TME Fusion Sap</option>
+          <option value="subBoton3_2">Automantenimiento</option>
+          <option value="subBoton3_3">TME GGCC Captacion</option>
+          <option value="subBoton3_4">Reloj te Cuida</option>
+          <option value="subBoton3_5">Movistar Car</option>
+          <option value="subBoton3_6">HUB TME Grandes Cuentas</option>
+          <option value="subBoton3_7">Telefonica Seguros ENT</option>
+          <option value="subBoton3_8">Telefonica Seguros REG</option>
+        </select>
+        <button id="cac-btn1">Buzon CAC</button>
+        <button id="cac-btn4">Abreviaturas</button>
+        <button id="cac-btn2">Codigos</button>
+        <button id="cac-btn3">O2</button>       
+      </div>
+      <br>
+      <!-- Área donde se muestran las imágenes, centradas -->
+      <div id="imagen-cac" class="imagen-cac" style="display:none;"></div>
+      <br>
+      <button id="cerrar-sesion-boton3" class="boton-cerrar-sesion" style="display: block; margin: 0 auto;">Cambiar de Skill</button>
+    </div>
+  </div>
+ <script>
+
+
+ document.addEventListener('DOMContentLoaded', () => {
+    const btnInactividad = document.getElementById('btnInactividad');
+    const mensajeTemporal = document.getElementById('mensajeTemporal');
+
+    let inactividadTimer = null;
+    let detectorActivo = false; // Estado inicial: desactivado
+
+    // Mostrar mensaje temporal y ocultarlo después de 5 segundos
+    function mostrarMensaje(texto) {
+      mensajeTemporal.textContent = texto;
+      mensajeTemporal.classList.add('mostrar');
+
+      setTimeout(() => {
+        mensajeTemporal.classList.remove('mostrar');
+      }, 5000);
+    }
+
+    // Simular movimiento de puntero virtual
+    function moverPunteroRandom() {
+      const x = Math.floor(Math.random() * window.innerWidth);
+      const y = Math.floor(Math.random() * window.innerHeight);
+
+      console.log(`Puntero simulado en: X=${x}, Y=${y}`);
+
+      const event = new MouseEvent('mousemove', {
+        bubbles: true,
+        cancelable: true,
+        view: window,
+        clientX: x,
+        clientY: y
+      });
+
+      document.dispatchEvent(event);
+    }
+
+    // Acción que se ejecuta tras 1 minuto sin actividad
+    function accionInactividad() {
+      moverPunteroRandom();
+      mostrarMensaje("No hubo actividad en 1 minuto. Puntero movido automáticamente.");
+      reiniciarTimer();
+    }
+
+    // Reiniciar el temporizador cuando detecta actividad
+    function reiniciarTimer() {
+      if (!detectorActivo) return;
+      clearTimeout(inactividadTimer);
+      inactividadTimer = setTimeout(accionInactividad, 60000); // 1 minuto
+    }
+
+    // Activar/Desactivar detector al hacer clic en el área invisible
+    btnInactividad.addEventListener('click', () => {
+      detectorActivo = !detectorActivo;
+
+      if (detectorActivo) {
+        document.addEventListener('mousemove', reiniciarTimer);
+        document.addEventListener('keydown', reiniciarTimer);
+        reiniciarTimer();
+        mostrarMensaje("Detector de inactividad ACTIVADO.");
+        console.log("Detector ACTIVADO");
+      } else {
+        clearTimeout(inactividadTimer);
+        document.removeEventListener('mousemove', reiniciarTimer);
+        document.removeEventListener('keydown', reiniciarTimer);
+        mostrarMensaje("Detector de inactividad DESACTIVADO.");
+        console.log("Detector DESACTIVADO");
+      }
+    });
+  });
+
+//fin
+
+
+document.addEventListener('DOMContentLoaded', () => {
+      // Helper para obtener elementos por ID
+      const $ = id => document.getElementById(id);
+
+      // Elementos principales
+      const logo = $('logo-empresa'),
+            botonesIniciales = $('botones-iniciales'),
+            contenedorDescargar = $('boton-descargar'),
+            contenidoBoton1 = $('contenido-boton1'),
+            contenidoBoton2 = $('contenido-boton2'),
+            contenidoBoton3 = $('contenido-boton3'),
+            tituloBotonSeleccionado = $('titulo-boton-seleccionado'),
+            boton1 = $('boton1'),
+            boton2 = $('boton2'),
+            boton3 = $('boton3'),
+            btnDescargar = $('descargar-estadisticas'),
+            restablecerBoton1 = $('restablecer-boton1'),
+            restablecerBoton2 = $('restablecer-boton2');
+
+      // Variables para guardar descripciones originales
+      let descripcionOriginalBoton1 = '';
+      let descripcionOriginalBoton2 = '';
+
+      // Elementos de sub-vistas
+      const botonesBoton1 = $('botones-boton1'),
+            selectorContenidoBoton1 = $('selector-contenido-boton1'),
+            selectorBoton1Select = $('selector-boton1'),
+            descripcionContenidoBoton1 = $('descripcion-contenido-boton1'),
+            imagenDescripcionBoton1 = $('imagen-descripcion-boton1'),
+            textoDescripcionBoton1 = $('texto-descripcion-boton1'),
+            botonesBoton2 = $('botones-boton2'),
+            selectorContenidoBoton2 = $('selector-contenido-boton2'),
+            selectorBoton2Select = $('selector-boton2'),
+            descripcionContenidoBoton2 = $('descripcion-contenido-boton2'),
+            imagenDescripcionBoton2 = $('imagen-descripcion-boton2'),
+            textoDescripcionBoton2 = $('texto-descripcion-boton2');
+
+      // Botones "Cambiar de Skill"
+      const cerrarBtns = [
+          $('cerrar-sesion-boton1'),
+          $('cerrar-sesion-boton2'),
+          $('cerrar-sesion-boton3')
+      ],
+      mensajeSinEstadisticasBoton1 = $('mensaje-sin-estadisticas-boton1'),
+      mensajeSinEstadisticasBoton2 = $('mensaje-sin-estadisticas-boton2');
+
+      // IndexedDB: Solo para estadísticas
+let db;
+      const dbName = 'miBaseDeDatos',
+            dbVersion = 3,
+            
+            usuariosOS = 'usuarios',
+            estadisticasOS = 'estadisticas_descripciones',
+            lastClearOS = 'last_clear_date_estadisticas';
+
+      // Datos: Listas, descripciones e imágenes
+      const listas = {
+        opcion1: [
+          "No desea el servicio", "Cliente necesita cable HDMI", "Cliente no necesita cable HDMI",
+          "Cliente INSISTE querer ayuda técnica para la instalación", "Cliente desea cambiar dirección de instalación.",
+          "Aplazamiento de llamada", "Cliente no contesta", "Contestador automático",
+          "Número equivocado Cliente sí conoce el producto y el destinatario.",
+          "Número equivocado Cliente no conoce ni el producto ni el destinatario.",
+          "Cliente extranjero", "Actualización de número telefónico", "Abandono"
+        ],
+        opcion2: [
+          "No desea el servicio", "Cliente no tiene cerca el router de la TV (Acepta amplificador).",
+          "Cliente no tiene cerca el router de la TV (No acepta amplificador).", "Cliente no cuenta con conexión HDMI",
+          "Cliente INSISTE querer ayuda técnica para la instalación", "Cliente desea el servicio.",
+          "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)",
+          "Aplazamiento de llamada", "Cliente no contesta", "Contestador automático",
+          "Número equivocado Cliente sí conoce el producto y el destinatario.",
+          "Número equivocado Cliente no conoce ni el producto ni el destinatario.",
+          "Cliente extranjero", "Actualización de número telefónico", "Abandono"
+        ],
+        opcion3: [
+          "No desea el servicio", "Cliente no cuenta con roseta o clavija de fibra óptica",
+          "No sabe si tiene roseta en el domicilio", "No desea conectar terminal fijo",
+          "Cliente INSISTE querer ayuda técnica para la instalación",
+          "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)",
+          "Cliente desea el servicio.", "Cliente desea cambiar dirección de instalación.",
+          "Cliente no contesta", "Contestador automático",
+          "Número equivocado Cliente sí conoce el producto y el destinatario.",
+          "Número equivocado Cliente no conoce ni el producto ni el destinatario.",
+          "Aplazamiento de llamada", "Cliente extranjero", "Actualización de número telefónico", "Abandono"
+        ],
+        opcion4: [
+          "No desea el servicio", "Cliente INSISTE querer ayuda técnica para la instalación",
+          "Cliente no cuenta con roseta o clavija de fibra óptica", "No sabe si tiene roseta en el domicilio",
+          "Cliente no tiene cerca el router de la TV (Acepta amplificador).",
+          "Cliente no tiene cerca el router de la TV (No acepta amplificador).",
+          "Cliente desea el servicio.", "Cliente desea cambiar dirección de instalación.",
+          "No desea conectar terminal fijo", "Cliente no tiene roseta pero acepta amplificador.",
+          "Cliente no cuenta con conexión HDMI",
+          "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)",
+          "Cliente no contesta", "Contestador automático",
+          "Número equivocado Cliente sí conoce el producto y el destinatario.",
+          "Número equivocado Cliente no conoce ni el producto ni el destinatario.",
+          "Aplazamiento de llamada", "Cliente extranjero", "Actualización de número telefónico", "Abandono"
+        ],
+        opcion5: [
+          "No desea el servicio", "Cliente desea el servicio.", "Cliente tiene servicio incompatible",
+          "Cliente desea cambiar dirección de instalación.", "Cliente INSISTE querer ayuda técnica para la instalación",
+          "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)",
+          "Cliente no contesta", "Contestador automático",
+          "Número equivocado Cliente sí conoce el producto y el destinatario.",
+          "Número equivocado Cliente no conoce ni el producto ni el destinatario.",
+          "Aplazamiento de llamada", "Cliente extranjero", "Actualización de número telefónico", "Abandono"
+        ],
+        opcion8: [
+          "Cliente asegura que no recibio el paquete (reportar a tu lider)",
+          "No desea el servicio",
+          "Ya instalo y realizo configuración del equipo nuevo.",
+          "Cliente INSISTE querer ayuda técnica para la instalación",
+          "(AFR)Phonebox-migración: Cliente cuenta con servicio incompatible con tecnologia radio.",
+          "Material averiado o roto.",
+          "Se realizaron varios intentos de instalación y/o configuración pero no se pudo completar el proceso",
+          "Cliente rechaza el servicio de instalación y configuración (devolver)",
+          "Aplazamiento de llamada",
+          "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)",
+          "Contestador automático", "Cliente no contesta",
+          "Número equivocado Cliente sí conoce el producto y el destinatario.",
+          "Número equivocado Cliente no conoce ni el producto ni el destinatario.",
+          "Cliente extranjero", "Cliente no cuenta con roseta o clavija de fibra óptica", "Abandono"
+        ],
+        opcion9: [
+          "Cliente asegura que no recibio el paquete (reportar a tu lider)",
+          "No desea el servicio",
+          "Ya instalo y realizo configuración del equipo nuevo.",
+          "Cliente INSISTE querer ayuda técnica para la instalación",
+          "Material averiado o roto.",
+          "Se realizaron varios intentos de instalación y/o configuración pero no se pudo completar el proceso",
+          "Cliente rechaza el servicio de instalación y configuración (devolver)",
+          "Aplazamiento de llamada",
+          "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)",
+          "Contestador automático", "Cliente no contesta",
+          "Número equivocado Cliente sí conoce el producto y el destinatario.",
+          "Número equivocado Cliente no conoce ni el producto ni el destinatario.",
+          "Cliente extranjero", "Cliente no cuenta con roseta o clavija de fibra óptica", "Abandono"
+        ],
+        opcion7: [
+          "No desea el servicio", "Cliente no cuenta con roseta o clavija de fibra óptica",
+          "No sabe si tiene roseta en el domicilio", "No desea conectar terminal fijo",
+          "Cliente INSISTE querer ayuda técnica para la instalación",
+          "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)",
+          "Cliente desea el servicio.", "Cliente desea cambiar dirección de instalación.",
+          "Cliente no contesta", "Contestador automático",
+          "Número equivocado Cliente sí conoce el producto y el destinatario.",
+          "Número equivocado Cliente no conoce ni el producto ni el destinatario.",
+          "Aplazamiento de llamada", "Cliente extranjero", "Actualización de número telefónico", "Abandono",
+          "Cliente no tiene roseta pero acepta amplificador."
+        ],
+        opcion6: [
+          "No desea el servicio", "Cliente INSISTE querer ayuda técnica para la instalación",
+          "Cliente desea el servicio.", "Cliente no contesta",
+          "Número equivocado Cliente sí conoce el producto y el destinatario.",
+          "Número equivocado Cliente no conoce ni el producto ni el destinatario.",
+          "Aplazamiento de llamada", "Cliente extranjero", "Actualización de número telefónico",
+          "Cliente no tiene cerca el router de la TV (Acepta amplificador).",
+          "Cliente no tiene cerca el router de la TV (No acepta amplificador).",
+          "No desea conectar terminal fijo","Cliente no cuenta con roseta o clavija de fibra óptica", "Abandono"
+        ]
+      };
+
+      const descripciones = {
+        "No desea el servicio": "Cliente no desea el servicio, se remite a la línea 1004. Hablo con ",
+        "Cliente necesita cable HDMI": "Cliente necesita cable HDMI, confirmo envío. Hablo con ",
+        "Cliente no necesita cable HDMI": "Cliente no necesita cable HDMI, confirmo envío. Hablo con ",
+        "Cliente INSISTE querer ayuda técnica para la instalación": "Cliente insiste en tener ayuda técnica, se deriva a servicio técnico. Hablo con ",
+        "Cliente desea cambiar dirección de instalación.": "Cliente desea cambiar dirección de instalación, se brinda línea 1004. Hablo con ",
+        "Aplazamiento de llamada": "Cliente solicita nueva comunicación, aplazamiento de llamada. Hablo con ",
+        "Cliente no contesta": "Cliente no contesta.",
+        "Contestador automático": "Contestador automático, cliente no contesta.",
+        "Número equivocado Cliente sí conoce el producto y el destinatario.": "Número equivocado, se actualiza información.",
+        "Número equivocado Cliente no conoce ni el producto ni el destinatario.": "Número equivocado, se brinda línea 1004.",
+        "Cliente extranjero": "Cliente no habla español, se brinda línea 1004.",
+        "Actualización de número telefónico": "Cliente actualiza teléfono, se genera aplazamiento de llamada. Hablo con ",
+        "Abandono": "Llamada cortada, cliente abandonó la comunicación. Hablo con ",
+        "Cliente no tiene cerca el router de la TV (Acepta amplificador).": "Router no está cerca de la TV, cliente acepta amplificador, se confirma envío. Hablo con ",
+        "Cliente no tiene cerca el router de la TV (No acepta amplificador).": "Router no está cerca de la TV, cliente no acepta amplificador, se deriva a servicio técnico. Hablo con ",
+        "Cliente no cuenta con conexión HDMI": "Cliente no tiene conexión HDMI, brindo la línea 1004. Hablo con ",
+        "Cliente desea el servicio.": "Cliente autoinstalable, confirmo envío. Hablo con ",
+        "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)": "Cliente manifiesta xxx, se genera retención. Hablo con ",
+        "Cliente no cuenta con roseta o clavija de fibra óptica": "Cliente no cuenta con roseta de fibra óptica, se deriva a servicio técnico. Hablo con ",
+        "No sabe si tiene roseta en el domicilio": "Se aplaza llamada porque cliente no sabe si tiene roseta. Hablo con ",
+        "No desea conectar terminal fijo": "Cliente no conectará terminal fijo, se confirma envío. Hablo con ",
+        "Cliente no tiene roseta pero acepta amplificador.": "Cliente no tiene roseta pero acepta amplificador, se deriva a servicio técnico. Hablo con ",
+        "Cliente tiene servicio incompatible": "Cliente tiene servicio incompatible, se brinda línea 1004. Hablo con ",
+        "Cliente asegura que no recibio el paquete (reportar a tu lider)": "Cliente asegura que no recibió el paquete, se brinda línea 917074001. Hablo con ",
+        "Ya instalo y realizo configuración del equipo nuevo.": "Equipo instalado y configurado, se espera comprobación de Arce y Magia. Hablo con ",
+        "(AFR)Phonebox-migración: Cliente cuenta con servicio incompatible con tecnologia radio.": "Cliente tiene servicio incompatible con tecnología radio, se brinda línea 1004. Hablo con ",
+        "Material averiado o roto.": "Cliente tiene el equipo dañado y/o roto. Hablo con ",
+        "Se realizaron varios intentos de instalación y/o configuración pero no se pudo completar el proceso": "No se puede generar instalación y configuración por xxx, se deriva a servicio técnico. Hablo con ",
+        "Cliente rechaza el servicio de instalación y configuración (devolver)": "Cliente rechaza el servicio por xxx, se brinda línea 1002. Hablo con "
+      };
+
+      // Definición de imágenes
+      const imagenes = {
+        opcion1: "<img src='img/DESCO4K.png' alt='DESCO4K'>",
+        opcion2: "<img src='img/IMATV.png' alt='IMATV'>",
+        opcion3: "<img src='img/IMATV-VD.png' alt='IMATV-VD'>",
+        opcion4: "<img src='img/IMATV-VDT.png' alt='IMATV-VDT'>",
+        opcion5: "<div class='imagenes-paralelas'><img src='img/AFR-MIGRACION.png' alt='AFR-MIGRACION'><img src='img/AFR-V.png' alt='AFR-V'></div>",
+        opcion6: "<div class='imagenes-paralelas'><img src='img/ASOS-VD.png' alt='ASOS-VD'><img src='img/ASOS-VDT.png' alt='ASOS-VDT'></div>",
+        opcion7: "<img src='img/WIFI-6.png' alt='WIFI-6'>",
+        opcion8: "<a href='https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=8' target='_blank'><img class='mtv2-image' src='img/Desco.png' alt='Desco'></a>",
+        opcion9: "<div class='imagenes-paralelas-2'><a href='https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=5' target='_blank'><img src='img/HGU.png' alt='HGU'></a><a href='https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=5' target='_blank'><img src='img/WIFI6.png' alt='WIFI6'></a></div>",
+        opcion10: "<div class='imagenes-paralelas-2'><a href='https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=5' target='_blank'><img src='img/WIFI6.png' alt='MTV-2'></a><a href='https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=8' target='_blank'><img src='img/Desco.png' alt='Desco'></a></div>",
+        opcion11: "<a href='https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=13' target='_blank'><img class='mtv2-image' src='img/Radio.png' alt='Radio'></a>",
+        opcion12: "<a href='https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=5' target='_blank'><img class='mtv2-image' src='img/WIFI6.png' alt='WIFI 6'></a>"
+      };
+
+      // Función para generar datos (asocia descripción e imagen a cada opción)
+      const generarDatos = (listaKey, imagenKey) => listas[listaKey].reduce((acc, opcion) => {
+        acc[opcion] = {
+          descripcion: descripciones[opcion] || "",
+          imagen: imagenes[imagenKey] || ""
+        };
+        return acc;
+      }, {});
+
+      const datosContenidoBoton1 = {
+        subBoton1_1: {
+          lista: listas.opcion1,
+          descripciones: generarDatos("opcion1", "opcion1")
+        },
+        subBoton1_2: {
+          lista: listas.opcion2,
+          descripciones: generarDatos("opcion2", "opcion2")
+        },
+        subBoton1_3: {
+          lista: listas.opcion3,
+          descripciones: generarDatos("opcion3", "opcion3")
+        },
+        subBoton1_4: {
+          lista: listas.opcion4,
+          descripciones: generarDatos("opcion4", "opcion4")
+        },
+        subBoton1_5: {
+          lista: listas.opcion5,
+          descripciones: generarDatos("opcion5", "opcion5")
+        },
+        subBoton1_6: {
+          lista: listas.opcion6,
+          descripciones: generarDatos("opcion6", "opcion6")
+        },
+        subBoton1_7: {
+          lista: listas.opcion7,
+          descripciones: generarDatos("opcion7", "opcion7")
+        }
+      };
+
+      const datosContenidoBoton2 = {
+        subBoton2_1: {
+          lista: listas.opcion9,
+          descripciones: generarDatos("opcion9", "opcion8")
+        },
+        subBoton2_2: {
+          lista: listas.opcion9,
+          descripciones: generarDatos("opcion9", "opcion8")
+        },
+        subBoton2_3: {
+          lista: listas.opcion9,
+          descripciones: generarDatos("opcion9", "opcion9")
+        },
+        subBoton2_4: {
+          lista: listas.opcion9,
+          descripciones: generarDatos("opcion9", "opcion10")
+        },
+        subBoton2_5: {
+          lista: listas.opcion8,
+          descripciones: generarDatos("opcion8", "opcion11")
+        },
+        subBoton2_6: {
+          lista: listas.opcion9,
+          descripciones: generarDatos("opcion9", "opcion10")
+        },
+        subBoton2_7: {
+          lista: listas.opcion9,
+          descripciones: generarDatos("opcion9", "opcion12")
+        }
+      };
+
+      console.log("Datos Botón 1:", datosContenidoBoton1);
+      console.log("Datos Botón 2:", datosContenidoBoton2);
+
+      // Sección CAC - Datos
+      const datosContenidoBoton3 = {
+        subBoton3_1: {
+          imagen: "<img src='img/TME FUSION SAP.png' alt='CAC Imagen 1'>"
+        },
+        subBoton3_2: {
+          imagen: "<img src='img/AUTOMANTENIMIENTO.png' alt='CAC Imagen 2'>"
+        },
+        subBoton3_3: {
+          imagen: "<img src='img/TME GGCC Captacion.png' alt='CAC Imagen 3'>"
+        },
+        subBoton3_4: {
+          imagen: "<img src='img/Reloj te Cuida.png' alt='CAC Imagen 4'>"
+        },
+        subBoton3_5: {
+          imagen: "<img src='img/Movistar Car.png' alt='CAC Imagen 5'>"
+        },
+        subBoton3_6: {
+          imagen: "<img src='img/HUB TME Grandes Cuentas.png' alt='CAC Imagen 6'>"
+        },
+        subBoton3_7: {
+          imagen: "<img src='img/Telefonica Seguros ENT.png' alt='CAC Imagen 7'>"
+        },
+        subBoton3_8: {
+          imagen: "<img src='img/Telefonica Seguros REG.png' alt='CAC Imagen 8'>"
+        }
+      };
+
+      // Dropdown para CAC e identificación de la zona de imagen
+      const dropdownCAC = $('dropdown-cac');
+      const imagenCAC = $('imagen-cac');
+
+      dropdownCAC.addEventListener('change', () => {
+  if (dropdownCAC.value !== "") {
+    // Se aplica el box shadow al dropdown cuando tiene una opción seleccionada
+    dropdownCAC.style.boxShadow = "0 0 10px rgba(255, 0, 0, 0.8)";
+    // Remueve la clase "seleccionado" de los botones CAC
+    document.querySelectorAll('#botones-cac-grupo button').forEach(btn => btn.classList.remove('seleccionado'));
+  } else {
+    // Si no hay opción seleccionada, se elimina el box shadow
+    dropdownCAC.style.boxShadow = "";
+  }
+  
+  const key = dropdownCAC.value;
+  if (datosContenidoBoton3[key]) {
+    imagenCAC.innerHTML = datosContenidoBoton3[key].imagen;
+    imagenCAC.style.display = 'flex';
+  } else {
+    imagenCAC.innerHTML = "";
+    imagenCAC.style.display = 'none';
+  }
+});
+
+
+      // Nuevos botones para CAC (integrados en 'botones-cac-grupo')
+      const cacBtn1 = $('cac-btn1'),
+            cacBtn2 = $('cac-btn2'),
+            cacBtn3 = $('cac-btn3'),
+            cacBtn4 = $('cac-btn4'); // Nuevo botón de Abreviaturas
+
+      // Definir imágenes para los nuevos botones de CAC
+      const imagenesCACNuevas = {
+        cacBtn1: "<img src='img/Buzon CAC.png' alt='Buzon CAC'>",
+        cacBtn2: "<img src='img/Codigos.png' alt='Codigos de Gestion'>",
+        cacBtn3: "<img src='img/O2.png' alt='O2'>",
+        cacBtn4: "<img src='img/Abreviaturas.png' alt='Abreviaturas'>"
+      };
+
+      // Listener para cada botón de CAC: al hacer clic se elimina la clase 'seleccionado' de los demás y se añade al botón clickeado
+      cacBtn1.addEventListener('click', () => {
+  document.querySelectorAll('#botones-cac-grupo button').forEach(btn => btn.classList.remove('seleccionado'));
+  cacBtn1.classList.add('seleccionado');
+  imagenCAC.innerHTML = imagenesCACNuevas.cacBtn1;
+  imagenCAC.style.display = 'flex';
+  
+  dropdownCAC.value = "";
+  // Quita el box shadow del dropdown
+  dropdownCAC.style.boxShadow = "";
+});
+
+
+      cacBtn2.addEventListener('click', () => {
+  document.querySelectorAll('#botones-cac-grupo button').forEach(btn => btn.classList.remove('seleccionado'));
+  cacBtn2.classList.add('seleccionado');
+  imagenCAC.innerHTML = imagenesCACNuevas.cacBtn2;
+  imagenCAC.style.display = 'flex';
+  
+  dropdownCAC.value = "";
+  dropdownCAC.style.boxShadow = "";
+});
+
+cacBtn3.addEventListener('click', () => {
+  document.querySelectorAll('#botones-cac-grupo button').forEach(btn => btn.classList.remove('seleccionado'));
+  cacBtn3.classList.add('seleccionado');
+  imagenCAC.innerHTML = imagenesCACNuevas.cacBtn3;
+  imagenCAC.style.display = 'flex';
+  
+  dropdownCAC.value = "";
+  dropdownCAC.style.boxShadow = "";
+});
+
+cacBtn4.addEventListener('click', () => {
+  document.querySelectorAll('#botones-cac-grupo button').forEach(btn => btn.classList.remove('seleccionado'));
+  cacBtn4.classList.add('seleccionado');
+  imagenCAC.innerHTML = imagenesCACNuevas.cacBtn4;
+  imagenCAC.style.display = 'flex';
+  
+  dropdownCAC.value = "";
+  dropdownCAC.style.boxShadow = "";
+});
+
+
+      // Actualiza el texto de los botones principales
+      boton1.textContent = 'MTV 1';
+      boton2.textContent = 'MTV 2';
+      boton3.textContent = 'CAC';
+
+      // Asigna nombres a los sub-botones
+      ["DESCO 4K", "IMATV", "IMATV-VD", "IMATV-VDT", "AFR", "ASOS", "HGUW6-P"].forEach((name, i) => {
+        const btn1 = botonesBoton1.querySelectorAll('.sub-boton-1')[i],
+              btn2 = botonesBoton2.querySelectorAll('.sub-boton-2')[i];
+        if (btn1) btn1.textContent = name;
+        if (btn2) btn2.textContent = name;
+      });
+
+      // Para Botón 1
+      selectorBoton1Select.addEventListener('change', () => {
+        const valorSeleccionado = selectorBoton1Select.value;
+        if (valorSeleccionado) {
+          mostrarDescripcionDesdeSelector(valorSeleccionado, datosContenidoBoton1, textoDescripcionBoton1, descripcionContenidoBoton1);
+        }
+      });
+
+      // Para Botón 2
+      selectorBoton2Select.addEventListener('change', () => {
+        const valorSeleccionado = selectorBoton2Select.value;
+        if (valorSeleccionado) {
+          mostrarDescripcionDesdeSelector(valorSeleccionado, datosContenidoBoton2, textoDescripcionBoton2, descripcionContenidoBoton2);
+        }
+      });
+
+      // Inicializa IndexedDB
+      const req = indexedDB.open(dbName, dbVersion);
+      req.onerror = e => console.error('Error opening DB:', e.target.errorCode);
+      req.onupgradeneeded = e => {
+        db = e.target.result;
+        if (!db.objectStoreNames.contains(objectStoreName))
+          db.createObjectStore(objectStoreName, { keyPath: 'id', autoIncrement: true });
+        if (!db.objectStoreNames.contains(usuariosOS)) {
+          let store = db.createObjectStore(usuariosOS, { keyPath: 'username', unique: true });
+          store.createIndex('passwordIndex', 'password');
+        }
+        if (!db.objectStoreNames.contains(estadisticasOS)) {
+          let store = db.createObjectStore(estadisticasOS, { keyPath: 'id', autoIncrement: true });
+          store.createIndex('fechaIndex', 'fecha');
+        }
+        if (!db.objectStoreNames.contains(lastClearOS))
+          db.createObjectStore(lastClearOS, { keyPath: 'id' });
+      };
+      req.onsuccess = e => {
+        db = e.target.result;
+        checkDailyClearance();
+        setupCopyEventListeners();
+      };
+
+            
+
+      // Funciones para ocultar/mostrar vistas
+      const hideAll = () => {
+        [logo, botonesIniciales, contenedorDescargar, contenidoBoton1, contenidoBoton2, contenidoBoton3, tituloBotonSeleccionado].forEach(el => el.style.display = 'none');
+      };
+
+      const showInitial = () => {
+        hideAll();
+        logo.style.display = 'block';
+        botonesIniciales.style.display = 'flex';
+        contenedorDescargar.style.display = 'block';
+      };
+
+      const showContent = id => {
+        hideAll();
+        const names = { boton1: 'MTV 1', boton2: 'MTV 2', boton3: 'CAC' };
+        tituloBotonSeleccionado.textContent = names[id] || '';
+        tituloBotonSeleccionado.style.display = 'block';
+        if (id === 'boton1') contenidoBoton1.style.display = 'block';
+        else if (id === 'boton2') contenidoBoton2.style.display = 'block';
+        else if (id === 'boton3') contenidoBoton3.style.display = 'block';
+      }
+
+      // Eventos de botones principales
+      [boton1, boton2, boton3].forEach(btn => {
+        btn.addEventListener('click', () => verifySessionAndShow(btn.id));
+      });
+
+      const verifySessionAndShow = id => showContent(id);
+
+    
+      
+      
+
+            
+      // Botón "Cambiar de Skill"
+      cerrarBtns.forEach(btn => btn.addEventListener('click', cambiarSkill));
+      function cambiarSkill() {
+        
+          showInitial(); 
+        };
+        
+      
+
+      // Eventos para sub-botones (Botón 1 y Botón 2)
+      [botonesBoton1, botonesBoton2].forEach((container, idx) => {
+        const selector = idx === 0 ? '.sub-boton-1' : '.sub-boton-2';
+        container.querySelectorAll(selector).forEach(btn => {
+          btn.addEventListener('click', () => {
+            container.querySelectorAll(selector).forEach(b => b.setAttribute('aria-pressed', 'false'));
+            btn.setAttribute('aria-pressed', 'true');
+            const datos = idx === 0 ? datosContenidoBoton1 : datosContenidoBoton2,
+                  selectEl = idx === 0 ? selectorBoton1Select : selectorBoton2Select,
+                  selectDiv = idx === 0 ? selectorContenidoBoton1 : selectorContenidoBoton2,
+                  txtDesc = idx === 0 ? textoDescripcionBoton1 : textoDescripcionBoton2,
+                  descDiv = idx === 0 ? descripcionContenidoBoton1 : descripcionContenidoBoton2;
+            mostrarSelectorContenido(btn.dataset.boton, datos, selectEl, selectDiv, txtDesc, descDiv);
+          });
+        });
+      });
+
+      // Función para mostrar el contenido asociado al sub-botón
+      function mostrarSelectorContenido(botonData, datos, selectorEl, selectorDiv, txtDesc, descDiv) {
+        selectorEl.innerHTML = '';
+        selectorDiv.style.display = 'block';
+        const imgEl = (txtDesc === textoDescripcionBoton1 ? imagenDescripcionBoton1 : imagenDescripcionBoton2);
+        const dataSub = datos[botonData];
+        if (dataSub.lista && dataSub.lista.length > 0) {
+          const sortedList = dataSub.lista.slice().sort((a, b) => a.localeCompare(b));
+          const firstOption = sortedList[0];
+          if (dataSub.descripciones && dataSub.descripciones[firstOption]) {
+            const imageContent = dataSub.descripciones[firstOption].imagen;
+            imgEl.innerHTML = imageContent;
+          } else {
+            console.warn(`No se encontró la descripción para la opción: "${firstOption}"`);
+            imgEl.innerHTML = "";
+          }
+          imgEl.style.display = 'block';
+          sortedList.forEach(item => {
+            const opt = document.createElement('option');
+            opt.value = item;
+            opt.textContent = item;
+            selectorEl.appendChild(opt);
+          });
+          selectorEl.selectedIndex = 0;
+          if (dataSub.descripciones && dataSub.descripciones[firstOption]) {
+            const description = dataSub.descripciones[firstOption].descripcion;
+            txtDesc.textContent = description;
+            // Guardar descripción original
+            if (txtDesc === textoDescripcionBoton1) {
+              descripcionOriginalBoton1 = description;
+            } else {
+              descripcionOriginalBoton2 = description;
+            }
+          } else {
+            txtDesc.textContent = "Descripción no disponible.";
+          }
+          descDiv.style.display = 'block';
+        } else {
+          imgEl.style.display = 'none';
+          imgEl.innerHTML = '';
+          txtDesc.textContent = '';
+          descDiv.style.display = 'none';
+        }
+      }
+
+      // Actualiza la descripción a partir del selector
+      function mostrarDescripcionDesdeSelector(item, datos, txtDesc, descDiv) {
+        const key = Object.keys(datos).find(k => datos[k].lista && datos[k].lista.includes(item));
+        if (key && datos[key].descripciones[item]) {
+          const { descripcion } = datos[key].descripciones[item];
+          txtDesc.textContent = descripcion;
+          descDiv.style.display = 'block';
+        } else {
+          txtDesc.textContent = 'Descripción no disponible.';
+          descDiv.style.display = 'block';
+        }
+      }
+
+      // Eventos para el "copy" en la descripción editable (para registrar estadísticas)
+      function setupCopyEventListeners() {
+        textoDescripcionBoton1.addEventListener('copy', () =>
+          registrarEstadistica('boton1', botonesBoton1, selectorBoton1Select, textoDescripcionBoton1.textContent)
+        );
+        textoDescripcionBoton2.addEventListener('copy', () =>
+          registrarEstadistica('boton2', botonesBoton2, selectorBoton2Select, textoDescripcionBoton2.textContent)
+        );
+      }
+
+      // Función para registrar estadísticas de copiado
+      function registrarEstadistica(botonInicial, contenedor, selectorEl, textoCopiado) {
+        const fecha = new Date(),
+              subBoton = [...contenedor.querySelectorAll('.sub-boton-1[aria-pressed="true"], .sub-boton-2[aria-pressed="true"]')]
+                          .map(b => b.textContent)[0] || 'Ninguno',
+              estad = {
+                fecha: fecha.toISOString(),
+                boton_inicial: botonInicial,
+                sub_boton: subBoton,
+                seleccion_lista: selectorEl.value,
+                texto_copiado: textoCopiado
+              },
+              txn = db.transaction([estadisticasOS], 'readwrite'),
+              store = txn.objectStore(estadisticasOS),
+              req = store.add(estad);
+        req.onsuccess = () => console.log('Estadística registrada:', estad);
+        req.onerror = e => console.error('Error registrando estadística:', e.target.errorCode);
+      }
+
+      // Funciones para descargar estadísticas
+      const pad = n => n < 10 ? '0' + n : n;
+      const formatearFecha = () => {
+        const f = new Date();
+        return `${pad(f.getDate())}-${pad(f.getMonth() + 1)}-${f.getFullYear()}_${pad(f.getHours())}-${pad(f.getMinutes())}`;
+      };
+
+      function descargarEstadisticas() {
+        const txn = db.transaction([estadisticasOS], 'readonly'),
+              store = txn.objectStore(estadisticasOS),
+              reqAll = store.getAll();
+        reqAll.onsuccess = () => {
+          const est = reqAll.result;
+          if (est?.length) {
+            const contenido = formatearEstadisticasTXT(est),
+                  nombreArchivo = `${formatearFecha()}.txt`;
+            descargarArchivoTXT(contenido, nombreArchivo);
+            mensajeSinEstadisticasBoton1.style.display = 'none';
+            mensajeSinEstadisticasBoton2.style.display = 'none';
+          } else {
+            const visible = contenidoBoton1.style.display === 'block' ? 'boton1' : contenidoBoton2.style.display === 'block' ? 'boton2' : null;
+            if (visible === 'boton1') { 
+              mensajeSinEstadisticasBoton1.style.display = 'block'; 
+              setTimeout(() => mensajeSinEstadisticasBoton1.style.display = 'none', 3000); 
+            } else if (visible === 'boton2') { 
+              mensajeSinEstadisticasBoton2.style.display = 'block'; 
+              setTimeout(() => mensajeSinEstadisticasBoton2.style.display = 'none', 3000); 
+            }
+          }
+        };
+        reqAll.onerror = e => console.error('Error obteniendo estadísticas:', e.target.errorCode);
+      }
+
+      function formatearEstadisticasTXT(est) {
+        let txt = `Estadísticas de copias de texto:\n\n- Total de copias: ${est.length}\n\n- Copias por botón:\n`;
+        const porSub = {};
+        est.forEach(e => { 
+          const k = e.sub_boton || 'Ninguno'; 
+          porSub[k] = (porSub[k] || 0) + 1; 
+        });
+        for (let k in porSub) txt += `  - ${k}: ${porSub[k]}\n`;
+        txt += "\n- Copias por lista:\n";
+        const porLista = {};
+        est.forEach(e => { 
+          const k = e.seleccion_lista || 'Ninguna'; 
+          porLista[k] = (porLista[k] || 0) + 1; 
+        });
+        for (let k in porLista) txt += `  - ${k}: ${porLista[k]}\n`;
+        txt += "\n- Detalles de copias:\n";
+        const nombres = { boton1: 'MTV 1', boton2: 'MTV 2', boton3: 'CAC' };
+        est.forEach(e => {
+          const f = new Date(e.fecha);
+          txt += `  - Fecha/Hora: ${f.toLocaleDateString('es-ES', { month: 'numeric', day: 'numeric', year: 'numeric' })}, ${f.toLocaleTimeString('es-ES', { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true })}, Botón: ${e.sub_boton || 'Ninguno'}, Lista: ${e.seleccion_lista || 'Ninguna'}, Skill: ${nombres[e.boton_inicial] || e.boton_inicial}\n`;
+        });
+        return txt;
+      }
+
+      function descargarArchivoTXT(contenido, nombreArchivo) {
+        const blob = new Blob([contenido], { type: 'text/plain' }),
+              url = URL.createObjectURL(blob),
+              a = document.createElement('a');
+        a.href = url;
+        a.download = nombreArchivo;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      // Limpieza diaria de estadísticas
+      function checkDailyClearance() {
+        const txn = db.transaction([lastClearOS, estadisticasOS], 'readwrite'),
+              lastClearStore = txn.objectStore(lastClearOS),
+              estStore = txn.objectStore(estadisticasOS),
+              req = lastClearStore.get('lastClearDate');
+        req.onsuccess = () => {
+          const last = req.result ? new Date(req.result.date) : null,
+                current = new Date();
+          if (!last || current.toDateString() > last.toDateString())
+            limpiarEstadisticas(estStore, lastClearStore, current);
+          else console.log('Estadísticas ya se limpiaron hoy.');
+        };
+        req.onerror = e => console.error('Error en checkDailyClearance:', e.target.errorCode);
+      }
+
+      function limpiarEstadisticas(estStore, lastClearStore, current) {
+        const reqClear = estStore.clear();
+        reqClear.onsuccess = () => actualizarFechaUltimoBorrado(lastClearStore, current);
+        reqClear.onerror = e => console.error('Error limpiando estadísticas:', e.target.errorCode);
+      }
+
+      function actualizarFechaUltimoBorrado(lastClearStore, current) {
+        const reqUpd = lastClearStore.put({ id: 'lastClearDate', date: current.toISOString() });
+        reqUpd.onsuccess = () => console.log('Fecha actualizada');
+        reqUpd.onerror = e => console.error('Error actualizando fecha:', e.target.errorCode);
+      }
+
+      btnDescargar.addEventListener('click', descargarEstadisticas);
+
+      // Modo Oscuro
+      const btnDarkMode = $('btnDarkMode');
+      btnDarkMode.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        btnDarkMode.classList.toggle('rotated');
+      });
+
+      // Hora España
+      function actualizarHoraEspana() {
+        const opciones = {
+          timeZone: 'Europe/Madrid',
+          hour: 'numeric',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: true
+        };
+        // Actualiza solo el contenido del span que contiene la hora
+        $('hora-dinamica').textContent = new Intl.DateTimeFormat('es-ES', opciones).format(new Date());
+      }
+      setInterval(actualizarHoraEspana, 1000);
+      
+      // Evento para ocultar/mostrar solo la hora (el <span id="hora-dinamica">)
+      $('hora-espana').addEventListener('click', function() {
+        const timeSpan = $('hora-dinamica');
+        if (!timeSpan.classList.contains('slide-hidden')) {
+          timeSpan.classList.add('slide-hidden');
+        } else {
+          timeSpan.classList.remove('slide-hidden');
+          timeSpan.classList.add('slide-from-right');
+          void timeSpan.offsetWidth;
+          timeSpan.classList.remove('slide-from-right');
+        }
+      });
+
+      // Eventos para los botones de restablecer
+      // Modificar los event listeners de los botones de restablecer
+restablecerBoton1.addEventListener('click', () => {
+  const opcionSeleccionada = selectorBoton1Select.value;
+  if (opcionSeleccionada) {
+    const subBotonActivo = document.querySelector('#botones-boton1 .sub-boton-1[aria-pressed="true"]');
+    if (subBotonActivo) {
+      const datos = datosContenidoBoton1[subBotonActivo.dataset.boton];
+      if (datos && datos.descripciones[opcionSeleccionada]) {
+        textoDescripcionBoton1.textContent = datos.descripciones[opcionSeleccionada].descripcion;
+      }
+    }
+  }
+});
+
+restablecerBoton2.addEventListener('click', () => {
+  const opcionSeleccionada = selectorBoton2Select.value;
+  if (opcionSeleccionada) {
+    const subBotonActivo = document.querySelector('#botones-boton2 .sub-boton-2[aria-pressed="true"]');
+    if (subBotonActivo) {
+      const datos = datosContenidoBoton2[subBotonActivo.dataset.boton];
+      if (datos && datos.descripciones[opcionSeleccionada]) {
+        textoDescripcionBoton2.textContent = datos.descripciones[opcionSeleccionada].descripcion;
+      }
+    }
+  }
+});
+
+ 
+      // Fin de la configuración y eventos iniciales.
+    });
+
+
+	if (dropdownCAC.value !== "") {
+	  dropdownCAC.classList.add("dropdown-shadow");
+	} else {
+	  dropdownCAC.classList.remove("dropdown-shadow");
+	}
+	// Al seleccionar un botón:
+	dropdownCAC.classList.remove("dropdown-shadow");
+</script>
+<footer>
+  <p>&copy; Ing. Javier Mastrangelo. Todos los derechos reservados.</p>
+</footer>
+</body>
+</html>
+
+

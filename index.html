@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Zeleris App</title>
+<link rel="icon" href="img/logo.ico" type="image/x-icon">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  height:100vh;
+  display:flex;
+  overflow:hidden;
+}
+
+/* ===== TOGGLE ===== */
+.btn-toggle-sidebar{
+  position:fixed;
+  top:10px;
+  left:10px;
+  z-index:1002;
+  background:rgba(0,0,0,0.2);
+  border:none;
+  font-size:18px;
+  padding:6px 10px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+  width:220px;
+  background:#1f2937;
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  padding:20px;
+}
+
+.sidebar.oculto{
+  display:none;
+}
+
+/* ===== MAIN ===== */
+.main{
+  flex:1;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  background:#f3f4f6;
+  overflow:auto;
+}
+
+.contenido{
+  width:100%;
+  max-width:1200px;
+  padding:20px;
+}
+
+/* ===== MODULOS ===== */
+.modulo{display:none;}
+.modulo.active{display:block;}
+
+/* ===== BOTONES SIDEBAR ===== */
+.menu-btn{
+  padding:12px;
+  margin:5px 0;
+  background:#374151;
+  border:none;
+  color:#fff;
+  cursor:pointer;
+  border-radius:5px;
+  text-align:left;
+}
+
+.menu-btn.active{
+  background:#4b5563;
+  box-shadow:0 0 10px #54eb36;
+}
+
+/* ===== IFRAME ===== */
+.frame{
+  width:100%;
+  height:90vh;
+  border:none;
+  border-radius:10px;
+}
+
+/* ===== CEUTRA LAYOUT ===== */
+.ceutra-wrapper{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  width:100%;
+}
+
+/* LOGO ARRIBA */
+.ceutra-logo{
+  margin-top:20px;
+  margin-bottom:40px;
+}
+
+.ceutra-logo img{
+  max-width:250px;
+}
+
+/* CONTENIDO */
+.ceutra-content{
+  width:100%;
+  display:flex;
+  justify-content:center;
+}
+
+/* DROP AREA */
+#drop{
+  border:2px dashed #aaa;
+  padding:40px;
+  border-radius:10px;
+  background:#fff;
+  cursor:pointer;
+  text-align:center;
+  width:400px;
+}
+
+/* ===== PROGRESO MODAL ===== */
+#progressModal{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.5);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:2000;
+}
+
+#progressBox{
+  background:#fff;
+  padding:30px;
+  border-radius:10px;
+  width:300px;
+  text-align:center;
+}
+
+#barContainer{
+  background:#ddd;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+#bar{
+  height:20px;
+  width:0%;
+  background:#54eb36;
+}
+
+/* ===== MODAL ===== */
+.modal{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.6);
+  display:none;
+  justify-content:center;
+  align-items:center;
+}
+
+.modal.show{
+  display:flex;
+}
+
+/* ===== MODAL CONTENT ===== */
+.modal-content{
+  background:#fff;
+  padding:30px;
+  border-radius:14px;
+  text-align:center;
+  box-shadow:0 10px 30px rgba(0,0,0,0.25);
+}
+
+/* ===== BOTONES MODAL MEJORADOS ===== */
+.modal-content button{
+  width:160px;
+  margin:10px;
+  padding:12px 14px;
+  border-radius:10px;
+  border:none;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.25s ease;
+  box-shadow:0 3px 8px rgba(0,0,0,0.12);
+}
+
+/* ===== SEPARAR (AZUL) ===== */
+.modal-content button:nth-child(2){
+  background:#3b82f6;
+  color:#fff;
+}
+
+.modal-content button:nth-child(2):hover{
+  background:#2563eb;
+  transform:translateY(-2px);
+  box-shadow:0 6px 14px rgba(59,130,246,0.35);
+}
+
+/* ===== ELIMINAR (ROJO) ===== */
+.modal-content button:nth-child(3){
+  background:#ef4444;
+  color:#fff;
+}
+
+.modal-content button:nth-child(3):hover{
+  background:#dc2626;
+  transform:translateY(-2px);
+  box-shadow:0 6px 14px rgba(239,68,68,0.35);
+}
+
+/* ===== AMBOS (VERDE) ===== */
+.modal-content button:nth-child(4){
+  background:#10b981;
+  color:#fff;
+}
+
+.modal-content button:nth-child(4):hover{
+  background:#059669;
+  transform:translateY(-2px);
+  box-shadow:0 6px 14px rgba(16,185,129,0.35);
+}
+
+/* click suave */
+.modal-content button:active{
+  transform:scale(0.97);
+}
+
+/* ===== TOAST ===== */
+.toast{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#000;
+  color:#fff;
+  padding:10px;
+  border-radius:5px;
+}
+</style>
+</head>
+
+<body>
+
+<button class="btn-toggle-sidebar" id="toggle">☰</button>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <h2>ZELERIS</h2>
+
+  <button class="menu-btn active" onclick="cambiar('mtv',this)">MTV</button>
+  <button class="menu-btn" onclick="cambiar('bo',this)">BO</button>
+  <button class="menu-btn" onclick="cambiar('ceutra',this)">CEUTRA</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+<div class="contenido">
+
+<!-- MTV -->
+<div id="mtv" class="modulo active">
+  <iframe class="frame" src="mtv.html"></iframe>
+</div>
+
+<!-- BO -->
+<div id="bo" class="modulo">
+  <iframe class="frame" src="bo.html"></iframe>
+</div>
+
+<!-- CEUTRA -->
+<div id="ceutra" class="modulo">
+
+  <div class="ceutra-wrapper">
+
+    <!-- LOGO ARRIBA -->
+    <div class="ceutra-logo">
+      <img src="img/empresa.png" alt="CEUTRA">
+    </div>
+
+    <!-- CONTENIDO ABAJO -->
+    <div class="ceutra-content">
+
+      <div id="drop">
+        Arrastra o haz clic para cargar Excel
+        <input type="file" id="file" hidden>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+</div>
+</div>
+
+<!-- PROGRESO -->
+<div id="progressModal">
+  <div id="progressBox">
+    <h3>Procesando...</h3>
+
+    <div id="barContainer">
+      <div id="bar"></div>
+    </div>
+
+    <p id="percent">0%</p>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modalAcciones">
+  <div class="modal-content">
+    <h3>Acción</h3>
+    <button onclick="accion('separar')">Separar</button>
+    <button onclick="accion('eliminar')">Eliminar</button>
+    <button onclick="accion('ambos')">Ambos</button>
+  </div>
+</div>
+
+<script>
+
+// ===== TOGGLE =====
+document.getElementById("toggle").onclick=()=>{
+  document.getElementById("sidebar").classList.toggle("oculto");
+};
+
+// ===== MODULOS =====
+function cambiar(id,btn){
+  document.querySelectorAll(".modulo").forEach(m=>m.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+
+  document.querySelectorAll(".menu-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+}
+
+// ===== EXCEL =====
+let data=[];
+
+const file=document.getElementById("file");
+const drop=document.getElementById("drop");
+
+drop.onclick=()=>file.click();
+
+file.onchange=e=>{
+  let f=e.target.files[0];
+  let r=new FileReader();
+
+  r.onload=ev=>{
+    let wb=XLSX.read(ev.target.result,{type:"binary"});
+    let ws=wb.Sheets[wb.SheetNames[0]];
+    data=XLSX.utils.sheet_to_json(ws);
+
+    document.getElementById("modalAcciones").classList.add("show");
+  };
+
+  r.readAsBinaryString(f);
+};
+
+// ===== PROGRESO =====
+function progreso(p){
+  document.getElementById("progressModal").style.display="flex";
+  document.getElementById("bar").style.width=p+"%";
+  document.getElementById("percent").innerText=p+"%";
+
+  if(p===100){
+    setTimeout(()=>{
+      document.getElementById("progressModal").style.display="none";
+    },500);
+  }
+}
+
+// ===== ACCION =====
+function accion(t){
+  document.getElementById("modalAcciones").classList.remove("show");
+
+  let d=[...data];
+
+  progreso(20);
+
+  setTimeout(()=>{
+
+    if(t!=="eliminar"){
+      d=d.map(r=>{
+        if(r.REFERENCIA){
+          let p=String(r.REFERENCIA).split("/");
+          r.REFERENCIA=p[0];
+          r.REINTENTO=p[1]?"/"+p[1]:"";
+        }
+        return r;
+      });
+    }
+
+    progreso(70);
+
+    setTimeout(()=>{
+
+      if(t!=="separar"){
+        let map={};
+        d.forEach(r=>{
+          let v=parseInt((r.REINTENTO||"").replace("/",""))||0;
+          if(!map[r.REFERENCIA]||v>map[r.REFERENCIA].v){
+            map[r.REFERENCIA]={r,v};
+          }
+        });
+        d=Object.values(map).map(x=>x.r);
+      }
+
+      progreso(100);
+
+      setTimeout(()=>descargar(d),400);
+
+    },500);
+
+  },500);
+}
+
+// ===== DESCARGA =====
+function descargar(d){
+  const ws=XLSX.utils.json_to_sheet(d);
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,"Resultado");
+  XLSX.writeFile(wb,"resultado.xlsx");
+}
+
+</script>
+
+</body>
+</html>

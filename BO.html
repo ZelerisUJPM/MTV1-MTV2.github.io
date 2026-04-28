@@ -491,164 +491,195 @@ const data={
     "NO CONTACTO CON DTT":"IMPROCEDENTE: DENEGADO NO CONTACTO CON DTT", "FALTA DEF":"IMPROCEDENTE: FALTA DEF", "PENDIENTE ENTREGA":"PENDIENTE DE ENTREGA, ENTREGA ESTIMADA EN 24–48 HORAS LABORABLES.", "PEDIDO ESTA ANULADO":"IMPROCEDENTE: NO PODEMOS TRAMITAR ESTA SOLICITUD PORQUE EL PEDIDO ESTÁ ANULADO.", "PEDIDO ANULADO":"PEDIDO ANULADO SEGÚN LO SOLICITADO.", "NO ENTREGADO":"IMPROCEDENTE: PEDIDO NO CONSTA ENTREGADO", "TV >= 55”":"PENDIENTE DE CONCERTAR CITA CON EL CLIENTE EN 24/48/72H LABORABLES.", "ZPS":"GESTIONADO PEDIDO DE SUSTITUCIÓN, RECOGIDA Y ENTREGA SIMULTANEA ESTIMADA EN 24–48 HORAS LABORABLES.", "FUERA DE PLAZO +30":"IMPROCEDENTE: FUERA DE PLAZO +30 DIAS PARA LA RECLAMACIÓN","EN PROCESO DE DEVOLUCIÓN":"EN PROCESO DE DEVOLUCIÓN, DEVOLUCIÓN ESTIMADA EN 24/48 HORAS LABORALES", "NO DESEA EL ALBARAN":"IMPROCEDENTE: DENEGADO CLIENTE NO DESEA EL ALBARAN", "NO LO NECESITA":"IMPROCEDENTE: DENEGADO CLIENTE NO LO NECESITA", "NO PLAZAS/ ARIL (CUANDO SE BUSCA EN TODOS LOS APLICATIVOS Y NO APARECE NADA)":"IMPROCEDENTE: DENEGADO NO PLAZAS/ ARIL", "NO HAY EVIDENCIAS":"IMPROCEDENTE: NO HAY EVIDENCIAS", "PEDIDO CON INCIDENCIA DE TRANSPORTES":"IMPROCEDENTE: PEDIDO CON INCIDENCIA DE TRANSPORTES", "PEDIDO CONTABILIZADO":"IMPROCEDENTE: PEDIDO CONTABILIZADO", "PEDIDO EN DISTRIBUCIÓN O REPARTO":"IMPROCEDENTE: PEDIDO EN DISTRIBUCIÓN O REPARTO, ENTREGA ESTIMADA EN 24–48 HORAS LABORABLES.", "PEDIDO CON FALTA DE STOCK":"IMPROCEDENTE: PEDIDO CON FALTA DE STOCK", "PEDIDO ENTREGADO":"IMPROCEDENTE: PEDIDO ENTREGADO", "PEDIDO CON BLOQUEO DE ENTREGA / MANIPULACION PEDIDO":"IMPROCEDENTE: PEDIDO CON BLOQUEO DE ENTREGA / MANIPULACION PEDIDO", "PEDIDO INCOMPLETO FALTA TECNICO COMERCIAL":"IMPROCEDENTE:PEDIDO INCOMPLETO FALTA TECNICO COMERCIAL", "PEDIDO INCOMPLETO":"IMPROCEDENTE: PEDIDO INCOMPLETO FALTA DETERMINACION DE PRECIO", "SE SOLICITA ALBARAN": "COMPROBANTE DE ENTREGA SOLICITADO PARA SU ENVÍO AL CLIENTE.","ALBARAN ENVIADO":"EL COMPROBANTE DE ENTREGA HA SIDO ENVIADO AL CLIENTE.", "PENDIENTE DE CONCERTAR CITA CON EL CLIENTE PARA SU RECOGIDA":"PENDIENTE DE CONCERTAR CITA CON EL CLIENTE PARA SU RECOGIDA","MAL TABULADO": "IMPROCEDENTE: MAL TABULADO, TABULAR XXX", "FALTA CORREO": "IMPROCEDENTE: FALTA DE INFORMACION INDICAR CORREO", "FUERA DE PLAZO": "IMPROCEDENTE: FUERA DE PLAZO", "PEDIDO DEVUELTO": "IMPROCEDENTE: EL PEDIDO NO SE ENTREGÓ Y HA SIDO DEVUELTO AL ALMACÉN. LA DEVOLUCIÓN ESTÁ GESTIONADA.", "SE INFORMA PEDIDO IMEI XXXXX - ABONO": "IMPROCEDENTE: SE INFORMA PEDIDO IMEI XXXXX - ABONO", "TABULAR INCIDENCIA SOLICITUD ALBARAN SIN REPOSICIÓN.": "IMPROCEDENTE: TABULAR INCIDENCIA SOLICITUD ALBARAN SIN REPOSICIÓN.", "ENVIAR A TIENDA": "IMPROCEDENTE: AL SER UN EQUIPAMIENTO MÓVIL DE RENT EL DESISTIMIENTO TIENE QUE GESTIONARSE EN CUALQUIER TIENDA DE MOVISTAR","ENTREGADO":"ENTREGADO", "PENDIENTE DE RECOGIDA":"PENDIENTE DE RECOGIDA, RECOGIDA ESTIMADA EN 24–48 HORAS LABORABLES.", "FALTAN DATOS":"IMPROCEDENTE: FALTAN DATOS", "NO ES POSIBLE CAMBIO DE DIRECCION":"IMPROCEDENTE: NO ES POSIBLE CAMBIO DE DIRECCION", "ESCALAR A WF DE GAMA BLANCA (SE USA CUANDO APARECE 9014)":"IMPROCEDENTE: ESCALAR A WF DE GAMA BLANCA", "ESCALAR A POSVENTA":"IMPROCEDENTE: ESCALAR A POSVENTA", "NO ES POSIBLE CAMBIO DE TELEFONO POR TELCO":"IMPROCEDENTE: NO ES POSIBLE CAMBIO DE TELEFONO POR TELCO","SE ACTUALIZAN LOS DATOS":"SE ACTUALIZAN LOS DATOS", "TEXTO LIBRE": "10-12-2025 NOMBRE TRAMITADA RECOGIDA POR DESISTIMIENTO INC ", "NO CONSTA DEVUELTO":"IMPROCEDENTE: PEDIDO NO CONSTA DEVUELTO", "SOLICITADO REENVÍO":"SOLICITADO REENVÍO", "FALLIDA":"IMPROCEDENTE: RECOGIDA FALLIDA POR CLIENTE XXX; SI HAY QUE INTENTAR DE NUEVO LA RECOGIDA, HAY QUE GENERAR UN NUEVO ZCONTACTOS DE “REINTENTO DE RECOGIDA”."
   };
 
+
+// =========================
+// 🧠 VARIABLES
+// =========================
+  
 const editedTexts = {};
 let currentKey = "";
 let currentTip = "";
 
-const selector=document.getElementById('selector');
-const select=document.getElementById('tipSelect');
-const textarea=document.getElementById('tipText');
-const toast=document.getElementById('toast');
+const selector = document.getElementById('selector');
+const select = document.getElementById('tipSelect');
+const textarea = document.getElementById('tipText');
+const toast = document.getElementById('toast');
+const allButtons = document.querySelectorAll('.buttons button,.buttons-secondary button');
 
-const allButtons=document.querySelectorAll('.buttons button,.buttons-secondary button');
-
-allButtons.forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    allButtons.forEach(b=>b.classList.remove('active'));
+// =========================
+// 🔘 BOTONES
+// =========================
+allButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    allButtons.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
 
     currentKey = btn.dataset.t;
-    const sorted=data[currentKey].slice().sort((a,b)=>a.localeCompare(b,'es'));
+    if (!currentKey) return;
 
-    select.innerHTML='';
-    sorted.forEach(item=>{
-      const opt=document.createElement('option');
-      opt.value=item;
-      opt.textContent=item;
+    const sorted = data[currentKey].slice().sort((a,b)=>a.localeCompare(b,'es'));
+
+    select.innerHTML = '';
+    sorted.forEach(item => {
+      const opt = document.createElement('option');
+      opt.value = item;
+      opt.textContent = item;
       select.appendChild(opt);
     });
 
-    select.selectedIndex=0;
     currentTip = sorted[0];
+    select.value = currentTip;
 
-    const memKey = `${currentKey}|${currentTip}`;
-    textarea.value = editedTexts[memKey] ?? descriptions[currentTip] ?? '';
-    selector.style.display='flex';
+    cargarTexto();
+    selector.style.display = 'flex';
   });
 });
 
-select.addEventListener('change',()=>{
+// =========================
+// 🔄 SELECT
+// =========================
+select.addEventListener('change', () => {
   currentTip = select.value;
-  const memKey = `${currentKey}|${currentTip}`;
-  textarea.value = editedTexts[memKey] ?? descriptions[currentTip] ?? textarea.value;
+  cargarTexto();
 });
 
-textarea.addEventListener('input',()=>{
+function cargarTexto(){
+  const memKey = `${currentKey}|${currentTip}`;
+  textarea.value = editedTexts[memKey] ?? descriptions[currentTip] ?? '';
+}
+
+// =========================
+// ✍️ GUARDAR EDICIÓN
+// =========================
+textarea.addEventListener('input', () => {
   if(!currentKey || !currentTip) return;
   editedTexts[`${currentKey}|${currentTip}`] = textarea.value;
 });
 
-document.getElementById('copyBtn').addEventListener('click',()=>{
-  textarea.select();
-  document.execCommand('copy');
-  toast.classList.add('show');
-  setTimeout(()=>toast.classList.remove('show'),2000);
+// =========================
+// 📋 COPIAR (MODERNO)
+// =========================
+document.getElementById('copyBtn').addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(textarea.value);
+    mostrarToast("Tipificación copiada");
+  } catch {
+    mostrarToast("Error al copiar");
+  }
 });
-  document.getElementById('resetBtn').addEventListener('click',()=>{
+
+// =========================
+// 🔄 RESET
+// =========================
+document.getElementById('resetBtn').addEventListener('click', () => {
   if(!currentKey || !currentTip) return;
 
   const memKey = `${currentKey}|${currentTip}`;
-
-  // Elimina el texto editado guardado
   delete editedTexts[memKey];
 
-  // Restaura texto por defecto o vacío
   textarea.value = descriptions[currentTip] ?? '';
-
-  // Feedback visual
-  toast.textContent = "Tipificación restablecida";
-  toast.classList.add('show');
-  setTimeout(()=>{
-    toast.classList.remove('show');
-    toast.textContent = "Tipificación copiada";
-  },2000);
+  mostrarToast("Tipificación restablecida");
 });
 
-</script>
+// =========================
+// 🔔 TOAST
+// =========================
+function mostrarToast(msg){
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),2000);
+}
 
-<script>
+// =========================
+// 📅 VALIDADOR
+// =========================
 function mostrarValidador(){
   const div = document.getElementById("validadorPlazo");
   div.style.display = div.style.display === "none" ? "flex" : "none";
 
-  // Autocompletar fecha actual
   const hoy = new Date().toISOString().split('T')[0];
   document.getElementById("fechaActual").value = hoy;
 }
 
 function calcularDias(){
-  const fechaEntrega = new Date(document.getElementById("fechaEntrega").value);
-  const fechaActual = new Date(document.getElementById("fechaActual").value);
+  const f1 = document.getElementById("fechaEntrega").value;
+  const f2 = document.getElementById("fechaActual").value;
+  const resultado = document.getElementById("resultadoDias");
 
-  if(!fechaEntrega || !fechaActual){
-    document.getElementById("resultadoDias").innerText = "Selecciona ambas fechas";
+  if(!f1 || !f2){
+    resultado.innerText = "⚠️ Selecciona ambas fechas";
     return;
   }
+
+  const fechaEntrega = new Date(f1);
+  const fechaActual = new Date(f2);
 
   const diferencia = fechaActual - fechaEntrega;
   const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
 
-  document.getElementById("resultadoDias").innerText = 
-    `Han transcurrido ${dias} días`;
+  if(dias < 0){
+    resultado.innerText = "⚠️ La fecha actual no puede ser menor";
+    return;
+  }
+
+  resultado.innerText = `Han transcurrido ${dias} días`;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+// =========================
+// ⏰ HORA ESPAÑA
+// =========================
+function actualizarHoraEspana() {
+  const opciones = {
+    timeZone: 'Europe/Madrid',
+    hour: 'numeric',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true
+  };
 
-  // =========================
-  // ⏰ HORA EN ESPAÑA
-  // =========================
-  function actualizarHoraEspana() {
-    const opciones = {
-      timeZone: 'Europe/Madrid',
-      hour: 'numeric',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: true
-    };
-
-    const hora = document.getElementById('hora-dinamica');
-
-    if (hora) {
-      hora.textContent = new Intl.DateTimeFormat('es-ES', opciones).format(new Date());
-    }
+  const hora = document.getElementById('hora-dinamica');
+  if (hora) {
+    hora.textContent = new Intl.DateTimeFormat('es-ES', opciones).format(new Date());
   }
+}
 
-  // Ejecutar inmediatamente y luego cada segundo
-  actualizarHoraEspana();
-  setInterval(actualizarHoraEspana, 1000);
+setInterval(actualizarHoraEspana, 1000);
+actualizarHoraEspana();
 
+// =========================
+// 🎬 ANIMACIÓN RELOJ
+// =========================
+document.getElementById('hora-espana').addEventListener('click', () => {
+  const timeSpan = document.getElementById('hora-dinamica');
 
-  // =========================
-  // 🎬 ANIMACIÓN AL HACER CLICK
-  // =========================
-  const contenedorHora = document.getElementById('hora-espana');
-
-  if (contenedorHora) {
-    contenedorHora.addEventListener('click', function() {
-      const timeSpan = document.getElementById('hora-dinamica');
-
-      if (!timeSpan) return;
-
-      if (!timeSpan.classList.contains('slide-hidden')) {
-        timeSpan.classList.add('slide-hidden');
-      } else {
-        timeSpan.classList.remove('slide-hidden');
-        timeSpan.classList.add('slide-from-right');
-
-        void timeSpan.offsetWidth; // reinicia animación
-
-        timeSpan.classList.remove('slide-from-right');
-      }
-    });
+  if (!timeSpan.classList.contains('slide-hidden')) {
+    timeSpan.classList.add('slide-hidden');
+  } else {
+    timeSpan.classList.remove('slide-hidden');
+    timeSpan.classList.add('slide-from-right');
+    void timeSpan.offsetWidth;
+    timeSpan.classList.remove('slide-from-right');
   }
-
 });
 
+// =========================
+// 🌙 DARK MODE (CON MEMORIA)
+// =========================
 const btn = document.getElementById("toggleDarkMode");
+
+// cargar estado guardado
+if(localStorage.getItem("darkMode") === "true"){
+  document.body.classList.add("dark-mode");
+  btn.classList.add("rotated");
+}
 
 btn.addEventListener("click", () => {
   document.body.classList.toggle("dark-mode");
   btn.classList.toggle("rotated");
+
+  localStorage.setItem("darkMode",
+    document.body.classList.contains("dark-mode")
+  );
 });
 </script>
 

@@ -56,11 +56,11 @@ body{
   width:100%;
   display:flex;
   justify-content:center;
-  margin-bottom:10px;
+  margin-bottom:5px;
 }
 
 .logo-empresa img{
-  max-width:500px;
+  max-width:250px;
   width:100%;
   height:auto;
 }
@@ -193,13 +193,12 @@ textarea{
 
 /* ===== FOOTER ===== */
 footer{
-  position:fixed;
-  bottom:15px;
-  left:50%;
-  transform:translateX(-50%);
+  margin-top:40px;
+  padding:15px 10px;
+  width:100%;
+  text-align:center;
   font-size:0.85rem;
   color:#555;
-  text-align:center;
 }
 
 /* ===== VALIDADOR ===== */
@@ -378,6 +377,14 @@ body.dark-mode .toast{
   background:var(--dark-gray-accent);
   color:var(--dark-gray-bg-base);
 }
+
+/* Buscador CP */
+#buscadorCP{
+  display:none;
+  flex-direction:column;
+  gap:10px;
+  margin-top:10px;
+}
 </style>
 </head>
 
@@ -389,10 +396,9 @@ body.dark-mode .toast{
   <img src="img/oscuro.ico" alt="Modo oscuro">
 </button>
 
-<!-- LOGO SUPERIOR -->
 <div id="logo-empresa" class="logo-empresa">
-  <img src="img/empresa.png" alt="Logo de la Empresa">
-</div>
+    <img src="img/empresa.png" alt="Logo de la Empresa">
+  </div>
 
 <div class="app">
   
@@ -409,6 +415,7 @@ body.dark-mode .toast{
   <div class="buttons-secondary">
     <button data-t="Agil">Agilizaciones</button>
     <button onclick="mostrarValidador()">Validar Plazo</button>
+    <button onclick="mostrarBuscadorCP()">Buscar CP</button>
     <button data-t="FPO">Fuera de Plazo Otros</button>
   </div>
 
@@ -424,6 +431,13 @@ body.dark-mode .toast{
 
   <p id="resultadoDias" style="font-weight:bold;"></p>
 
+</div>
+
+<!-- BUSCADOR CP -->
+<div id="buscadorCP">
+  <label>Código Postal:</label>
+  <input type="text" id="codigoPostal" placeholder="Ej: 4400" inputmode="numeric" maxlength="5">
+  <p id="resultadoCP"></p>
 </div>
 
   <div class="selector" id="selector">
@@ -493,193 +507,146 @@ const data={
 
 
 // =========================
-// 🧠 VARIABLES
+// VARIABLES
 // =========================
-  
-const editedTexts = {};
-let currentKey = "";
-let currentTip = "";
-
 const selector = document.getElementById('selector');
 const select = document.getElementById('tipSelect');
 const textarea = document.getElementById('tipText');
-const toast = document.getElementById('toast');
-const allButtons = document.querySelectorAll('.buttons button,.buttons-secondary button');
+const GEONAMES_USER = "zelerisuujjpm";
+
+let currentKey = "";
+let currentTip = "";
 
 // =========================
-// 🔘 BOTONES
+// BOTONES TIP
 // =========================
-allButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    allButtons.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+const tipButtons = document.querySelectorAll('button[data-t]');
+
+tipButtons.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+
+    document.getElementById("validadorPlazo").style.display="none";
+    document.getElementById("buscadorCP").style.display="none";
 
     currentKey = btn.dataset.t;
-    if (!currentKey) return;
 
-    const sorted = data[currentKey].slice().sort((a,b)=>a.localeCompare(b,'es'));
+    const sorted = data[currentKey] || [];
 
-    select.innerHTML = '';
-    sorted.forEach(item => {
-      const opt = document.createElement('option');
-      opt.value = item;
-      opt.textContent = item;
+    select.innerHTML='';
+    sorted.forEach(item=>{
+      const opt=document.createElement('option');
+      opt.value=item;
+      opt.textContent=item;
       select.appendChild(opt);
     });
 
     currentTip = sorted[0];
-    select.value = currentTip;
-
-    cargarTexto();
-    selector.style.display = 'flex';
+    textarea.value = descriptions[currentTip] ?? "";
+    selector.style.display='flex';
   });
 });
 
 // =========================
-// 🔄 SELECT
-// =========================
-select.addEventListener('change', () => {
-  currentTip = select.value;
-  cargarTexto();
-});
-
-function cargarTexto(){
-  const memKey = `${currentKey}|${currentTip}`;
-  textarea.value = editedTexts[memKey] ?? descriptions[currentTip] ?? '';
-}
-
-// =========================
-// ✍️ GUARDAR EDICIÓN
-// =========================
-textarea.addEventListener('input', () => {
-  if(!currentKey || !currentTip) return;
-  editedTexts[`${currentKey}|${currentTip}`] = textarea.value;
-});
-
-// =========================
-// 📋 COPIAR (MODERNO)
-// =========================
-document.getElementById('copyBtn').addEventListener('click', async () => {
-  try {
-    await navigator.clipboard.writeText(textarea.value);
-    mostrarToast("Tipificación copiada");
-  } catch {
-    mostrarToast("Error al copiar");
-  }
-});
-
-// =========================
-// 🔄 RESET
-// =========================
-document.getElementById('resetBtn').addEventListener('click', () => {
-  if(!currentKey || !currentTip) return;
-
-  const memKey = `${currentKey}|${currentTip}`;
-  delete editedTexts[memKey];
-
-  textarea.value = descriptions[currentTip] ?? '';
-  mostrarToast("Tipificación restablecida");
-});
-
-// =========================
-// 🔔 TOAST
-// =========================
-function mostrarToast(msg){
-  toast.textContent = msg;
-  toast.classList.add('show');
-  setTimeout(()=>toast.classList.remove('show'),2000);
-}
-
-// =========================
-// 📅 VALIDADOR
+// VALIDADOR
 // =========================
 function mostrarValidador(){
+  selector.style.display="none";
+  document.getElementById("buscadorCP").style.display="none";
+
   const div = document.getElementById("validadorPlazo");
   div.style.display = div.style.display === "none" ? "flex" : "none";
-
-  const hoy = new Date().toISOString().split('T')[0];
-  document.getElementById("fechaActual").value = hoy;
 }
 
 function calcularDias(){
   const f1 = document.getElementById("fechaEntrega").value;
   const f2 = document.getElementById("fechaActual").value;
-  const resultado = document.getElementById("resultadoDias");
 
   if(!f1 || !f2){
-    resultado.innerText = "⚠️ Selecciona ambas fechas";
+    document.getElementById("resultadoDias").innerText="Selecciona fechas";
     return;
   }
 
-  const fechaEntrega = new Date(f1);
-  const fechaActual = new Date(f2);
+  const dias = Math.floor((new Date(f2)-new Date(f1))/(1000*60*60*24));
+  document.getElementById("resultadoDias").innerText = dias+" días";
+}
 
-  const diferencia = fechaActual - fechaEntrega;
-  const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
+// =========================
+// BUSCADOR CP
+// =========================
+function mostrarBuscadorCP(){
+  selector.style.display="none";
+  document.getElementById("validadorPlazo").style.display="none";
 
-  if(dias < 0){
-    resultado.innerText = "⚠️ La fecha actual no puede ser menor";
+  const div = document.getElementById("buscadorCP");
+  div.style.display = div.style.display === "none" ? "flex" : "none";
+}
+
+const plataformas = [
+  { principal:"*001 VITORIA", codigos:["01","20","26","31","39","48"] },
+  { principal:"*003 ALICANTE", codigos:["03","30","12","46"] },
+  { principal:"*008 BARCELONA", codigos:["08","07","17","25","43"] },
+  { principal:"*015 CORUÑA", codigos:["15","27","32","36"] },
+  { principal:"*028 MADRID", codigos:["28","02","13","16","19","35","45","38"] },
+  { principal:"*029 MÁLAGA", codigos:["29","04","18","23","52","51","59"] },
+  { principal:"*041 SEVILLA", codigos:["41","06","10","11","14","21"] },
+  { principal:"*047 VALLADOLID", codigos:["47","05","09","24","33","34","37","40","49"] },
+  { principal:"*050 ZARAGOZA", codigos:["50","22","44","42"] }
+];
+
+// AUTO BUSQUEDA
+const inputCP = document.getElementById("codigoPostal");
+const resultadoCP = document.getElementById("resultadoCP");
+
+inputCP.addEventListener("input", function(){
+
+  this.value = this.value.replace(/\D/g,"").slice(0,5);
+
+  if(this.value.length < 2){
+    resultadoCP.innerText="✍️ Escribe al menos 2 dígitos...";
     return;
   }
 
-  resultado.innerText = `Han transcurrido ${dias} días`;
-}
+  let prefijo = this.value.substring(0,2);
+  prefijo = String(parseInt(prefijo)).padStart(2,"0");
 
-// =========================
-// ⏰ HORA ESPAÑA
-// =========================
-function actualizarHoraEspana() {
-  const opciones = {
-    timeZone: 'Europe/Madrid',
-    hour: 'numeric',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: true
-  };
-
-  const hora = document.getElementById('hora-dinamica');
-  if (hora) {
-    hora.textContent = new Intl.DateTimeFormat('es-ES', opciones).format(new Date());
+  // EXCEPCIÓN VALENCIA
+  if(prefijo === "12" || prefijo === "46"){
+    resultadoCP.innerText = "📦 VALENCIA - usuario jmbellido";
+    return;
   }
-}
 
-setInterval(actualizarHoraEspana, 1000);
-actualizarHoraEspana();
-
-// =========================
-// 🎬 ANIMACIÓN RELOJ
-// =========================
-document.getElementById('hora-espana').addEventListener('click', () => {
-  const timeSpan = document.getElementById('hora-dinamica');
-
-  if (!timeSpan.classList.contains('slide-hidden')) {
-    timeSpan.classList.add('slide-hidden');
-  } else {
-    timeSpan.classList.remove('slide-hidden');
-    timeSpan.classList.add('slide-from-right');
-    void timeSpan.offsetWidth;
-    timeSpan.classList.remove('slide-from-right');
+  for(let grupo of plataformas){
+    if(grupo.codigos.includes(prefijo)){
+      resultadoCP.innerText = `📦 ${grupo.principal}`;
+      return;
+    }
   }
+
+  resultadoCP.innerText="❌ No encontrado";
 });
 
 // =========================
-// 🌙 DARK MODE (CON MEMORIA)
+// HORA
 // =========================
-const btn = document.getElementById("toggleDarkMode");
+document.addEventListener("DOMContentLoaded", () => {
 
-// cargar estado guardado
-if(localStorage.getItem("darkMode") === "true"){
-  document.body.classList.add("dark-mode");
-  btn.classList.add("rotated");
-}
+  function actualizarHoraEspana() {
+    const opciones = {
+      timeZone: "Europe/Madrid",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true   // 👈 FORMATO 12 HORAS
+    };
 
-btn.addEventListener("click", () => {
-  document.body.classList.toggle("dark-mode");
-  btn.classList.toggle("rotated");
+    const el = document.getElementById("hora-dinamica");
+    if (!el) return;
 
-  localStorage.setItem("darkMode",
-    document.body.classList.contains("dark-mode")
-  );
+    el.textContent = new Intl.DateTimeFormat("es-ES", opciones).format(new Date());
+  }
+
+  actualizarHoraEspana();
+  setInterval(actualizarHoraEspana, 1000);
 });
 </script>
 

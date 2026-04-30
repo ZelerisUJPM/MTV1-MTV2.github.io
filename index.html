@@ -249,6 +249,51 @@ body{
   padding:10px;
   border-radius:5px;
 }
+
+
+.drop-box{
+  border:2px dashed #aaa;
+  padding:30px;
+  border-radius:10px;
+  background:#fff;
+  cursor:pointer;
+  text-align:center;
+  width:300px;
+  transition:0.2s;
+}
+
+.drop-box:hover{
+  background:#f9fafb;
+  border-color:#666;
+}
+
+.drop-box.dragover{
+  background:#e0f2fe;
+  border-color:#3b82f6;
+}
+
+.mensaje-box{
+  max-width:350px;
+}
+
+.mensaje-box h3{
+  margin-bottom:10px;
+}
+
+.mensaje-box p{
+  margin-bottom:20px;
+  line-height:1.4;
+}
+
+/* botón más elegante */
+.mensaje-box button{
+  background:#3b82f6;
+  color:#fff;
+}
+
+.mensaje-box button:hover{
+  background:#2563eb;
+}
 </style>
 </head>
 
@@ -271,12 +316,12 @@ body{
 
 <!-- MTV -->
 <div id="mtv" class="modulo active">
-  <iframe class="frame" src="mtv.html"></iframe>
+  <iframe class="frame" src="mtvTEST.html"></iframe>
 </div>
 
 <!-- BO -->
 <div id="bo" class="modulo">
-  <iframe class="frame" src="BO.html"></iframe>
+  <iframe class="frame" src="BOTEST.html"></iframe>
 </div>
 
 <!-- CEUTRA -->
@@ -292,17 +337,25 @@ body{
     <!-- CONTENIDO ABAJO -->
     <div class="ceutra-content">
 
-      <div id="drop">
-        Arrastra o haz clic para cargar Excel
-        <input type="file" id="file" hidden>
+      <div style="display:flex; flex-direction:column; gap:20px; align-items:center;">
+
+        <!-- BOTON PROCESAR -->
+        <div id="dropProcesar" class="drop-box">
+          Procesar archivo
+          <input type="file" id="fileProcesar" hidden accept=".xlsx,.xls,.xlsm,.xlsb,.csv">
+        </div>
+
+        <!-- BOTON UNIR -->
+        <div id="dropUnir" class="drop-box">
+          Unir archivos Excel / CSV
+          <input type="file" id="fileUnir" multiple hidden accept=".xlsx,.xls,.xlsm,.xlsb,.csv">
+        </div>
+
       </div>
 
     </div>
 
   </div>
-</div>
-
-</div>
 </div>
 
 <!-- PROGRESO -->
@@ -318,7 +371,7 @@ body{
   </div>
 </div>
 
-<!-- MODAL -->
+<!-- MODAL ACCIONES -->
 <div class="modal" id="modalAcciones">
   <div class="modal-content">
     <h3>Acción</h3>
@@ -328,14 +381,43 @@ body{
   </div>
 </div>
 
+<!-- MODAL MENSAJES -->
+<div class="modal" id="modalMensaje">
+  <div class="modal-content mensaje-box">
+    <h3 id="mensajeTitulo">Aviso</h3>
+    <p id="mensajeTexto"></p>
+    <button onclick="cerrarMensaje()">Aceptar</button>
+  </div>
+</div>
+
 <script>
 
-// ===== TOGGLE =====
+// =========================
+// ===== NOMBRE ARCHIVO ====
+// =========================
+function nombreArchivoCEUTRA(){
+  const hoy = new Date();
+  const dd = String(hoy.getDate()).padStart(2, "0");
+  const mm = String(hoy.getMonth() + 1).padStart(2, "0");
+  const yyyy = hoy.getFullYear();
+  return `CEUTRA_${dd}-${mm}-${yyyy}.xlsx`;
+}
+
+// =========================
+// ===== VALIDACION ========
+// =========================
+function esExcel(file){
+  const ext = file.name.split(".").pop().toLowerCase();
+  return ["xlsx","xls","xlsm","xlsb","csv"].includes(ext);
+}
+
+// =========================
+// ===== UI CONTROL ========
+// =========================
 document.getElementById("toggle").onclick=()=>{
   document.getElementById("sidebar").classList.toggle("oculto");
 };
 
-// ===== MODULOS =====
 function cambiar(id,btn){
   document.querySelectorAll(".modulo").forEach(m=>m.classList.remove("active"));
   document.getElementById(id).classList.add("active");
@@ -344,22 +426,61 @@ function cambiar(id,btn){
   btn.classList.add("active");
 }
 
-// ===== EXCEL =====
+// =========================
+// ===== DATA GLOBAL =======
+// =========================
 let data=[];
 
-const file=document.getElementById("file");
-const drop=document.getElementById("drop");
+// =========================
+// ===== PROCESAR =========
+// =========================
+const fileProcesar = document.getElementById("fileProcesar");
+const dropProcesar = document.getElementById("dropProcesar");
 
-drop.onclick=()=>file.click();
+["dragenter","dragover"].forEach(event=>{
+  dropProcesar.addEventListener(event, e=>{
+    e.preventDefault();
+    dropProcesar.classList.add("dragover");
+  });
+});
 
-file.onchange=e=>{
-  let f=e.target.files[0];
-  let r=new FileReader();
+["dragleave","drop"].forEach(event=>{
+  dropProcesar.addEventListener(event, e=>{
+    e.preventDefault();
+    dropProcesar.classList.remove("dragover");
+  });
+});
 
-  r.onload=ev=>{
-    let wb=XLSX.read(ev.target.result,{type:"binary"});
-    let ws=wb.Sheets[wb.SheetNames[0]];
-    data=XLSX.utils.sheet_to_json(ws);
+dropProcesar.addEventListener("drop", (e)=>{
+  const files = e.dataTransfer.files;
+  if(files.length === 0) return;
+
+  fileProcesar.files = files;
+  fileProcesar.onchange({target:{files}});
+});
+
+dropProcesar.onclick = () => fileProcesar.click();
+
+fileProcesar.onchange = e => {
+
+  let f = e.target.files[0];
+
+  if(!f){
+    mostrarMensaje("No seleccionaste archivo", "Error");
+    return;
+  }
+
+  if(!esExcel(f)){
+    mostrarMensaje("Solo se permiten archivos Excel o CSV", "Archivo no válido");
+    return;
+  }
+
+  let r = new FileReader();
+
+  r.onload = ev => {
+    let wb = XLSX.read(ev.target.result,{type:"binary"});
+    let ws = wb.Sheets[wb.SheetNames[0]];
+    data = XLSX.utils.sheet_to_json(ws);
 
     document.getElementById("modalAcciones").classList.add("show");
   };
@@ -367,21 +488,171 @@ file.onchange=e=>{
   r.readAsBinaryString(f);
 };
 
-// ===== PROGRESO =====
+// =========================
+// ===== UNIR ARCHIVOS =====
+// =========================
+const fileUnir = document.getElementById("fileUnir");
+const dropUnir = document.getElementById("dropUnir");
+
+["dragenter","dragover"].forEach(event=>{
+  dropUnir.addEventListener(event, e=>{
+    e.preventDefault();
+    dropUnir.classList.add("dragover");
+  });
+});
+
+["dragleave","drop"].forEach(event=>{
+  dropUnir.addEventListener(event, e=>{
+    e.preventDefault();
+    dropUnir.classList.remove("dragover");
+  });
+});
+
+dropUnir.addEventListener("drop", (e)=>{
+  const files = Array.from(e.dataTransfer.files);
+  if(files.length === 0) return;
+
+  const dt = new DataTransfer();
+  files.forEach(f=>dt.items.add(f));
+  fileUnir.files = dt.files;
+
+  fileUnir.onchange({target:{files}});
+});
+
+dropUnir.onclick = () => fileUnir.click();
+
+// =========================
+// ===== PROGRESO =========
+// =========================
 function progreso(p){
   document.getElementById("progressModal").style.display="flex";
   document.getElementById("bar").style.width=p+"%";
-  document.getElementById("percent").innerText=p+"%";
+  document.getElementById("percent").innerText=Math.round(p)+"%";
 
-  if(p===100){
-    setTimeout(()=>{
-      document.getElementById("progressModal").style.display="none";
-    },500);
+  if(p>=100){
+    setTimeout(()=>cerrarProgreso(),500);
   }
 }
 
-// ===== ACCION =====
+function cerrarProgreso(){
+  document.getElementById("progressModal").style.display="none";
+}
+
+// =========================
+// ===== UNIR LOGICA =======
+// =========================
+fileUnir.onchange = async (e) => {
+
+  try{
+
+    const files = Array.from(e.target.files);
+
+    if(files.length === 0){
+      mostrarMensaje("No seleccionaste archivos", "Error");
+      return;
+    }
+
+    progreso(5);
+
+    let resultado = [];
+    let encabezadoBase = null;
+
+    const filaValida = row =>
+      row.some(cell => String(cell || "").trim() !== "");
+
+    for(let i=0; i<files.length; i++){
+
+      const file = files[i];
+
+      if(!esExcel(file)){
+        cerrarProgreso();
+        mostrarMensaje("Archivo no válido:\n\n" + file.name, "Error");
+        return;
+      }
+
+      let buffer = await file.arrayBuffer();
+      let wb = XLSX.read(buffer, {type:"array"});
+      let ws = wb.Sheets[wb.SheetNames[0]];
+
+      let json = XLSX.utils.sheet_to_json(ws, {header:1});
+      json = json.filter(filaValida);
+
+      if(json.length === 0) continue;
+
+      let encabezadoActual = json[0].map(h => String(h).toLowerCase().trim());
+
+      if(i === 0){
+        encabezadoBase = encabezadoActual;
+        resultado.push(...json);
+      }else{
+
+        let iguales = encabezadoBase.length === encabezadoActual.length &&
+          encabezadoBase.every((col, idx) => col === encabezadoActual[idx]);
+
+        if(!iguales){
+          cerrarProgreso();
+          mostrarMensaje(
+            "Las columnas no coinciden en:\n\n" + file.name +
+            "\n\nTodos los archivos deben tener la misma estructura.",
+            "Error de estructura"
+          );
+          return;
+        }
+
+        json = json.slice(1);
+        json = json.filter(filaValida);
+        resultado.push(...json);
+      }
+
+      progreso((i+1)/files.length * 70);
+    }
+
+    if(resultado.length === 0){
+      cerrarProgreso();
+      mostrarMensaje("No hay datos para unir", "Error");
+      return;
+    }
+
+    let headers = resultado[0].map(h => String(h).toLowerCase().trim());
+
+    const eliminar = [
+      "s","consignatario","poblacion","rep.","hoja",
+      "h. desde 1","h. hasta 1","h. desde 2","h. hasta 2",
+      "modo asg.","info oln"
+    ];
+
+    let indices = headers
+      .map((h,i)=> eliminar.includes(h) ? i : -1)
+      .filter(i=>i !== -1);
+
+    resultado = resultado.map(row =>
+      row.filter((_,i)=> !indices.includes(i))
+    );
+
+    progreso(90);
+
+    const wsFinal = XLSX.utils.aoa_to_sheet(resultado);
+    const wbFinal = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wbFinal, wsFinal, "Unido");
+
+    progreso(100);
+
+    setTimeout(()=>{
+      XLSX.writeFile(wbFinal, nombreArchivoCEUTRA());
+    },400);
+
+  }catch(err){
+    cerrarProgreso();
+    console.error(err);
+    mostrarMensaje("Error al unir archivos:\n\n" + err.message, "Error crítico");
+  }
+};
+
+// =========================
+// ===== ACCIONES =========
+// =========================
 function accion(t){
+
   document.getElementById("modalAcciones").classList.remove("show");
 
   let d=[...data];
@@ -407,12 +678,15 @@ function accion(t){
 
       if(t!=="separar"){
         let map={};
+
         d.forEach(r=>{
           let v=parseInt((r.REINTENTO||"").replace("/",""))||0;
-          if(!map[r.REFERENCIA]||v>map[r.REFERENCIA].v){
+
+          if(!map[r.REFERENCIA] || v > map[r.REFERENCIA].v){
             map[r.REFERENCIA]={r,v};
           }
         });
+
         d=Object.values(map).map(x=>x.r);
       }
 
@@ -425,13 +699,30 @@ function accion(t){
   },500);
 }
 
-// ===== DESCARGA =====
+// =========================
+// ===== DESCARGA =========
+// =========================
 function descargar(d){
   const ws=XLSX.utils.json_to_sheet(d);
   const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,ws,"Resultado");
-  XLSX.writeFile(wb,"resultado.xlsx");
+  XLSX.writeFile(wb, nombreArchivoCEUTRA());
 }
+
+// =========================
+// ===== MODAL MENSAJES ====
+// =========================
+function mostrarMensaje(texto, titulo="Aviso"){
+  document.getElementById("mensajeTitulo").innerText = titulo;
+  document.getElementById("mensajeTexto").innerText = texto;
+  document.getElementById("modalMensaje").classList.add("show");
+}
+
+function cerrarMensaje(){
+  document.getElementById("modalMensaje").classList.remove("show");
+}
+
+</script>
 
 </script>
 

@@ -512,142 +512,214 @@ const data={
 const selector = document.getElementById('selector');
 const select = document.getElementById('tipSelect');
 const textarea = document.getElementById('tipText');
-const GEONAMES_USER = "zelerisuujjpm";
 
 let currentKey = "";
 let currentTip = "";
 
 // =========================
-// BOTONES TIP
+// BOTÓN COPIAR
 // =========================
-const tipButtons = document.querySelectorAll('button[data-t]');
+const copyBtn = document.getElementById("copyBtn");
 
-tipButtons.forEach(btn=>{
-  btn.addEventListener('click',()=>{
+copyBtn.addEventListener("click", () => {
+  if (!textarea.value) return;
 
-    document.getElementById("validadorPlazo").style.display="none";
-    document.getElementById("buscadorCP").style.display="none";
-
-    currentKey = btn.dataset.t;
-
-    const sorted = data[currentKey] || [];
-
-    select.innerHTML='';
-    sorted.forEach(item=>{
-      const opt=document.createElement('option');
-      opt.value=item;
-      opt.textContent=item;
-      select.appendChild(opt);
+  navigator.clipboard.writeText(textarea.value)
+    .then(() => {
+      const toast = document.getElementById("toast");
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2000);
+    })
+    .catch(() => {
+      alert("Error al copiar");
     });
+});
 
-    currentTip = sorted[0];
-    textarea.value = descriptions[currentTip] ?? "";
-    selector.style.display='flex';
-  });
+
+// =========================
+// BOTÓN RESET
+// =========================
+const resetBtn = document.getElementById("resetBtn");
+
+resetBtn.addEventListener("click", () => {
+  select.selectedIndex = 0;
+
+  if (select.options.length > 0) {
+    const firstValue = select.options[0].value;
+    textarea.value = descriptions[firstValue] ?? "";
+  } else {
+    textarea.value = "";
+  }
 });
 
 // =========================
-// VALIDADOR
+// EVENTO SELECT (CAMBIO MANUAL)
 // =========================
-function mostrarValidador(){
-  selector.style.display="none";
-  document.getElementById("buscadorCP").style.display="none";
+select.addEventListener('change', (e) => {
+  currentTip = e.target.value;
+  textarea.value = descriptions[currentTip] ?? "";
+});
 
+// =========================
+// BOTONES TIP (CLIC EN CATEGORÍA)
+// =========================
+const tipButtons = document.querySelectorAll('button[data-t]');
+
+tipButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+
+    // 🔴 QUITAR active de todos
+    tipButtons.forEach(b => b.classList.remove('active'));
+
+    // 🟢 AGREGAR active al seleccionado
+    btn.classList.add('active');
+
+    document.getElementById("validadorPlazo").style.display = "none";
+    document.getElementById("buscadorCP").style.display = "none";
+
+    currentKey = btn.dataset.t;
+    const sorted = data[currentKey] || [];
+
+    select.innerHTML = '';
+    
+    if (sorted.length === 0) {
+      textarea.value = "No hay opciones para esta categoría";
+      selector.style.display = 'flex';
+      return;
+    }
+
+    sorted.forEach(item => {
+      const opt = document.createElement('option');
+      opt.value = item;
+      opt.textContent = item;
+      select.appendChild(opt);
+    });
+
+    currentTip = sorted[0]; 
+    textarea.value = descriptions[currentTip] ?? "Sin descripción";
+    selector.style.display = 'flex';
+  });
+});
+// =========================
+// VALIDADOR PLAZO (CON FECHA AUTO)
+// =========================
+function mostrarValidador() {
+  selector.style.display = "none";
+  document.getElementById("buscadorCP").style.display = "none";
+  
   const div = document.getElementById("validadorPlazo");
-  div.style.display = div.style.display === "none" ? "flex" : "none";
+  const inputFechaActual = document.getElementById("fechaActual");
+
+  // Si el div se va a mostrar, fijamos la fecha de hoy
+  if (div.style.display === "none" || div.style.display === "") {
+    const hoy = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
+    inputFechaActual.value = hoy;
+    div.style.display = "flex";
+  } else {
+    div.style.display = "none";
+  }
 }
 
-function calcularDias(){
+function calcularDias() {
   const f1 = document.getElementById("fechaEntrega").value;
   const f2 = document.getElementById("fechaActual").value;
-
-  if(!f1 || !f2){
-    document.getElementById("resultadoDias").innerText="Selecciona fechas";
+  if (!f1 || !f2) {
+    document.getElementById("resultadoDias").innerText = "Selecciona fechas";
     return;
   }
-
-  const dias = Math.floor((new Date(f2)-new Date(f1))/(1000*60*60*24));
-  document.getElementById("resultadoDias").innerText = dias+" días";
+  const dias = Math.floor((new Date(f2) - new Date(f1)) / (1000 * 60 * 60 * 24));
+  document.getElementById("resultadoDias").innerText = dias + " días";
 }
 
 // =========================
 // BUSCADOR CP
 // =========================
-function mostrarBuscadorCP(){
-  selector.style.display="none";
-  document.getElementById("validadorPlazo").style.display="none";
-
+function mostrarBuscadorCP() {
+  selector.style.display = "none";
+  document.getElementById("validadorPlazo").style.display = "none";
   const div = document.getElementById("buscadorCP");
   div.style.display = div.style.display === "none" ? "flex" : "none";
 }
 
 const plataformas = [
-  { principal:"*001 VITORIA", codigos:["01","20","26","31","39","48"] },
-  { principal:"*003 ALICANTE", codigos:["03","30","12","46"] },
-  { principal:"*008 BARCELONA", codigos:["08","07","17","25","43"] },
-  { principal:"*015 CORUÑA", codigos:["15","27","32","36"] },
-  { principal:"*028 MADRID", codigos:["28","02","13","16","19","35","45","38"] },
-  { principal:"*029 MÁLAGA", codigos:["29","04","18","23","52","51","59"] },
-  { principal:"*041 SEVILLA", codigos:["41","06","10","11","14","21"] },
-  { principal:"*047 VALLADOLID", codigos:["47","05","09","24","33","34","37","40","49"] },
-  { principal:"*050 ZARAGOZA", codigos:["50","22","44","42"] }
+  { principal: "*001 VITORIA", codigos: ["01", "20", "26", "31", "39", "48"] },
+  { principal: "*003 ALICANTE", codigos: ["03", "30", "12", "46"] },
+  { principal: "*008 BARCELONA", codigos: ["08", "07", "17", "25", "43"] },
+  { principal: "*015 CORUÑA", codigos: ["15", "27", "32", "36"] },
+  { principal: "*028 MADRID", codigos: ["28", "02", "13", "16", "19", "35", "45", "38"] },
+  { principal: "*029 MÁLAGA", codigos: ["29", "04", "18", "23", "52", "51", "59"] },
+  { principal: "*041 SEVILLA", codigos: ["41", "06", "10", "11", "14", "21"] },
+  { principal: "*047 VALLADOLID", codigos: ["47", "05", "09", "24", "33", "34", "37", "40", "49"] },
+  { principal: "*050 ZARAGOZA", codigos: ["50", "22", "44", "42"] }
 ];
 
-// AUTO BUSQUEDA
 const inputCP = document.getElementById("codigoPostal");
 const resultadoCP = document.getElementById("resultadoCP");
 
-inputCP.addEventListener("input", function(){
-
-  this.value = this.value.replace(/\D/g,"").slice(0,5);
-
-  if(this.value.length < 2){
-    resultadoCP.innerText="✍️ Escribe al menos 2 dígitos...";
-    return;
-  }
-
-  let prefijo = this.value.substring(0,2);
-  prefijo = String(parseInt(prefijo)).padStart(2,"0");
-
-  // EXCEPCIÓN VALENCIA
-  if(prefijo === "12" || prefijo === "46"){
-    resultadoCP.innerText = "📦 VALENCIA - usuario jmbellido";
-    return;
-  }
-
-  for(let grupo of plataformas){
-    if(grupo.codigos.includes(prefijo)){
-      resultadoCP.innerText = `📦 ${grupo.principal}`;
+if (inputCP) {
+  inputCP.addEventListener("input", function() {
+    this.value = this.value.replace(/\D/g, "").slice(0, 5);
+    if (this.value.length < 2) {
+      resultadoCP.innerText = "✍️ Escribe al menos 2 dígitos...";
       return;
     }
-  }
+    let prefijo = this.value.substring(0, 2);
+    prefijo = String(parseInt(prefijo)).padStart(2, "0");
 
-  resultadoCP.innerText="❌ No encontrado";
-});
+    if (prefijo === "12" || prefijo === "46") {
+      resultadoCP.innerText = "📦 VALENCIA - usuario jmbellido";
+      return;
+    }
+
+    for (let grupo of plataformas) {
+      if (grupo.codigos.includes(prefijo)) {
+        resultadoCP.innerText = `📦 ${grupo.principal}`;
+        return;
+      }
+    }
+    resultadoCP.innerText = "❌ No encontrado";
+  });
+}
 
 // =========================
-// HORA
+// HORA DINÁMICA
 // =========================
 document.addEventListener("DOMContentLoaded", () => {
-
   function actualizarHoraEspana() {
     const opciones = {
       timeZone: "Europe/Madrid",
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",
-      hour12: true   // 👈 FORMATO 12 HORAS
+      hour12: true
     };
-
     const el = document.getElementById("hora-dinamica");
-    if (!el) return;
-
-    el.textContent = new Intl.DateTimeFormat("es-ES", opciones).format(new Date());
+    if (el) {
+      el.textContent = new Intl.DateTimeFormat("es-ES", opciones).format(new Date());
+    }
   }
-
   actualizarHoraEspana();
   setInterval(actualizarHoraEspana, 1000);
 });
+
+// =========================
+// MODO OSCURO (NUEVO)
+// =========================
+const btnOscuro = document.getElementById('toggleDarkMode'); // Asegúrate de que el ID en tu HTML coincida
+if (btnOscuro) {
+  btnOscuro.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    
+    // Opcional: Guardar preferencia en el navegador
+    const modo = document.body.classList.contains('dark-mode') ? 'oscuro' : 'claro';
+    localStorage.setItem('tema', modo);
+  });
+}
+
+// Cargar preferencia al iniciar
+if (localStorage.getItem('tema') === 'oscuro') {
+  document.body.classList.add('dark-mode');
+}
 </script>
 
 </body>

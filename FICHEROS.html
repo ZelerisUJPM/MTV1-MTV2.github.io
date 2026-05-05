@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Gestor de Incidencias</title>
+
+<!-- ✅ BOOTSTRAP -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+<style>
+textarea {
+    min-height: 80px;
+    resize: none;
+    overflow: hidden;
+}
+</style>
+</head>
+
+<body class="bg-light">
+
+<div class="container my-4">
+
+<h2 class="text-center mb-4">Gestor de Incidencias</h2>
+
+<!-- INICIO -->
+<div id="inicio" class="card p-4 shadow-sm">
+
+    <div class="mb-3">
+        <label class="form-label">Cargar archivo Excel</label>
+        <input type="file" id="fileInput" class="form-control" accept=".xlsx, .xls">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Tipo de gestión</label>
+        <select id="gestion" class="form-select">
+            <option>RECOGIDAS</option>
+            <option>T11</option>
+            <option>T01</option>
+            <option>AGILIZACIONES</option>
+            <option>ENTREGADO</option>
+            <option>DEVUELTO</option>
+            <option>TRATAMIENTO</option>
+        </select>
+    </div>
+
+    <div id="filtroRecogida" class="row">
+        <div class="col-md-6">
+            <label class="form-label">Tipo Recogida</label>
+            <select id="tipoRecogida" class="form-select">
+                <option value="">-- Seleccionar --</option>
+                <option>T05</option>
+                <option>T40</option>
+                <option>T12</option>
+            </select>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Centro (solo T05)</label>
+            <select id="centroRecogida" class="form-select">
+                <option value="">-- Opcional --</option>
+                <option>1500</option>
+                <option>9010</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="mb-3 mt-3">
+        <label class="form-label">Nombre del agente</label>
+        <input type="text" id="agente" class="form-control">
+    </div>
+
+    <button onclick="iniciar()" class="btn btn-success w-100">INICIAR</button>
+</div>
+
+<!-- APP -->
+<div id="app" class="card p-4 shadow-sm mt-4 d-none">
+
+    <h5 id="info" class="text-center mb-3"></h5>
+
+    <div class="row g-3">
+        <div class="col-md-3">
+            <label class="form-label">Nº Incidencia</label>
+            <input id="inc" class="form-control" disabled>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Fecha</label>
+            <input id="fecha" class="form-control" disabled>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Doc. Comercial</label>
+            <input id="doc" class="form-control" disabled>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Centro</label>
+            <input id="centro" class="form-control" disabled>
+        </div>
+    </div>
+
+    <div class="row g-3 mt-2">
+    <div class="col-md-2">
+        <label class="form-label">Tipo</label>
+        <input id="tipo" class="form-control" disabled>
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">Clase</label>
+        <input id="clase" class="form-control" disabled>
+    </div>
+
+    <div class="col-md-8">
+        <label class="form-label">Denominación Clase</label>
+        <input id="denominacion" class="form-control" disabled>
+    </div>
+</div>
+
+    <div class="mt-3">
+        <label class="form-label">Texto Incidencia</label>
+        <textarea id="texto" class="form-control" disabled></textarea>
+    </div>
+
+    <hr>
+
+    <div class="row g-3 mt-3">
+    <div class="col-md-6">
+        <label class="form-label">Albaran</label>
+        <input id="albaran" class="form-control">
+    </div>
+
+    <div id="grupoVende" class="col-md-6">
+        <label class="form-label">Cod. Vende</label>
+        <input id="vende" class="form-control" disabled>
+    </div>
+</div>
+
+   <div class="row g-3 mt-3">
+    <div class="col-md-6">
+        <label class="form-label">Estado SAP</label>
+        <select id="estado" class="form-select">
+    <option value="" selected disabled hidden>---</option>
+    <option value="SOLICITADO">SOLICITADO</option>
+    <option value="CERRADO">CERRADO</option>
+    <option value="TRATAMIENTO">TRATAMIENTO</option>
+</select>
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Casuistica</label>
+        <select id="casuistica" class="form-select">
+    <option value="" selected disabled hidden>---</option>
+    <option value="RECOGIDA PENDIENTE CONTACTOS">RECOGIDA PENDIENTE ZCONTACTOS</option>
+    <option value="RECOGIDA PENDIENTE TRANSPORTE">RECOGIDA PENDIENTE TRANSPORTE</option>
+    <option value="CERRADO">CERRADO</option>
+    <option value="ZPS FALTA DE STOCK">ZPS FALTA DE STOCK</option>
+    <option value="PENDIENTE RESPUESTA CORREO">PENDIENTE RESPUESTA CORREO</option>
+    <option value="PENDIENTE ALMACEN">PENDIENTE ALMACEN</option>
+</select>
+    </div>
+</div>
+
+    <div class="d-flex justify-content-center gap-2 mt-5 pt-2 flex-wrap">
+        <button class="btn btn-warning" onclick="anterior()">ATRÁS</button>
+        <button class="btn btn-success" onclick="siguiente()">SIGUIENTE</button>
+        <button class="btn btn-secondary" onclick="cargarOtro()">CARGAR OTRO</button>
+        <button class="btn btn-primary" onclick="descargar()">DESCARGAR</button>
+    </div>
+
+</div>
+
+</div>
+
+<script>
+
+// =========================
+// UI
+// =========================
+function mostrarApp(){
+    document.getElementById("inicio").classList.add("d-none");
+    document.getElementById("app").classList.remove("d-none");
+}
+
+// =========================
+// VARIABLES
+// =========================
+let data = [];
+let index = 0;
+let agente = "";
+let gestion = "";
+let registrosUnicos = new Set();
+
+// =========================
+// LOCAL STORAGE
+// =========================
+function guardarEstadoLocal(){
+    const estadoApp = {
+        data,
+        index,
+        agente,
+        gestion,
+        registrosUnicos: Array.from(registrosUnicos)
+    };
+
+    localStorage.setItem("gestorIncidencias", JSON.stringify(estadoApp));
+}
+
+function cargarEstadoLocal(){
+    const guardado = localStorage.getItem("gestorIncidencias");
+    if(!guardado) return false;
+
+    const estado = JSON.parse(guardado);
+
+    data = estado.data || [];
+    index = estado.index || 0;
+    agente = estado.agente || "";
+    gestion = estado.gestion || "";
+    registrosUnicos = new Set(estado.registrosUnicos || []);
+
+    return data.length > 0;
+}
+
+// =========================
+// DOM
+// =========================
+const inc = document.getElementById("inc");
+const fecha = document.getElementById("fecha");
+const doc = document.getElementById("doc");
+const centro = document.getElementById("centro");
+const tipo = document.getElementById("tipo");
+const clase = document.getElementById("clase");
+const denominacion = document.getElementById("denominacion");
+const texto = document.getElementById("texto");
+const albaran = document.getElementById("albaran");
+const vende = document.getElementById("vende");
+const estado = document.getElementById("estado");
+const casuistica = document.getElementById("casuistica");
+const grupoVende = document.getElementById("grupoVende");
+
+// =========================
+// NORMALIZAR
+// =========================
+function normalizarFila(d){
+    return {
+        inc: d["Nº incidencia"] || d["Nº Incidencia"] || "",
+        doc: d["Documento comercial"] || d["Doc. Comercial"] || "",
+        tipo: d["Tipo Inc."] || "",
+        clase: d["Clase Inc."] || "",
+        denominacion: d["Denominación"] || "",
+        centro: d["Centro"] || "",
+        fecha: d["Fecha"] || "",
+        texto: d["Texto Status"] || "",
+        albaran: d["Albaran"] || d["Albarán"] || "",
+        vende: d["Cod. Vende"] || "",
+        grupo: d["Grupo de vendedores"] || "",
+        estado: d["Estado SAP"] || "",
+        casuistica: d["Casuistica"] || ""
+    };
+}
+
+// =========================
+// CLAVE ÚNICA
+// =========================
+function generarClave(d){
+    let incVal = (d.inc ?? "").toString().trim();
+    let docVal = (d.doc ?? "").toString().trim();
+    return incVal + "_" + docVal;
+}
+
+// =========================
+// AUTO RESIZE
+// =========================
+function autoResize(el){
+    el.style.height="auto";
+    el.style.height=el.scrollHeight+"px";
+}
+
+// =========================
+// FECHA
+// =========================
+function convertirFecha(v){
+    if(typeof v === "number"){
+        let f = XLSX.SSF.parse_date_code(v);
+        return `${f.d}-${f.m}-${f.y}`;
+    }
+    return v || "";
+}
+
+// =========================
+// DUPLICADOS
+// =========================
+function eliminarDuplicados(datos){
+    let filtrados = [];
+
+    datos.forEach(d => {
+        let clave = generarClave(d);
+
+        if(!registrosUnicos.has(clave)){
+            registrosUnicos.add(clave);
+            filtrados.push(d);
+        }
+    });
+
+    return filtrados;
+}
+
+// =========================
+// FILTRO RECOGIDAS
+// =========================
+function filtrarRecogidas(datos){
+
+    let tipoR = document.getElementById("tipoRecogida").value;
+    let centroR = document.getElementById("centroRecogida").value;
+
+    if(!tipoR){
+        alert("Selecciona tipo de recogida");
+        return [];
+    }
+
+    return datos.filter(d => {
+
+        let tipo = (d.tipo || "").toUpperCase();
+        let centro = (d.centro || "").toString();
+
+        if(tipo !== tipoR) return false;
+
+        if(tipoR === "T05" && centroR){
+            return centro === centroR;
+        }
+
+        return true;
+    });
+}
+
+// =========================
+// COD VENDE AUTOMÁTICO
+// =========================
+function calcularVende(d){
+
+    let centro = (d.centro || "").toString();
+    let grupo = (d.grupo || "").toString();
+
+    if(centro === "1140"){
+        return "003500150";
+    }
+
+    if(centro === "1500" && d.tipo === "T05"){
+
+        if(grupo === "69" || grupo === "361"){
+            return "002801282";
+        }
+
+        if(grupo === "358" || grupo === "359"){
+            return "002803648";
+        }
+    }
+
+    return d.vende || "";
+}
+
+// =========================
+// INICIAR
+// =========================
+function iniciar(){
+
+    let file = document.getElementById("fileInput").files[0];
+    agente = document.getElementById("agente").value.trim();
+    gestion = document.getElementById("gestion").value;
+
+    if(!file || !agente){
+        alert("Falta archivo o agente");
+        return;
+    }
+
+    let sesion = localStorage.getItem("gestorIncidencias");
+
+    if(sesion && data.length === 0){
+        if(confirm("Existe sesión anterior ¿Continuar?")){
+            cargarEstadoLocal();
+            mostrarApp();
+            mostrar();
+            return;
+        } else {
+            localStorage.removeItem("gestorIncidencias");
+        }
+    }
+
+    let reader = new FileReader();
+
+    reader.onload = function(e){
+
+        let wb = XLSX.read(e.target.result, { type: "array" });
+        let sheet = wb.Sheets[wb.SheetNames[0]];
+
+        let raw = XLSX.utils.sheet_to_json(sheet);
+
+        let nuevos = raw.map(normalizarFila);
+
+        if(gestion === "RECOGIDAS"){
+            nuevos = filtrarRecogidas(nuevos);
+        }
+
+        nuevos = eliminarDuplicados(nuevos);
+
+        data = data.concat(nuevos);
+
+        mostrarApp();
+        mostrar();
+    };
+
+    reader.readAsArrayBuffer(file);
+}
+
+// =========================
+// MOSTRAR (🔥 CORREGIDO)
+// =========================
+function mostrar(){
+
+    let d = data[index];
+
+    document.getElementById("info").innerText =
+        `Incidencia ${index + 1} de ${data.length}`;
+
+    inc.value = d.inc;
+    fecha.value = convertirFecha(d.fecha);
+    tipo.value = d.tipo;
+    clase.value = d.clase;
+    denominacion.value = d.denominacion;
+    doc.value = d.doc;
+    centro.value = d.centro;
+
+    texto.value = d.texto;
+    autoResize(texto);
+
+    let centroVal = (d.centro || "").toString().trim();
+    let tipoVal = (d.tipo || "").toString().trim().toUpperCase();
+
+    let vendeAuto = calcularVende(d);
+
+    albaran.value = d.albaran;
+
+    // 🔥 REGLA FINAL
+if(centroVal === "1500" && tipoVal === "T05"){
+    // 🔒 BLOQUEADO SOLO ESTE CASO
+    vende.value = vendeAuto;
+    vende.disabled = true;
+}else{
+    // ✏️ TODOS LOS DEMÁS EDITABLES
+    vende.value = d.vende || vendeAuto;
+    vende.disabled = false;
+}
+
+    estado.value = d.estado;
+    casuistica.value = d.casuistica;
+}
+
+// =========================
+// GUARDAR (🔥 CORREGIDO)
+// =========================
+function guardar(){
+
+    let d = data[index];
+
+    d.albaran = albaran.value;
+
+    let centroVal = (d.centro || "").toString().trim();
+    let tipoVal = (d.tipo || "").toString().trim().toUpperCase();
+
+    // 🔥 REGLA FINAL
+if(centroVal === "1500" && tipoVal === "T05"){
+    // 🔒 SIEMPRE AUTOMÁTICO
+    d.vende = calcularVende(d);
+}else{
+    // ✏️ EL USUARIO MANDA
+    d.vende = vende.value;
+}
+
+    d.estado = estado.value;
+    d.casuistica = casuistica.value;
+
+    d.agente = agente;
+    d.fechaGestion = new Date().toLocaleDateString();
+
+    guardarEstadoLocal();
+}
+
+// =========================
+// SIGUIENTE
+// =========================
+function siguiente(){
+
+    if(!estado.value){
+        alert("Selecciona Estado SAP");
+        return;
+    }
+
+    if(!casuistica.value){
+        alert("Selecciona Casuística");
+        return;
+    }
+
+    guardar();
+
+    if(index < data.length - 1){
+        index++;
+        mostrar();
+    } else {
+        alert("Fin de incidencias");
+    }
+}
+
+// =========================
+// ATRAS
+// =========================
+function anterior(){
+    guardar();
+    if(index > 0){
+        index--;
+        mostrar();
+    }
+}
+
+// =========================
+// CARGAR OTRO
+// =========================
+function cargarOtro(){
+
+    document.getElementById("inicio").classList.remove("d-none");
+    document.getElementById("app").classList.add("d-none");
+
+    document.getElementById("fileInput").value = "";
+
+    index = data.length;
+
+    alert("Selecciona nuevo archivo y configuración");
+}
+
+// =========================
+// DESCARGAR
+// =========================
+function descargar(){
+
+    guardar();
+
+    let fechaHoy = new Date();
+    let fechaStr = `${fechaHoy.getDate()}-${fechaHoy.getMonth()+1}-${fechaHoy.getFullYear()}`;
+
+    let nombre = gestion + "_" + fechaStr;
+
+    let salida = data.map(d => ({
+        "Nº Incidencia": d.inc,
+        "Fecha creacion": convertirFecha(d.fecha),
+        "Tipo": d.tipo,
+        "Clase": d.clase,
+        "Denominación Clase": d.denominacion,
+        "Doc. Comercial": d.doc,
+        "Albaran": d.albaran,
+        "Codigo Vendedor": d.vende,
+        "Centro": d.centro,
+        "Texto Incidencia": d.texto,
+        "Estado SAP": d.estado,
+        "Casuistica": d.casuistica,
+        "Fecha Gestion": d.fechaGestion,
+        "Agente": d.agente
+    }));
+
+    let ws = XLSX.utils.json_to_sheet(salida);
+    let wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Resultado");
+
+    XLSX.writeFile(wb, nombre + ".xlsx");
+
+    localStorage.removeItem("gestorIncidencias");
+}
+
+</script>
+
+</body>
+</html>

@@ -318,12 +318,28 @@ function filtrarRecogidas(datos){
 
     return datos.filter(d => {
 
-        let tipo = (d.tipo || "").toUpperCase();
-        let centro = (d.centro || "").toString();
+        let tipo = (d.tipo || "").toString().trim().toUpperCase();
+
+        // 🔥 NORMALIZAR CENTRO (CLAVE)
+        let centro = (d.centro || "")
+            .toString()
+            .replace(".0","")
+            .trim();
 
         if(tipo !== tipoR) return false;
 
         if(tipoR === "T05" && centroR){
+
+            // 🔥 9010 incluye 1100
+            if(centroR === "9010"){
+                return centro === "9010" || centro === "1100";
+            }
+
+            // 🔥 1500 incluye 1140
+            if(centroR === "1500"){
+                return centro === "1500" || centro === "1140";
+            }
+
             return centro === centroR;
         }
 
@@ -439,7 +455,7 @@ function mostrar(){
     albaran.value = d.albaran;
 
     // 🔥 REGLA FINAL
-if(centroVal === "1500" && tipoVal === "T05"){
+if(centroVal === "1500" || centroVal === "1140" && tipoVal === "T05"){
     // 🔒 BLOQUEADO SOLO ESTE CASO
     vende.value = vendeAuto;
     vende.disabled = true;

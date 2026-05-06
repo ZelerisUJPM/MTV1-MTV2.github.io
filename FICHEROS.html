@@ -155,7 +155,6 @@ textarea {
     <option value="ZPS FALTA DE STOCK">ZPS FALTA DE STOCK</option>
     <option value="PENDIENTE RESPUESTA CORREO">PENDIENTE RESPUESTA CORREO</option>
     <option value="PENDIENTE ALMACEN">PENDIENTE ALMACEN</option>
-    <option value="PENDIENTE ALMACEN">PENDIENTE DISTRIBUCION</option>
 </select>
     </div>
 </div>
@@ -317,35 +316,76 @@ function filtrarRecogidas(datos){
         return [];
     }
 
-    return datos.filter(d => {
+    let filtrados = datos.filter(d => {
 
-        let tipo = (d.tipo || "").toString().trim().toUpperCase();
-
-        // 🔥 NORMALIZAR CENTRO (CLAVE)
-        let centro = (d.centro || "")
-            .toString()
-            .replace(".0","")
-            .trim();
+        let tipo = (d.tipo || "").toUpperCase();
+        let centro = (d.centro || "").toString().trim();
 
         if(tipo !== tipoR) return false;
 
+        // 🔥 CASO T05 CON CENTROS COMBINADOS
         if(tipoR === "T05" && centroR){
 
-            // 🔥 9010 incluye 1100
+            // 9010 incluye 1100
             if(centroR === "9010"){
                 return centro === "9010" || centro === "1100";
             }
 
-            // 🔥 1500 incluye 1140
+            // 1500 incluye 1140
             if(centroR === "1500"){
                 return centro === "1500" || centro === "1140";
             }
-
-            return centro === centroR;
         }
 
         return true;
     });
+
+    // =========================
+    // 🔥 ORDEN PRIORITARIO
+    // =========================
+    if(tipoR === "T05" && centroR){
+
+        // 9010 → A055 primero
+        if(centroR === "9010"){
+            filtrados.sort((a, b) => {
+                let aClase = (a.clase || "").toUpperCase();
+                let bClase = (b.clase || "").toUpperCase();
+
+                if(aClase === "A055" && bClase !== "A055") return -1;
+                if(aClase !== "A055" && bClase === "A055") return 1;
+
+                return 0;
+            });
+        }
+
+        // 1500 → A042 y A025 primero
+        if(centroR === "1500"){
+            filtrados.sort((a, b) => {
+
+                let prioridad = ["A042", "A025"];
+
+                let aClase = (a.clase || "").toUpperCase();
+                let bClase = (b.clase || "").toUpperCase();
+
+                let aIndex = prioridad.indexOf(aClase);
+                let bIndex = prioridad.indexOf(bClase);
+
+                if(aIndex === -1 && bIndex === -1) return 0;
+                if(aIndex === -1) return 1;
+                if(bIndex === -1) return -1;
+
+                return aIndex - bIndex;
+            });
+        }
+    }
+
+    // 🔥 VALIDACIÓN: SI NO HAY RESULTADOS → NO INICIAR
+    if(filtrados.length === 0){
+        alert("No hay datos que coincidan con el filtro seleccionado");
+        return [];
+    }
+
+    return filtrados;
 }
 
 // =========================
@@ -375,7 +415,7 @@ function calcularVende(d){
 }
 
 // =========================
-// INICIAR
+// INICIAR (FIX)
 // =========================
 function iniciar(){
 
@@ -407,24 +447,23 @@ function iniciar(){
 
         let wb = XLSX.read(e.target.result, { type: "array" });
         let sheet = wb.Sheets[wb.SheetNames[0]];
-
         let raw = XLSX.utils.sheet_to_json(sheet);
 
         let nuevos = raw.map(normalizarFila);
 
-if(gestion === "RECOGIDAS"){
-    nuevos = filtrarRecogidas(nuevos);
-}
+        if(gestion === "RECOGIDAS"){
+            nuevos = filtrarRecogidas(nuevos);
+        }
 
-// 🔥 VALIDACIÓN CLAVE
-if(!nuevos || nuevos.length === 0){
-    alert("No hay incidencias que coincidan con el filtro seleccionado");
-    return; // 🚫 NO inicia la app
-}
+        // 🔥 evita duplicados entre cargas
+        registrosUnicos = new Set(data.map(generarClave));
 
         nuevos = eliminarDuplicados(nuevos);
 
         data = data.concat(nuevos);
+
+        // 🔥 guardar estado
+        guardarEstadoLocal();
 
         mostrarApp();
         mostrar();
@@ -434,7 +473,7 @@ if(!nuevos || nuevos.length === 0){
 }
 
 // =========================
-// MOSTRAR (🔥 CORREGIDO)
+// MOSTRAR
 // =========================
 function mostrar(){
 
@@ -462,22 +501,20 @@ function mostrar(){
     albaran.value = d.albaran;
 
     // 🔥 REGLA FINAL
-if(centroVal === "1500" || centroVal === "1140" && tipoVal === "T05"){
-    // 🔒 BLOQUEADO SOLO ESTE CASO
-    vende.value = vendeAuto;
-    vende.disabled = true;
-}else{
-    // ✏️ TODOS LOS DEMÁS EDITABLES
-    vende.value = d.vende || vendeAuto;
-    vende.disabled = false;
-}
+    if(centroVal === "1500" && tipoVal === "T05"){
+        vende.value = vendeAuto;
+        vende.disabled = true;
+    }else{
+        vende.value = d.vende || vendeAuto;
+        vende.disabled = false;
+    }
 
     estado.value = d.estado;
     casuistica.value = d.casuistica;
 }
 
 // =========================
-// GUARDAR (🔥 CORREGIDO)
+// GUARDAR
 // =========================
 function guardar(){
 
@@ -488,14 +525,11 @@ function guardar(){
     let centroVal = (d.centro || "").toString().trim();
     let tipoVal = (d.tipo || "").toString().trim().toUpperCase();
 
-    // 🔥 REGLA FINAL
-if(centroVal === "1500" && tipoVal === "T05"){
-    // 🔒 SIEMPRE AUTOMÁTICO
-    d.vende = calcularVende(d);
-}else{
-    // ✏️ EL USUARIO MANDA
-    d.vende = vende.value;
-}
+    if(centroVal === "1500" && tipoVal === "T05"){
+        d.vende = calcularVende(d);
+    }else{
+        d.vende = vende.value;
+    }
 
     d.estado = estado.value;
     d.casuistica = casuistica.value;
@@ -543,16 +577,18 @@ function anterior(){
 }
 
 // =========================
-// CARGAR OTRO
+// CARGAR OTRO (FIX REAL)
 // =========================
 function cargarOtro(){
+
+    guardar(); // 🔥 importante
 
     document.getElementById("inicio").classList.remove("d-none");
     document.getElementById("app").classList.add("d-none");
 
     document.getElementById("fileInput").value = "";
 
-    index = data.length;
+    // 🔥 NO modificar index
 
     alert("Selecciona nuevo archivo y configuración");
 }

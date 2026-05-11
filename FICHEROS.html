@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Gestor de Incidencias</title>
+    <meta charset="UTF-8">
+    <title>Gestor de Incidencias Pro - Diseño Optimizado</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    <style>
+        textarea { min-height: 80px; resize: none; overflow: hidden; }
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); display: none; justify-content: center; align-items: center; z-index: 9999; flex-direction: column; }
+        .loading-overlay .spinner-border { width: 3rem; height: 3rem; }
+        .loading-overlay .contador { margin-top: 15px; font-size: 0.9rem; color: #333; }
+        #seccionCentroExtra, #filtrosRecogidaContainer { display: none; }
+        #btnFinales { display: none; }
 
-<!-- ✅ BOOTSTRAP -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        .container.my-4 {
+            position: relative;
+        }
 
-<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-
-<style>
-textarea {
-    min-height: 80px;
-    resize: none;
-    overflow: hidden;
-}
-
-    /* Estilo para el contenedor de la hora */
         .hora-esquina {
             position: absolute;
             top: 20px;
@@ -33,665 +33,930 @@ textarea {
             backdrop-filter: blur(2px);
             z-index: 10;
         }
-</style>
-</head>
 
+        .btn-buscar-icono {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            color: #6c757d;
+        }
+        .btn-buscar-icono:hover {
+            transform: scale(1.1);
+            color: #0d6efd;
+        }
+        .titulo-con-busqueda {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .modal-buscar .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .modal-buscar .modal-header .btn-close {
+            filter: invert(1);
+        }
+        .resultado-preview {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 4px solid #28a745;
+        }
+        
+        select:disabled, input:disabled {
+            background-color: #e9ecef;
+            cursor: not-allowed;
+        }
+        
+        .alert-cerrado {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+            font-size: 0.85rem;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+        
+        .modal-footer .btn-group {
+            flex: 1;
+            display: flex;
+            gap: 10px;
+        }
+        .modal-footer .btn-group .btn {
+            flex: 1;
+        }
+
+        @media (max-width: 576px) {
+            .hora-esquina {
+                font-size: 0.7rem;
+                top: 10px;
+                right: 10px;
+                padding: 3px 8px;
+            }
+        }
+    </style>
+</head>
 <body class="bg-light">
 
+<div id="loader" class="loading-overlay">
+    <div class="spinner-border text-primary"></div>
+    <div class="contador mt-2" id="loaderTexto">Procesando archivo...</div>
+</div>
+
 <div class="container my-4">
-     <!-- Reloj en esquina superior derecha (España, formato 12H) -->
     <div id="relojEspana" class="hora-esquina">--:-- --</div>
-    
-<h2 class="text-center mb-4">Gestor de Incidencias</h2>
+    <h2 class="text-center mb-4">Gestor de Incidencias</h2>
 
-<!-- INICIO -->
-<div id="inicio" class="card p-4 shadow-sm">
-
-    <div class="mb-3">
-        <label class="form-label">Cargar archivo Excel</label>
-        <input type="file" id="fileInput" class="form-control" accept=".xlsx, .xls">
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Tipo de gestión</label>
-        <select id="gestion" class="form-select">
-            <option>RECOGIDAS</option>
-            <option>T11</option>
-            <option>T01</option>
-            <option>AGILIZACIONES</option>
-            <option>ENTREGADO</option>
-            <option>DEVUELTO</option>
-            <option>TRATAMIENTO</option>
-        </select>
-    </div>
-
-    <div id="filtroRecogida" class="row">
-        <div class="col-md-6">
-            <label class="form-label">Tipo Recogida</label>
-            <select id="tipoRecogida" class="form-select">
-                <option value="">-- Seleccionar --</option>
-                <option>T05</option>
-                <option>T40</option>
-                <option>T12</option>
-            </select>
+    <!-- VISTA INICIO -->
+    <div id="inicio" class="card p-4 shadow-sm">
+        <div class="alert alert-info d-none" id="avisoContinuar">
+            <strong>Modo Continuación:</strong> Los datos nuevos se añadirán a la lista actual.
+        </div>
+        
+        <div class="mb-4 pb-3 border-bottom">
+            <label class="form-label fw-bold">Cargar archivo Excel</label>
+            <input type="file" id="fileInput" class="form-control" accept=".xlsx, .xls">
         </div>
 
-        <div class="col-md-6">
-            <label class="form-label">Centro (solo T05)</label>
-            <select id="centroRecogida" class="form-select">
-                <option value="">-- Opcional --</option>
-                <option>1500</option>
-                <option>9010</option>
-            </select>
+        <!-- FILA 1: GESTIÓN Y FILTROS -->
+        <div class="row mb-3 g-3">
+            <div class="col-md-4">
+                <label class="form-label">Tipo de gestión</label>
+                <select id="gestion" class="form-select" onchange="toggleFiltrosRecogida()">
+                    <option>RECOGIDAS</option>
+                    <option>T11</option>
+                    <option>T01</option>
+                    <option>AGILIZACIONES</option>
+                    <option>ENTREGADO</option>
+                    <option>DEVUELTO</option>
+                    <option>TRATAMIENTO</option>
+                </select>
+            </div>
+            
+            <div class="col-md-4" id="colTipoRecogida" style="display: none;">
+                <label class="form-label">Tipo Recogida</label>
+                <select id="tipoRecogida" class="form-select" onchange="toggleCentroExtra()">
+                    <option value="">-- Todos --</option>
+                    <option>T05</option>
+                    <option>T40</option>
+                    <option>T12</option>
+                </select>
+            </div>
+
+            <div class="col-md-4" id="seccionCentroExtra">
+                <label class="form-label">Selección de Centros</label>
+                <select id="centroRecogidaFiltro" class="form-select">
+                    <option value="">-- Todos --</option>
+                    <option value="GRUPO1500">1500 + 1140</option>
+                    <option value="GRUPO9010">9010 + 1100</option>
+                </select>
+            </div>
         </div>
-    </div>
 
-    <div class="mb-3 mt-3">
-        <label class="form-label">Nombre del agente</label>
-        <input type="text" id="agente" class="form-control">
-    </div>
-
-    <button onclick="iniciar()" class="btn btn-success w-100">INICIAR</button>
-</div>
-
-<!-- APP -->
-<div id="app" class="card p-4 shadow-sm mt-4 d-none">
-
-    <h5 id="info" class="text-center mb-3"></h5>
-
-    <div class="row g-3">
-        <div class="col-md-3">
-            <label class="form-label">Nº Incidencia</label>
-            <input id="inc" class="form-control" disabled>
+        <!-- FILA 2: AGENTE -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <label class="form-label">Nombre del agente</label>
+                <input type="text" id="agente" class="form-control" placeholder="Escribe tu nombre...">
+            </div>
         </div>
-        <div class="col-md-3">
-            <label class="form-label">Fecha</label>
-            <input id="fecha" class="form-control" disabled>
+
+        <button onclick="iniciarNuevaCarga()" class="btn btn-success w-100" id="btnCargar">INICIAR / AÑADIR GESTIÓN</button>
+        <button onclick="recuperarSesionDirecto()" class="btn btn-outline-primary w-100 mt-2 d-none" id="btnVolverApp">VOLVER A LA LISTA ACTUAL</button>
+    </div>
+
+    <!-- VISTA APP -->
+    <div id="app" class="card p-4 shadow-sm mt-4 d-none">
+        <div class="text-center mb-3">
+            <div class="titulo-con-busqueda justify-content-center">
+                <h5 id="info" class="mb-0"></h5>
+                <button class="btn-buscar-icono" onclick="abrirModalBusqueda()" title="Buscar incidencia">
+                    🔍
+                </button>
+            </div>
         </div>
-        <div class="col-md-3">
-            <label class="form-label">Doc. Comercial</label>
-            <input id="doc" class="form-control" disabled>
+        
+        <div class="row g-3">
+            <div class="col-md-3"><label class="form-label">Nº Incidencia</label><input id="inc" class="form-control" disabled></div>
+            <div class="col-md-3"><label class="form-label">Fecha</label><input id="fecha" class="form-control" disabled></div>
+            <div class="col-md-3"><label class="form-label">Doc. Comercial</label><input id="doc" class="form-control" disabled></div>
+            <div class="col-md-3"><label class="form-label">Centro</label><input id="centro" class="form-control" disabled></div>
         </div>
-        <div class="col-md-3">
-            <label class="form-label">Centro</label>
-            <input id="centro" class="form-control" disabled>
+        <div class="row g-3 mt-2">
+            <div class="col-md-2"><label class="form-label">Tipo</label><input id="tipo" class="form-control" disabled></div>
+            <div class="col-md-2"><label class="form-label">Clase</label><input id="clase" class="form-control" disabled></div>
+            <div class="col-md-8"><label class="form-label">Denominación</label><input id="denominacion" class="form-control" disabled></div>
         </div>
-    </div>
+        <div class="mt-3">
+            <label class="form-label">Texto Status / Incidencia</label>
+            <textarea id="texto" class="form-control" disabled></textarea>
+        </div>
+        <hr>
+        <div class="row g-3 mt-3">
+            <div class="col-md-6"><label class="form-label">Albarán</label><input id="albaran" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label">Cod. Vende</label><input id="vende" class="form-control"></div>
+        </div>
+        <div class="row g-3 mt-3">
+            <div class="col-md-6">
+                <label class="form-label">Estado SAP <span class="text-danger">*</span></label>
+                <select id="estado" class="form-select" onchange="onEstadoChange()">
+                    <option value="" selected disabled>Seleccionar...</option>
+                    <option value="SOLICITADO">SOLICITADO</option>
+                    <option value="CERRADO">CERRADO</option>
+                    <option value="TRATAMIENTO">TRATAMIENTO</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Casuistica <span class="text-danger">*</span></label>
+                <select id="casuistica" class="form-select">
+                    <option value="" selected disabled>Seleccionar...</option>
+                    <option value="CERRADO">CERRADO</option>
+                    <option value="RECOGIDA PENDIENTE CONTACTOS">RECOGIDA PENDIENTE CONTACTOS</option>
+                    <option value="RECOGIDA PENDIENTE TRANSPORTE">RECOGIDA PENDIENTE TRANSPORTE</option>
+                    <option value="ZPS FALTA DE STOCK">ZPS FALTA DE STOCK</option>
+                    <option value="PENDIENTE RESPUESTA CORREO">PENDIENTE RESPUESTA CORREO</option>
+                </select>
+                <div id="avisoCasuisticaBloqueada" class="alert-cerrado d-none">
+                    <small>🔒 Casuística bloqueada automáticamente por tener Estado = CERRADO</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="d-flex justify-content-center gap-2 mt-5 pt-2 flex-wrap">
+            <button class="btn btn-warning" onclick="anterior()">◀ ATRÁS</button>
+            <button class="btn btn-success" id="btnSiguiente" onclick="siguiente()">SIGUIENTE ▶</button>
+        </div>
 
-    <div class="row g-3 mt-2">
-    <div class="col-md-2">
-        <label class="form-label">Tipo</label>
-        <input id="tipo" class="form-control" disabled>
-    </div>
-
-    <div class="col-md-2">
-        <label class="form-label">Clase</label>
-        <input id="clase" class="form-control" disabled>
-    </div>
-
-    <div class="col-md-8">
-        <label class="form-label">Denominación Clase</label>
-        <input id="denominacion" class="form-control" disabled>
-    </div>
-</div>
-
-    <div class="mt-3">
-        <label class="form-label">Texto Incidencia</label>
-        <textarea id="texto" class="form-control" disabled></textarea>
-    </div>
-
-    <hr>
-
-    <div class="row g-3 mt-3">
-    <div class="col-md-6">
-        <label class="form-label">Albaran</label>
-        <input id="albaran" class="form-control">
-    </div>
-
-    <div id="grupoVende" class="col-md-6">
-        <label class="form-label">Cod. Vende</label>
-        <input id="vende" class="form-control" disabled>
-    </div>
-</div>
-
-   <div class="row g-3 mt-3">
-    <div class="col-md-6">
-        <label class="form-label">Estado SAP</label>
-        <select id="estado" class="form-select">
-    <option value="" selected disabled hidden>---</option>
-    <option value="SOLICITADO">SOLICITADO</option>
-    <option value="CERRADO">CERRADO</option>
-    <option value="TRATAMIENTO">TRATAMIENTO</option>
-</select>
-    </div>
-
-    <div class="col-md-6">
-        <label class="form-label">Casuistica</label>
-        <select id="casuistica" class="form-select">
-    <option value="" selected disabled hidden>---</option>
-    <option value="RECOGIDA PENDIENTE CONTACTOS">RECOGIDA PENDIENTE ZCONTACTOS</option>
-    <option value="RECOGIDA PENDIENTE TRANSPORTE">RECOGIDA PENDIENTE TRANSPORTE</option>
-    <option value="CERRADO">CERRADO</option>
-    <option value="ZPS FALTA DE STOCK">ZPS FALTA DE STOCK</option>
-    <option value="PENDIENTE RESPUESTA CORREO">PENDIENTE RESPUESTA CORREO</option>
-    <option value="PENDIENTE ALMACEN">PENDIENTE ALMACEN</option>
-</select>
+        <div id="btnFinales" class="justify-content-center gap-2 mt-3 pt-3 border-top flex-wrap">
+            <button class="btn btn-dark" onclick="irAInicio()">📁 CARGAR OTRO ARCHIVO</button>
+            <button class="btn btn-primary" onclick="descargar()">💾 DESCARGAR EXCEL</button>
+        </div>
     </div>
 </div>
 
-    <div class="d-flex justify-content-center gap-2 mt-5 pt-2 flex-wrap">
-        <button class="btn btn-warning" onclick="anterior()">ATRÁS</button>
-        <button class="btn btn-success" onclick="siguiente()">SIGUIENTE</button>
-        <button class="btn btn-secondary" onclick="cargarOtro()">CARGAR OTRO</button>
-        <button class="btn btn-primary" onclick="descargar()">DESCARGAR</button>
+<!-- MODAL DE BÚSQUEDA -->
+<div class="modal fade" id="modalBusqueda" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow modal-buscar">
+            <div class="modal-header">
+                <h5 class="modal-title">🔍 Buscar Incidencia</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning small mb-3">
+                    <strong>⚠️ IMPORTANTE:</strong> Para buscar una incidencia, debe ingresar <strong>ambos campos</strong> obligatoriamente.
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Nº Incidencia <span class="text-danger">*</span></label>
+                    <input type="text" id="modalBuscarInc" class="form-control" placeholder="Ej: 12345" autocomplete="off">
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Doc. Comercial <span class="text-danger">*</span></label>
+                    <input type="text" id="modalBuscarDoc" class="form-control" placeholder="Ej: FACT-001" autocomplete="off">
+                </div>
+                
+                <div id="modalResultadoBusqueda" class="resultado-preview d-none">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <strong class="text-success">✅ Incidencia encontrada</strong>
+                    </div>
+                    <div class="row small">
+                        <div class="col-6"><strong>Nº Incidencia:</strong> <span id="modalResInc"></span></div>
+                        <div class="col-6"><strong>Doc. Comercial:</strong> <span id="modalResDoc"></span></div>
+                        <div class="col-6 mt-1"><strong>Centro:</strong> <span id="modalResCentro"></span></div>
+                        <div class="col-6 mt-1"><strong>Tipo:</strong> <span id="modalResTipo"></span></div>
+                        <div class="col-12 mt-1"><strong>Denominación:</strong> <span id="modalResDenominacion"></span></div>
+                        <div class="col-12 mt-2">
+                            <button class="btn btn-primary btn-sm w-100" onclick="irAResultadoModal()">
+                                📍 IR A ESTA INCIDENCIA
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="modalErrorBusqueda" class="alert alert-danger text-center d-none mb-0">
+                    ❌ No se encontró ninguna incidencia con esos datos.<br>
+                    <small>Verifique que el Nº Incidencia y Doc. Comercial sean correctos.</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="btn-group w-100">
+                    <button type="button" class="btn btn-secondary" onclick="limpiarModalBusqueda()">🗑️ LIMPIAR</button>
+                    <button type="button" class="btn btn-info" onclick="irUltimaGestionada()">📌 ÚLTIMA GESTIONADA</button>
+                    <button type="button" class="btn btn-primary" onclick="buscarEnModal()">🔎 BUSCAR</button>
+                </div>
+            </div>
+        </div>
     </div>
-
 </div>
 
+<!-- MODAL SESION -->
+<div class="modal fade" id="modalSesion" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content shadow">
+            <div class="modal-header bg-primary text-white"><h5 class="modal-title">Gestión Detectada</h5></div>
+            <div class="modal-body">¿Deseas continuar con la sesión guardada o limpiar los datos para empezar de cero?</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" onclick="borrarYReiniciar()">BORRAR TODO</button>
+                <button type="button" class="btn btn-primary" onclick="recuperarSesion()">CONTINUAR</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container position-fixed top-0 end-0 p-3">
+    <div id="toastMsg" class="toast align-items-center text-bg-dark border-0" role="alert">
+        <div class="d-flex"><div class="toast-body" id="toastBody"></div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>
+    </div>
 </div>
 
 <script>
-// =========================
-// UI
-// =========================
-function mostrarApp(){
-    document.getElementById("inicio").classList.add("d-none");
-    document.getElementById("app").classList.remove("d-none");
-}
+const DB_NAME = "GestorIncidenciasDB";
+const DB_VERSION = 2;
+let db;
+let state = { data: [], index: 0, agente: "", gestion: "" };
+let registrosExistentes = new Set();
+let indiceEncontrado = -1;
+let modalBusquedaInstance = null;
 
-// =========================
-// VARIABLES
-// =========================
-let data = [];
-let index = 0;
-let agente = "";
-let gestion = "";
-let registrosUnicos = new Set();
-
-    // ---------- FUNCIÓN RELOJ ESPAÑA (formato 12H) ----------
+// ========== FUNCIÓN RELOJ ESPAÑA ==========
 function actualizarRelojEspana() {
     const relojDiv = document.getElementById("relojEspana");
     if (!relojDiv) return;
     
-    // Obtener hora actual en la zona horaria de España (Europe/Madrid)
     const opciones = {
         timeZone: "Europe/Madrid",
-        hour12: true,       // Formato 12 horas (AM/PM)
+        hour12: true,
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit"
     };
     const ahora = new Date();
     const horaFormateada = ahora.toLocaleTimeString("es-ES", opciones);
-    // toLocaleTimeString devuelve algo como "02:15:34 PM" o "02:15:34 p. m." según el navegador.
-    // Limpiamos para formato más limpio '02:15:34 PM'
-    let horaLimpia = horaFormateada;
-    // Reemplazar posibles variaciones de AM/PM
-    horaLimpia = horaLimpia.replace(/\./g, "").replace(/\s+/g, " ").replace(/p\.?\s?m\.?/i, "PM").replace(/a\.?\s?m\.?/i, "AM");
+    let horaLimpia = horaFormateada.replace(/\./g, "").replace(/\s+/g, " ").replace(/p\.?\s?m\.?/i, "PM").replace(/a\.?\s?m\.?/i, "AM");
     relojDiv.innerText = horaLimpia;
 }
 
-// Iniciar el reloj (se actualiza cada segundo)
 setInterval(actualizarRelojEspana, 1000);
-// Llamada inicial para que no tarde en aparecer
 actualizarRelojEspana();
 
+// ========== FUNCIÓN PARA IR A LA ÚLTIMA INCIDENCIA GESTIONADA ==========
+function irUltimaGestionada() {
+    if (state.data.length === 0) {
+        mostrarToast("No hay incidencias cargadas.", "danger");
+        return;
+    }
+    
+    let ultimoIndiceGestionado = -1;
+    
+    for (let i = state.data.length - 1; i >= 0; i--) {
+        const incidencia = state.data[i];
+        if (incidencia.estado && incidencia.estado !== "" && 
+            incidencia.casuistica && incidencia.casuistica !== "") {
+            ultimoIndiceGestionado = i;
+            break;
+        }
+    }
+    
+    if (ultimoIndiceGestionado === -1) {
+        mostrarToast("⚠️ No hay ninguna incidencia gestionada aún. Comienza a gestionar incidencias.", "warning");
+        return;
+    }
+    
+    guardar();
+    state.index = ultimoIndiceGestionado;
+    
+    if (db) {
+        db.transaction("config", "readwrite").objectStore("config").put({ 
+            agente: state.agente, 
+            gestion: state.gestion, 
+            index: state.index 
+        }, "current_state");
+    }
+    
+    mostrar();
+    
+    if (modalBusquedaInstance) {
+        modalBusquedaInstance.hide();
+    }
+    
+    limpiarModalBusqueda();
+    
+    const incidencia = state.data[ultimoIndiceGestionado];
+    const numIncidencia = incidencia.inc || "N/A";
+    const estadoTexto = incidencia.estado || "N/A";
+    
+    mostrarToast(`📍 Última incidencia gestionada: ${numIncidencia} (${estadoTexto}) - Posición ${ultimoIndiceGestionado + 1} de ${state.data.length}`, "success");
+}
+
+// ========== FUNCIÓN PARA MANEJAR CAMBIO EN ESTADO SAP ==========
+function onEstadoChange() {
+    const estadoSelect = document.getElementById("estado");
+    const casuisticaSelect = document.getElementById("casuistica");
+    const avisoBloqueo = document.getElementById("avisoCasuisticaBloqueada");
+    
+    if (estadoSelect.value === "CERRADO") {
+        casuisticaSelect.value = "CERRADO";
+        casuisticaSelect.disabled = true;
+        avisoBloqueo.classList.remove("d-none");
+        mostrarToast("🔒 Estado CERRADO seleccionado. Casuística automática: CERRADO (campo bloqueado)", "info");
+    } else {
+        casuisticaSelect.disabled = false;
+        avisoBloqueo.classList.add("d-none");
+    }
+}
+
+function verificarBloqueoCasuistica() {
+    const estadoSelect = document.getElementById("estado");
+    const casuisticaSelect = document.getElementById("casuistica");
+    const avisoBloqueo = document.getElementById("avisoCasuisticaBloqueada");
+    
+    if (estadoSelect.value === "CERRADO") {
+        casuisticaSelect.disabled = true;
+        avisoBloqueo.classList.remove("d-none");
+        if (casuisticaSelect.value !== "CERRADO") {
+            casuisticaSelect.value = "CERRADO";
+        }
+    } else {
+        casuisticaSelect.disabled = false;
+        avisoBloqueo.classList.add("d-none");
+    }
+}
+
+// ========== INICIALIZAR INDEXEDDB ==========
 async function initDB() {
     return new Promise((resolve) => {
         const request = indexedDB.open(DB_NAME, DB_VERSION);
         request.onupgradeneeded = (e) => {
             let dbInst = e.target.result;
-            if (!dbInst.objectStoreNames.contains("config")) dbInst.createObjectStore("config");
-            if (!dbInst.objectStoreNames.contains("data")) dbInst.createObjectStore("data", { keyPath: "id", autoIncrement: true });
+            if (!dbInst.objectStoreNames.contains("config")) {
+                dbInst.createObjectStore("config");
+            }
+            if (!dbInst.objectStoreNames.contains("data")) {
+                const store = dbInst.createObjectStore("data", { keyPath: "id", autoIncrement: true });
+                store.createIndex("claveUnica", "claveUnica", { unique: false });
+            }
         };
         request.onsuccess = (e) => { db = e.target.result; resolve(); };
     });
 }
-// -------------------------------------------------------
 
-// =========================
-// LOCAL STORAGE
-// =========================
-function guardarEstadoLocal(){
-    const estadoApp = {
-        data,
-        index,
-        agente,
-        gestion,
-        registrosUnicos: Array.from(registrosUnicos)
-    };
-
-    localStorage.setItem("gestorIncidencias", JSON.stringify(estadoApp));
+function generarClaveUnica(incidencia) {
+    const inc = (incidencia.inc || "").toString().trim();
+    const doc = (incidencia.doc || "").toString().trim();
+    const centro = (incidencia.centro || "").toString().trim();
+    return `${inc}|${doc}|${centro}`;
 }
 
-function cargarEstadoLocal(){
-    const guardado = localStorage.getItem("gestorIncidencias");
-    if(!guardado) return false;
-
-    const estado = JSON.parse(guardado);
-
-    data = estado.data || [];
-    index = estado.index || 0;
-    agente = estado.agente || "";
-    gestion = estado.gestion || "";
-    registrosUnicos = new Set(estado.registrosUnicos || []);
-
-    return data.length > 0;
+async function cargarClavesExistentes() {
+    return new Promise((resolve) => {
+        if (!db) {
+            resolve();
+            return;
+        }
+        const transaction = db.transaction("data", "readonly");
+        const store = transaction.objectStore("data");
+        const request = store.getAll();
+        
+        request.onsuccess = () => {
+            registrosExistentes.clear();
+            const datos = request.result || [];
+            datos.forEach(item => {
+                if (item.claveUnica) {
+                    registrosExistentes.add(item.claveUnica);
+                } else {
+                    const clave = generarClaveUnica(item);
+                    registrosExistentes.add(clave);
+                }
+            });
+            resolve();
+        };
+        request.onerror = () => resolve();
+    });
 }
 
-// =========================
-// DOM
-// =========================
-const inc = document.getElementById("inc");
-const fecha = document.getElementById("fecha");
-const doc = document.getElementById("doc");
-const centro = document.getElementById("centro");
-const tipo = document.getElementById("tipo");
-const clase = document.getElementById("clase");
-const denominacion = document.getElementById("denominacion");
-const texto = document.getElementById("texto");
-const albaran = document.getElementById("albaran");
-const vende = document.getElementById("vende");
-const estado = document.getElementById("estado");
-const casuistica = document.getElementById("casuistica");
-const grupoVende = document.getElementById("grupoVende");
+function actualizarClavesDesdeState() {
+    state.data.forEach(item => {
+        const clave = item.claveUnica || generarClaveUnica(item);
+        registrosExistentes.add(clave);
+        if (!item.claveUnica) item.claveUnica = clave;
+    });
+}
 
-// =========================
-// NORMALIZAR
-// =========================
-function normalizarFila(d){
+function abrirModalBusqueda() {
+    if (state.data.length === 0) {
+        mostrarToast("No hay incidencias cargadas. Cargue un archivo primero.", "danger");
+        return;
+    }
+    
+    document.getElementById("modalBuscarInc").value = "";
+    document.getElementById("modalBuscarDoc").value = "";
+    document.getElementById("modalResultadoBusqueda").classList.add("d-none");
+    document.getElementById("modalErrorBusqueda").classList.add("d-none");
+    
+    if (!modalBusquedaInstance) {
+        modalBusquedaInstance = new bootstrap.Modal(document.getElementById('modalBusqueda'));
+    }
+    modalBusquedaInstance.show();
+}
+
+function buscarEnModal() {
+    const incBuscar = document.getElementById("modalBuscarInc").value.trim();
+    const docBuscar = document.getElementById("modalBuscarDoc").value.trim();
+    
+    if (!incBuscar || !docBuscar) {
+        mostrarToast("⚠️ Debe ingresar AMBOS campos: Nº Incidencia y Doc. Comercial", "warning");
+        return;
+    }
+    
+    if (state.data.length === 0) {
+        mostrarToast("No hay incidencias cargadas.", "danger");
+        return;
+    }
+    
+    indiceEncontrado = -1;
+    for (let i = 0; i < state.data.length; i++) {
+        const item = state.data[i];
+        const incItem = (item.inc || "").toString().trim();
+        const docItem = (item.doc || "").toString().trim();
+        
+        if (incItem === incBuscar && docItem === docBuscar) {
+            indiceEncontrado = i;
+            break;
+        }
+    }
+    
+    if (indiceEncontrado !== -1) {
+        const encontrado = state.data[indiceEncontrado];
+        document.getElementById("modalResInc").innerText = encontrado.inc;
+        document.getElementById("modalResDoc").innerText = encontrado.doc;
+        document.getElementById("modalResCentro").innerText = encontrado.centro;
+        document.getElementById("modalResTipo").innerText = encontrado.tipo;
+        document.getElementById("modalResDenominacion").innerText = encontrado.denominacion;
+        
+        document.getElementById("modalResultadoBusqueda").classList.remove("d-none");
+        document.getElementById("modalErrorBusqueda").classList.add("d-none");
+        mostrarToast("✅ Incidencia encontrada correctamente", "success");
+    } else {
+        document.getElementById("modalResultadoBusqueda").classList.add("d-none");
+        document.getElementById("modalErrorBusqueda").classList.remove("d-none");
+        mostrarToast("❌ No se encontró ninguna incidencia con esos datos", "danger");
+    }
+}
+
+function irAResultadoModal() {
+    if (indiceEncontrado !== -1 && state.data[indiceEncontrado]) {
+        guardar();
+        state.index = indiceEncontrado;
+        
+        if (db) {
+            db.transaction("config", "readwrite").objectStore("config").put({ 
+                agente: state.agente, 
+                gestion: state.gestion, 
+                index: state.index 
+            }, "current_state");
+        }
+        
+        mostrar();
+        
+        if (modalBusquedaInstance) {
+            modalBusquedaInstance.hide();
+        }
+        
+        limpiarModalBusqueda();
+        mostrarToast(`📍 Navegando a incidencia ${indiceEncontrado + 1} de ${state.data.length}`, "info");
+    } else {
+        mostrarToast("Error: No se pudo localizar la incidencia", "danger");
+    }
+}
+
+function limpiarModalBusqueda() {
+    document.getElementById("modalBuscarInc").value = "";
+    document.getElementById("modalBuscarDoc").value = "";
+    document.getElementById("modalResultadoBusqueda").classList.add("d-none");
+    document.getElementById("modalErrorBusqueda").classList.add("d-none");
+    indiceEncontrado = -1;
+}
+
+// ========== NORMALIZAR FILA - MODIFICADO ==========
+function normalizarFila(d) {
+    let alb = Object.keys(d).find(k => k.toLowerCase().includes("albar"));
+    
+    // 🔥 PARA DENOMINACIÓN: tomar la SEGUNDA columna si existe duplicada
+    let denomValue = "";
+    const todasLasKeys = Object.keys(d);
+    const columnasDenominacion = todasLasKeys.filter(key => 
+        key === "Denominación" || key === "Denominación Clase" || key.startsWith("Denominación_")
+    );
+    
+    if (columnasDenominacion.length >= 2) {
+        denomValue = d[columnasDenominacion[1]];
+    } else if (columnasDenominacion.length === 1) {
+        denomValue = d[columnasDenominacion[0]];
+    } else {
+        denomValue = d["Denominación"] || d["Denominación Clase"] || "";
+    }
+    
+    // 🔥 PARA FECHA: puede ser "Fecha" o "Creado el"
+    let fechaValue = d["Fecha"] || d["Creado el"] || "";
+    if (typeof fechaValue === "number") {
+        fechaValue = convertirFechaExcel(fechaValue);
+    }
+    
+    // 🔥 PARA TEXTO: priorizar "Texto Incidencia" sobre "Texto Status"
+    let textoValue = d["Texto Incidencia"] || d["Texto Status"] || "";
+    
     return {
         inc: d["Nº incidencia"] || d["Nº Incidencia"] || "",
         doc: d["Documento comercial"] || d["Doc. Comercial"] || "",
-        tipo: d["Tipo Inc."] || "",
-        clase: d["Clase Inc."] || "",
-        denominacion: d["Denominación"] || "",
-        centro: d["Centro"] || "",
-        fecha: d["Fecha"] || "",
-        texto: d["Texto Status"] || "",
-        albaran: d["Albaran"] || d["Albarán"] || "",
+        tipo: d["Tipo Inc."] || d["Tipo"] || "",
+        clase: d["Clase Inc."] || d["Clase"] || "",
+        denominacion: denomValue,
+        centro: (d["Centro"] || "").toString(),
+        fecha: fechaValue,
+        texto: textoValue,
+        albaran: alb ? d[alb] : "",
         vende: d["Cod. Vende"] || "",
         grupo: d["Grupo de vendedores"] || "",
         estado: d["Estado SAP"] || "",
-        casuistica: d["Casuistica"] || ""
+        casuistica: d["Casuistica"] || "",
+        claveUnica: ""
     };
 }
 
-// =========================
-// CLAVE ÚNICA
-// =========================
-function generarClave(d){
-    let incVal = (d.inc ?? "").toString().trim();
-    let docVal = (d.doc ?? "").toString().trim();
-    return incVal + "_" + docVal;
-}
-
-// =========================
-// AUTO RESIZE
-// =========================
-function autoResize(el){
-    el.style.height="auto";
-    el.style.height=el.scrollHeight+"px";
-}
-
-// =========================
-// FECHA
-// =========================
-function convertirFecha(v){
-    if(typeof v === "number"){
-        let f = XLSX.SSF.parse_date_code(v);
-        return `${f.d}-${f.m}-${f.y}`;
-    }
-    return v || "";
-}
-
-// =========================
-// DUPLICADOS
-// =========================
-function eliminarDuplicados(datos){
-    let filtrados = [];
-
-    datos.forEach(d => {
-        let clave = generarClave(d);
-
-        if(!registrosUnicos.has(clave)){
-            registrosUnicos.add(clave);
-            filtrados.push(d);
-        }
-    });
-
-    return filtrados;
-}
-
-// =========================
-// FILTRO RECOGIDAS
-// =========================
-function filtrarRecogidas(datos){
-
-    let tipoR = document.getElementById("tipoRecogida").value;
-    let centroR = document.getElementById("centroRecogida").value;
-
-    if(!tipoR){
-        alert("Selecciona tipo de recogida");
-        return [];
-    }
-
-    let filtrados = datos.filter(d => {
-
-        let tipo = (d.tipo || "").toUpperCase();
-        let centro = (d.centro || "").toString().trim();
-
-        if(tipo !== tipoR) return false;
-
-        // 🔥 CASO T05 CON CENTROS COMBINADOS
-        if(tipoR === "T05" && centroR){
-
-            // 9010 incluye 1100
-            if(centroR === "9010"){
-                return centro === "9010" || centro === "1100";
-            }
-
-            // 1500 incluye 1140
-            if(centroR === "1500"){
-                return centro === "1500" || centro === "1140";
-            }
-        }
-
-        return true;
-    });
-
-    // =========================
-    // 🔥 ORDEN PRIORITARIO
-    // =========================
-    if(tipoR === "T05" && centroR){
-
-        // 9010 → A055 primero
-        if(centroR === "9010"){
-            filtrados.sort((a, b) => {
-                let aClase = (a.clase || "").toUpperCase();
-                let bClase = (b.clase || "").toUpperCase();
-
-                if(aClase === "A055" && bClase !== "A055") return -1;
-                if(aClase !== "A055" && bClase === "A055") return 1;
-
-                return 0;
+// ========== ELIMINAR DUPLICADOS ==========
+function eliminarDuplicadosCarga(nuevosRegistros) {
+    const duplicadosEncontrados = [];
+    const unicos = [];
+    
+    for (const registro of nuevosRegistros) {
+        const clave = generarClaveUnica(registro);
+        registro.claveUnica = clave;
+        
+        if (registrosExistentes.has(clave)) {
+            duplicadosEncontrados.push({
+                inc: registro.inc,
+                doc: registro.doc,
+                centro: registro.centro
             });
-        }
-
-        // 1500 → A042 y A025 primero
-        if(centroR === "1500"){
-            filtrados.sort((a, b) => {
-
-                let prioridad = ["A042", "A025"];
-
-                let aClase = (a.clase || "").toUpperCase();
-                let bClase = (b.clase || "").toUpperCase();
-
-                let aIndex = prioridad.indexOf(aClase);
-                let bIndex = prioridad.indexOf(bClase);
-
-                if(aIndex === -1 && bIndex === -1) return 0;
-                if(aIndex === -1) return 1;
-                if(bIndex === -1) return -1;
-
-                return aIndex - bIndex;
-            });
+        } else {
+            unicos.push(registro);
+            registrosExistentes.add(clave);
         }
     }
-
-    // 🔥 VALIDACIÓN: SI NO HAY RESULTADOS → NO INICIAR
-    if(filtrados.length === 0){
-        alert("No hay datos que coincidan con el filtro seleccionado");
-        return [];
+    
+    if (duplicadosEncontrados.length > 0) {
+        let mensaje = `⚠️ Se encontraron ${duplicadosEncontrados.length} registro(s) duplicado(s) y se omitieron.\n✅ Se añadirán ${unicos.length} registro(s) nuevos.`;
+        mostrarToast(mensaje, "warning");
     }
-
-    return filtrados;
+    
+    return unicos;
 }
 
-// =========================
-// COD VENDE AUTOMÁTICO
-// =========================
-function calcularVende(d){
-
-    let centro = (d.centro || "").toString();
-    let grupo = (d.grupo || "").toString();
-
-    if(centro === "1140"){
-        return "003500150";
+function toggleFiltrosRecogida() {
+    const gestion = document.getElementById("gestion").value;
+    const colTipo = document.getElementById("colTipoRecogida");
+    if (gestion === "RECOGIDAS") {
+        colTipo.style.display = "block";
+    } else {
+        colTipo.style.display = "none";
+        document.getElementById("seccionCentroExtra").style.display = "none";
     }
+}
 
-    if(centro === "1500" && d.tipo === "T05"){
+function toggleCentroExtra() {
+    const tipo = document.getElementById("tipoRecogida").value;
+    document.getElementById("seccionCentroExtra").style.display = (tipo === "T05") ? "block" : "none";
+}
 
-        if(grupo === "69" || grupo === "361"){
-            return "002801282";
-        }
+function convertirFechaExcel(n) {
+    let f = XLSX.SSF.parse_date_code(n);
+    return `${f.d.toString().padStart(2,'0')}/${f.m.toString().padStart(2,'0')}/${f.y}`;
+}
 
-        if(grupo === "358" || grupo === "359"){
-            return "002803648";
-        }
+function calcularVende(d) {
+    let c = d.centro; let g = (d.grupo || "").toString();
+    if (c === "1140") return "003500150";
+    if (c === "1500") {
+        if (g === "69" || g === "361") return "002801282";
+        if (g === "358" || g === "359") return "002803648";
     }
-
     return d.vende || "";
 }
 
-// =========================
-// INICIAR (FIX)
-// =========================
-function iniciar(){
+// ========== INICIAR NUEVA CARGA ==========
+async function iniciarNuevaCarga() {
+    const fileInput = document.getElementById("fileInput");
+    const agenteInput = document.getElementById("agente").value.trim();
+    if (!fileInput.files.length || !agenteInput) return mostrarToast("Falta archivo o nombre de agente", "danger");
 
-    let file = document.getElementById("fileInput").files[0];
-    agente = document.getElementById("agente").value.trim();
-    gestion = document.getElementById("gestion").value;
-
-    if(!file || !agente){
-        alert("Falta archivo o agente");
-        return;
-    }
-
-    let sesion = localStorage.getItem("gestorIncidencias");
-
-    if(sesion && data.length === 0){
-        if(confirm("Existe sesión anterior ¿Continuar?")){
-            cargarEstadoLocal();
-            mostrarApp();
-            mostrar();
-            return;
-        } else {
-            localStorage.removeItem("gestorIncidencias");
+    document.getElementById("loader").style.display = "flex";
+    document.getElementById("loaderTexto").innerText = "Leyendo archivo Excel...";
+    
+    await cargarClavesExistentes();
+    
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+        document.getElementById("loaderTexto").innerText = "Procesando datos del archivo...";
+        
+        const wb = XLSX.read(new Uint8Array(e.target.result), { type: "array" });
+        const raw = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+        
+        // Mostrar columnas detectadas para depuración
+        if (raw.length > 0) {
+            console.log("📊 Columnas detectadas:", Object.keys(raw[0]));
         }
-    }
-
-    let reader = new FileReader();
-
-    reader.onload = function(e){
-
-        let wb = XLSX.read(e.target.result, { type: "array" });
-        let sheet = wb.Sheets[wb.SheetNames[0]];
-        let raw = XLSX.utils.sheet_to_json(sheet);
-
+        
+        let gestion = document.getElementById("gestion").value;
+        let tipoFiltro = document.getElementById("tipoRecogida").value;
+        let centroFiltro = document.getElementById("centroRecogidaFiltro").value;
+        
         let nuevos = raw.map(normalizarFila);
 
-        if(gestion === "RECOGIDAS"){
-            nuevos = filtrarRecogidas(nuevos);
+        document.getElementById("loaderTexto").innerText = "Aplicando filtros de gestión...";
+
+        if (gestion === "RECOGIDAS") {
+            if (tipoFiltro && tipoFiltro !== "") {
+                nuevos = nuevos.filter(d => (d.tipo || "").toString().toUpperCase() === tipoFiltro.toUpperCase());
+            }
+            if (tipoFiltro === "T05" && centroFiltro && centroFiltro !== "") {
+                if (centroFiltro === "GRUPO1500") {
+                    nuevos = nuevos.filter(d => ["1500", "1140"].includes((d.centro || "").toString()));
+                    nuevos.sort((a, b) => {
+                        const prioritarios = ["A042", "A025"];
+                        const aPrio = prioritarios.includes(a.clase) ? 0 : 1;
+                        const bPrio = prioritarios.includes(b.clase) ? 0 : 1;
+                        return aPrio - bPrio;
+                    });
+                } else if (centroFiltro === "GRUPO9010") {
+                    nuevos = nuevos.filter(d => ["9010", "1100"].includes((d.centro || "").toString()));
+                    nuevos.sort((a, b) => {
+                        const aPrio = a.clase === "A055" ? 0 : 1;
+                        const bPrio = b.clase === "A055" ? 0 : 1;
+                        return aPrio - bPrio;
+                    });
+                }
+            }
         }
 
-        // 🔥 evita duplicados entre cargas
-        registrosUnicos = new Set(data.map(generarClave));
+        if (nuevos.length === 0) {
+            document.getElementById("loader").style.display = "none";
+            return mostrarToast("No hay registros coincidentes con los filtros", "warning");
+        }
 
-        nuevos = eliminarDuplicados(nuevos);
+        document.getElementById("loaderTexto").innerText = `Validando ${nuevos.length} registros contra existentes...`;
+        
+        const nuevosUnicos = eliminarDuplicadosCarga(nuevos);
+        
+        if (nuevosUnicos.length === 0) {
+            document.getElementById("loader").style.display = "none";
+            mostrarToast("Todos los registros ya existen en la base de datos. No se añadió ninguno nuevo.", "info");
+            return;
+        }
 
-        data = data.concat(nuevos);
+        document.getElementById("loaderTexto").innerText = `Guardando ${nuevosUnicos.length} registros nuevos...`;
 
-        // 🔥 guardar estado
-        guardarEstadoLocal();
+        const tx = db.transaction(["data", "config"], "readwrite");
+        nuevosUnicos.forEach(item => tx.objectStore("data").add(item));
+        state.agente = agenteInput;
+        state.gestion = gestion;
+        tx.objectStore("config").put({ agente: state.agente, gestion: state.gestion, index: state.index }, "current_state");
 
-        mostrarApp();
-        mostrar();
+        tx.oncomplete = () => {
+            db.transaction("data", "readonly").objectStore("data").getAll().onsuccess = (ev) => {
+                state.data = ev.target.result;
+                actualizarClavesDesdeState();
+                document.getElementById("loader").style.display = "none";
+                mostrarApp();
+                mostrar();
+                mostrarToast(`✅ Se añadieron ${nuevosUnicos.length} registro(s) nuevo(s). Total: ${state.data.length}`, "success");
+            };
+        };
+        
+        tx.onerror = () => {
+            document.getElementById("loader").style.display = "none";
+            mostrarToast("Error al guardar los datos", "danger");
+        };
     };
-
-    reader.readAsArrayBuffer(file);
+    reader.readAsArrayBuffer(fileInput.files[0]);
 }
 
-// =========================
-// MOSTRAR
-// =========================
-function mostrar(){
-
-    let d = data[index];
-
-    document.getElementById("info").innerText =
-        `Incidencia ${index + 1} de ${data.length}`;
-
-    inc.value = d.inc;
-    fecha.value = convertirFecha(d.fecha);
-    tipo.value = d.tipo;
-    clase.value = d.clase;
-    denominacion.value = d.denominacion;
-    doc.value = d.doc;
-    centro.value = d.centro;
-
-    texto.value = d.texto;
-    autoResize(texto);
-
-    let centroVal = (d.centro || "").toString().trim();
-    let tipoVal = (d.tipo || "").toString().trim().toUpperCase();
-
-    let vendeAuto = calcularVende(d);
-
-    albaran.value = d.albaran;
-
-    // 🔥 REGLA FINAL
-    if(centroVal === "1500" && tipoVal === "T05"){
-        vende.value = vendeAuto;
-        vende.disabled = true;
-    }else{
-        vende.value = d.vende || vendeAuto;
-        vende.disabled = false;
+function mostrar() {
+    if (!state.data[state.index]) return;
+    const d = state.data[state.index];
+    document.getElementById("info").innerHTML = `INCIDENCIA ${state.index + 1} / ${state.data.length}`;
+    document.getElementById("inc").value = d.inc || "";
+    document.getElementById("fecha").value = d.fecha || "";
+    document.getElementById("doc").value = d.doc || "";
+    document.getElementById("centro").value = d.centro || "";
+    document.getElementById("tipo").value = d.tipo || "";
+    document.getElementById("clase").value = d.clase || "";
+    document.getElementById("denominacion").value = d.denominacion || "";
+    document.getElementById("texto").value = d.texto || "";
+    document.getElementById("albaran").value = d.albaran || "";
+    document.getElementById("vende").value = d.vende || calculateVende(d);
+    document.getElementById("estado").value = d.estado || "";
+    document.getElementById("casuistica").value = d.casuistica || "";
+    
+    verificarBloqueoCasuistica();
+    
+    if (state.index < state.data.length - 1) {
+        document.getElementById("btnFinales").style.display = "none";
+    } else {
+        document.getElementById("btnFinales").style.display = "flex";
     }
-
-    estado.value = d.estado;
-    casuistica.value = d.casuistica;
+    autoResize(document.getElementById("texto"));
 }
 
-// =========================
-// GUARDAR
-// =========================
-function guardar(){
-
-    let d = data[index];
-
-    d.albaran = albaran.value;
-
-    let centroVal = (d.centro || "").toString().trim();
-    let tipoVal = (d.tipo || "").toString().trim().toUpperCase();
-
-    if(centroVal === "1500" && tipoVal === "T05"){
-        d.vende = calcularVende(d);
-    }else{
-        d.vende = vende.value;
-    }
-
-    d.estado = estado.value;
-    d.casuistica = casuistica.value;
-
-    d.agente = agente;
-    d.fechaGestion = new Date().toLocaleDateString();
-
-    guardarEstadoLocal();
+// Alias para mantener compatibilidad
+function calculateVende(d) {
+    return calcularVende(d);
 }
 
-// =========================
-// SIGUIENTE
-// =========================
-function siguiente(){
-
-    if(!estado.value){
-        alert("Selecciona Estado SAP");
-        return;
+function guardar() {
+    if (!state.data[state.index]) return;
+    const d = state.data[state.index];
+    d.estado = document.getElementById("estado").value;
+    d.casuistica = document.getElementById("casuistica").value;
+    d.albaran = document.getElementById("albaran").value;
+    d.vende = document.getElementById("vende").value;
+    d.agente = state.agente;
+    
+    const ahora = new Date();
+    d.fechaGestion = `${String(ahora.getDate()).padStart(2, '0')}/${String(ahora.getMonth() + 1).padStart(2, '0')}/${ahora.getFullYear()}`;
+    
+    if (db) {
+        const tx = db.transaction("data", "readwrite");
+        tx.objectStore("data").put(d);
     }
+}
 
-    if(!casuistica.value){
-        alert("Selecciona Casuística");
-        return;
-    }
+async function siguiente() {
+    const est = document.getElementById("estado").value;
+    const cas = document.getElementById("casuistica").value;
+    if (!est || !cas) return mostrarToast("Estado y Casuística son obligatorios", "danger");
 
     guardar();
 
-    if(index < data.length - 1){
-        index++;
+    if (state.index < state.data.length - 1) {
+        state.index++;
+        if (db) {
+            db.transaction("config", "readwrite").objectStore("config").put({ agente: state.agente, gestion: state.gestion, index: state.index }, "current_state");
+        }
         mostrar();
     } else {
-        alert("Fin de incidencias");
+        mostrarToast("¡Fin de la lista alcanzado!", "success");
+        document.getElementById("btnFinales").style.display = "flex";
     }
 }
 
-// =========================
-// ATRAS
-// =========================
-function anterior(){
+function anterior() {
     guardar();
-    if(index > 0){
-        index--;
+    if (state.index > 0) {
+        state.index--;
         mostrar();
     }
 }
 
-// =========================
-// CARGAR OTRO (FIX REAL)
-// =========================
-function cargarOtro(){
-
-    guardar(); // 🔥 importante
-
-    document.getElementById("inicio").classList.remove("d-none");
-    document.getElementById("app").classList.add("d-none");
-
-    document.getElementById("fileInput").value = "";
-
-    // 🔥 NO modificar index
-
-    alert("Selecciona nuevo archivo y configuración");
-}
-
-// =========================
-// DESCARGAR
-// =========================
-function descargar(){
-
+function descargar() {
     guardar();
-
-    let fechaHoy = new Date();
-    let fechaStr = `${fechaHoy.getDate()}-${fechaHoy.getMonth()+1}-${fechaHoy.getFullYear()}`;
-
-    let nombre = gestion + "_" + fechaStr;
-
-    let salida = data.map(d => ({
-        "Nº Incidencia": d.inc,
-        "Fecha creacion": convertirFecha(d.fecha),
-        "Tipo": d.tipo,
-        "Clase": d.clase,
-        "Denominación Clase": d.denominacion,
-        "Doc. Comercial": d.doc,
-        "Albaran": d.albaran,
-        "Codigo Vendedor": d.vende,
-        "Centro": d.centro,
-        "Texto Incidencia": d.texto,
-        "Estado SAP": d.estado,
-        "Casuistica": d.casuistica,
-        "Fecha Gestion": d.fechaGestion,
-        "Agente": d.agente
-    }));
-
-    let ws = XLSX.utils.json_to_sheet(salida);
-    let wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Resultado");
-
-    XLSX.writeFile(wb, nombre + ".xlsx");
-
-    localStorage.removeItem("gestorIncidencias");
+    if (!db) return;
+    
+    db.transaction("data", "readonly").objectStore("data").getAll().onsuccess = (e) => {
+        const dataExport = e.target.result.map(d => ({
+            "Nº Incidencia": d.inc,
+            "Fecha creacion": d.fecha,
+            "Tipo": d.tipo,
+            "Clase": d.clase,
+            "Denominación Clase": d.denominacion,
+            "Doc. Comercial": d.doc,
+            "Albaran": d.albaran,
+            "Codigo Vendedor": d.vende,
+            "Centro": d.centro,
+            "Texto Incidencia": d.texto,
+            "Estado SAP": d.estado || "",
+            "Casuistica": d.casuistica || "",
+            "Fecha Gestion": d.fechaGestion || "",
+            "Agente": d.agente || ""
+        }));
+        const ws = XLSX.utils.json_to_sheet(dataExport);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Gestión");
+        XLSX.writeFile(wb, `Gestion_${state.agente}_${new Date().toLocaleDateString().replace(/\//g,'-')}.xlsx`);
+    };
 }
 
-</script>
+function autoResize(el) { el.style.height = "auto"; el.style.height = el.scrollHeight + "px"; }
+function mostrarApp() { document.getElementById("inicio").classList.add("d-none"); document.getElementById("app").classList.remove("d-none"); }
 
+function irAInicio() { 
+    guardar();
+    document.getElementById("app").classList.add("d-none"); 
+    document.getElementById("inicio").classList.remove("d-none");
+    document.getElementById("avisoContinuar").classList.remove("d-none");
+    document.getElementById("btnVolverApp").classList.remove("d-none");
+    document.getElementById("btnFinales").style.display = "none";
+    document.getElementById("agente").value = state.agente;
+    document.getElementById("fileInput").value = "";
+}
+
+function recuperarSesionDirecto() { mostrarApp(); mostrar(); }
+
+function mostrarToast(msg, tipo) {
+    document.getElementById("toastBody").innerText = msg;
+    const t = document.getElementById("toastMsg");
+    t.className = `toast align-items-center text-bg-${tipo} border-0`;
+    new bootstrap.Toast(t, { autohide: tipo === "warning" ? false : true, delay: tipo === "warning" ? 5000 : 3000 }).show();
+}
+
+async function arrancarAplicacion() {
+    await initDB();
+    await cargarClavesExistentes();
+    toggleFiltrosRecogida();
+    setTimeout(() => {
+        if (db) {
+            db.transaction("config", "readonly").objectStore("config").get("current_state").onsuccess = (e) => {
+                if (e.target.result && e.target.result.agente) {
+                    db.transaction("data", "readonly").objectStore("data").getAll().onsuccess = (ev) => {
+                        if (ev.target.result.length > 0) new bootstrap.Modal(document.getElementById('modalSesion')).show();
+                    };
+                }
+            };
+        }
+    }, 400);
+}
+
+function recuperarSesion() {
+    db.transaction("config", "readonly").objectStore("config").get("current_state").onsuccess = (e) => {
+        state = {...state, ...e.target.result};
+        db.transaction("data", "readonly").objectStore("data").getAll().onsuccess = (ev) => {
+            state.data = ev.target.result;
+            actualizarClavesDesdeState();
+            bootstrap.Modal.getInstance(document.getElementById('modalSesion')).hide();
+            mostrarApp(); mostrar();
+            if (state.index === state.data.length - 1 && state.data[state.index].estado) {
+                document.getElementById("btnFinales").style.display = "flex";
+            }
+        };
+    };
+}
+
+function borrarYReiniciar() {
+    const tx = db.transaction(["config", "data"], "readwrite");
+    tx.objectStore("config").clear();
+    tx.objectStore("data").clear();
+    registrosExistentes.clear();
+    tx.oncomplete = () => location.reload();
+}
+
+window.addEventListener("load", arrancarAplicacion);
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

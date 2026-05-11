@@ -1,462 +1,255 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-J7N4WLVE0M"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'G-J7N4WLVE0M');
-</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tipificaciones BO</title>
-<link rel="icon" href="img/logo.ico" type="image/x-icon">
+<link rel="icon" href="img/logo.ico">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
-:root{
-  /* ===== PALETA CLARO ===== */
-  --primary-color:#54eb36;
-  --primary-hover:#42ba2c;
-  --text-color:#1a1a1a;
-  --background-color:#fff;
-  --border-color:#ddd;
-  --shadow-color:rgba(0,0,0,0.12);
-  --highlight-color:red;
-
-  /* ===== MODO OSCURO ===== */
-  --dark-gray-bg-base:#282828;
-  --dark-gray-bg-secondary:#383838;
-  --dark-gray-text-primary:#E0E0E0;
-  --dark-gray-text-secondary:#B0B0B0;
-  --dark-gray-accent:#A0A0A0;
-  --shadow-color-dark-mode:rgba(255,255,255,0.03);
-}
-
-/* ===== RESET ===== */
-*{box-sizing:border-box}
-
-/* ===== BODY ===== */
-body{
-  font-family:'Segoe UI',Arial,sans-serif;
-  background:#e0e7ec;
-  margin:0;
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  padding:20px 20px 60px;
-  color:var(--text-color);
-}
-
-/* ===== LOGO ===== */
-.logo-empresa{
-  width:100%;
-  display:flex;
-  justify-content:center;
-  margin-bottom:5px;
-}
-
-.logo-empresa img{
-  max-width:250px;
-  width:100%;
-  height:auto;
-}
-
-/* ===== CONTENEDOR ===== */
-.app{
-  background:var(--background-color);
-  width:100%;
-  max-width:720px;
-  padding:32px;
-  border-radius:12px;
-  box-shadow:0 4px 12px var(--shadow-color);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:26px;
-}
-
-/* ===== TITULOS ===== */
-h1,h2{
-  margin:0;
-  text-align:center;
-  color:var(--text-color);
-}
-
-/* ===== BOTONES ===== */
-.buttons{
-  width:100%;
-  max-width:520px;
-  display:grid;
-  gap:14px;
-  grid-template-columns:repeat(auto-fit,minmax(90px,1fr));
-}
-
-.buttons-secondary{
-  display:flex;
-  gap:10px;
-}
-
-.buttons-secondary button{
-  flex:1;
-  padding:10px;
-  font-size:14px;
-}
-
-/* BOTONES GENERALES */
-button{
-  background:var(--primary-color);
-  color:#000;
-  border:none;
-  padding:14px 0;
-  border-radius:8px;
-  font-weight:700;
-  cursor:pointer;
-  transition:0.3s;
-  box-shadow:0 4px 10px var(--shadow-color);
-}
-
-/* hover general (NO afecta botón dark mode) */
-button:hover:not(.btn-dark-mode){
-  background:var(--primary-hover);
-  transform:scale(1.05);
-}
-
-/* BOTÓN ACTIVO */
-button.active{
-  box-shadow:0 0 10px var(--highlight-color);
-  border:2px solid var(--highlight-color);
-}
-
-/* ===== SELECTOR ===== */
-.selector{
-  width:100%;
-  max-width:520px;
-  display:none;
-  flex-direction:column;
-  gap:14px;
-}
-
-select{
-  padding:12px;
-  border-radius:6px;
-  border:1px solid var(--border-color);
-}
-
-textarea{
-  width:100%;
-  height:160px;
-  max-height:300px;
-  padding:14px;
-  border-radius:8px;
-  border:1px solid var(--border-color);
-  resize:none;
-  overflow-y:auto;
-}
-
-/* ===== ACCIONES ===== */
-.actions{
-  display:flex;
-  gap:12px;
-  justify-content:center;
-}
-
-.actions button{
-  padding:10px 24px;
-  font-size:.9rem;
-}
-
-/* ===== TOAST ===== */
-.toast{
-  position:fixed;
-  top:20px;
-  left:50%;
-  transform:translateX(-50%) translateY(-10px);
-  background:var(--primary-color);
-  color:#000;
-  padding:12px 22px;
-  border-radius:999px;
-  font-weight:600;
-  opacity:0;
-  pointer-events:none;
-  transition:.3s ease;
-  z-index:999;
-}
-
-.toast.show{
-  opacity:1;
-  transform:translateX(-50%) translateY(0);
-}
-
-/* ===== FOOTER ===== */
-footer{
-  margin-top:40px;
-  padding:15px 10px;
-  width:100%;
-  text-align:center;
-  font-size:0.85rem;
-  color:#555;
-}
-
-/* ===== VALIDADOR ===== */
-#validadorPlazo{
-  background:#f9f9f9;
-  padding:15px;
-  border-radius:10px;
-  box-shadow:0 2px 6px var(--shadow-color);
-}
-
-#validadorPlazo label{
-  font-weight:600;
-  font-size:14px;
-}
-
-#validadorPlazo input[type="date"]{
-  padding:10px;
-  border-radius:6px;
-  border:1px solid var(--border-color);
-  font-size:14px;
-}
-
-#validadorPlazo input[type="date"]:focus{
-  border-color:#007bff;
-  outline:none;
-  box-shadow:0 0 5px rgba(0,123,255,0.3);
-}
-
-#validadorPlazo button{
-  margin-top:10px;
-  padding:10px;
-  border-radius:6px;
-  background:#007bff;
-  color:#fff;
-}
-
-#validadorPlazo button:hover{
-  background:#0056b3;
-}
-
-#resultadoDias{
-  margin-top:10px;
-  font-size:15px;
-}
-
-/* ===== RELOJ ===== */
-.hora-espana{
-  text-align:center;
-  font-size:1.5em;
-  margin-bottom:20px;
-  font-family:'Roboto',sans-serif;
-  cursor:pointer;
-}
-
-#hora-dinamica{
-  display:inline-block;
-  transition:transform 0.5s ease, opacity 0.5s ease;
-  transform:translateX(0);
-  opacity:1;
-}
-
-#hora-dinamica.slide-hidden{
-  transform:translateX(-100%);
-  opacity:0;
-}
-
-#hora-dinamica.slide-from-right{
-  transform:translateX(100%);
-  opacity:0;
-}
-
-/* ===== BOTÓN DARK MODE (SOLO IMAGEN LIMPIA) ===== */
-.btn-dark-mode{
-  position:fixed;
-  top:15px;
-  left:15px;
-  width:42px;
-  height:42px;
-  padding:0;
-  margin:0;
-  border:none;
-  outline:none;
-  background:transparent;
-  box-shadow:none;
-  cursor:pointer;
-  z-index:9999;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  -webkit-appearance:none;
-  appearance:none;
-}
-
-/* sin efecto al interactuar */
-.btn-dark-mode:focus,
-.btn-dark-mode:active{
-  outline:none;
-  box-shadow:none;
-}
-
-/* imagen perfecta */
-.btn-dark-mode img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  display:block;
-  pointer-events:none;
-  transition:transform 0.8s ease-in-out;
-}
-
-/* rotación estilo MTV */
-.btn-dark-mode.rotated img{
-  transform:rotate(180deg);
-}
-
-/* sin hover */
-.btn-dark-mode:hover{
-  background:transparent !important;
-  box-shadow:none !important;
-  transform:none !important;
-}
-
-/* ===== DARK MODE GLOBAL ===== */
 body.dark-mode{
-  background-color:var(--dark-gray-bg-base);
-  color:var(--dark-gray-text-primary);
+  background:#1f1f1f !important;
+  color:white;
 }
-
-body.dark-mode .app,
-body.dark-mode #validadorPlazo{
-  background-color:var(--dark-gray-bg-secondary);
-  color:var(--dark-gray-text-primary);
-  box-shadow:0 2px 6px var(--shadow-color-dark-mode);
+body.dark-mode .card{
+  background:#2b2b2b;
+  color:white;
 }
-
-body.dark-mode h1,
-body.dark-mode h2,
-body.dark-mode label,
-body.dark-mode p{
-  color:var(--dark-gray-text-primary);
+body.dark-mode .form-control,
+body.dark-mode .form-select{
+  background:#333;
+  color:white;
+  border-color:#555;
 }
-
-body.dark-mode input,
-body.dark-mode select,
-body.dark-mode textarea{
-  background-color:var(--dark-gray-bg-secondary);
-  color:var(--dark-gray-text-primary);
-  border:1px solid var(--dark-gray-text-secondary);
-}
-
-body.dark-mode button:not(.btn-dark-mode){
-  background-color:var(--dark-gray-accent);
-  color:var(--dark-gray-bg-base);
-}
-
-body.dark-mode button:not(.btn-dark-mode):hover{
-  filter:brightness(1.1);
-}
-
 body.dark-mode footer{
-  color:var(--dark-gray-text-secondary);
+  color:#aaa;
+}
+.tip-btn.active{
+  box-shadow:0 0 0 3px rgba(25,135,84,.35);
+}
+.hora-espana{
+  cursor:pointer;
+  user-select:none;
 }
 
-body.dark-mode .logo-empresa img{
-  filter:drop-shadow(0 0 3px white);
+.textarea-pro{
+  border-radius:12px;
+  border:1px solid #ced4da;
+  transition:all 0.25s ease;
+  font-size:14px;
+  line-height:1.5;
+  resize:none;
 }
 
-body.dark-mode #validadorPlazo input[type="date"]{
-  background-color:var(--dark-gray-bg-base);
-  color:var(--dark-gray-text-primary);
+/* Hover suave */
+.textarea-pro:hover{
+  border-color:#86b7fe;
 }
 
-body.dark-mode .toast{
-  background:var(--dark-gray-accent);
-  color:var(--dark-gray-bg-base);
+/* Focus PRO */
+.textarea-pro:focus{
+  border-color:#198754;
+  box-shadow:0 0 0 0.2rem rgba(25,135,84,.25);
+  background:#fdfefe;
 }
 
-/* Buscador CP */
-#buscadorCP{
-  display:none;
-  flex-direction:column;
-  gap:10px;
-  margin-top:10px;
+/* Modo oscuro */
+body.dark-mode .textarea-pro{
+  background:#2f2f2f;
+  color:#fff;
+  border-color:#555;
 }
+
+body.dark-mode .textarea-pro:focus{
+  background:#2f2f2f;
+  border-color:#20c997;
+  box-shadow:0 0 0 0.2rem rgba(32,201,151,.25);
+}
+
+/* =========================
+   LOGO EFECTO LETRAS
+========================= */
+
+.logo-empresa{
+  transition:all 0.35s ease;
+}
+
+/* Shadow SOLO sobre letras claras */
+body.dark-mode .logo-empresa{
+  filter:
+    drop-shadow(0 0 4px rgba(255,255,255,.45))
+    drop-shadow(0 0 10px rgba(25,135,84,.85))
+    drop-shadow(0 0 22px rgba(25,135,84,.75))
+    drop-shadow(0 0 40px rgba(25,135,84,.60))
+    drop-shadow(0 0 65px rgba(25,135,84,.45));
+}
+
+/* BOTONES ACTIVOS */
+.action-btn.active{
+  background:#198754 !important;
+  color:white !important;
+  border-color:#198754 !important;
+  box-shadow:0 0 0 3px rgba(25,135,84,.35);
+}
+
+/* =========================
+   ANIMACIÓN HORA
+========================= */
+
+#hora-espana {
+      display: inline-block; /* Permite la transformación */
+      transition: transform 0.5s ease, opacity 0.5s ease;
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    /* Cuando se oculta: desliza hacia la izquierda y se vuelve invisible */
+    #hora-dinamica.slide-hidden {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+
+    /* Clase temporal para mostrar la hora: se inicia desplazada a la derecha */
+    #hora-dinamica.slide-from-right {
+      transform: translateX(100%);
+      opacity: 0;
+    }
 </style>
+
 </head>
 
-<body>
+<body class="bg-light">
 
-<div id="hora-espana" class="hora-espana">Hora en España: <span id="hora-dinamica"></span></div>
+<div class="container py-4">
 
-<button class="btn-dark-mode" id="toggleDarkMode">
-  <img src="img/oscuro.ico" alt="Modo oscuro">
-</button>
+<!-- HORA -->
+<div class="text-center mb-3 fs-5 hora-espana">
 
-<div id="logo-empresa" class="logo-empresa">
-    <img src="img/empresa.png" alt="Logo de la Empresa">
-  </div>
+  <span class="titulo-hora">
+    Hora en España:
+  </span>
 
-<div class="app">
-  
-  <h1>Tipificaciones ZContactos</h1>
-
-  <div class="buttons">
-    <button data-t="T01">T01</button>
-    <button data-t="T05">T05</button>
-    <button data-t="T11">T11</button>
-    <button data-t="T12">T12</button>
-    <button data-t="T40">T40</button>
-  </div>
-
-  <div class="buttons-secondary">
-    <button data-t="Agil">Agilizaciones</button>
-    <button onclick="mostrarValidador()">Validar Plazo</button>
-    <button onclick="mostrarBuscadorCP()">Buscar CP</button>
-    <button data-t="FPO">Fuera de Plazo Otros</button>
-  </div>
-
-<div id="validadorPlazo" style="display:none; width:100%; max-width:520px; flex-direction:column; gap:10px;">
-  
-  <label>📅 Fecha entrega:</label>
-<input type="date" id="fechaEntrega">
-
-<label>📆 Fecha actual:</label>
-<input type="date" id="fechaActual">
-
-  <button onclick="calcularDias()">Calcular días</button>
-
-  <p id="resultadoDias" style="font-weight:bold;"></p>
+  <span id="contenedorHora">
+    <span id="hora-dinamica"></span>
+  </span>
 
 </div>
 
-<!-- BUSCADOR CP -->
-<div id="buscadorCP">
-  <label>Código Postal:</label>
-  <input type="text" id="codigoPostal" placeholder="Ej: 4400" inputmode="numeric" maxlength="5">
-  <p id="resultadoCP"></p>
+<!-- DARK MODE -->
+<button id="toggleDarkMode" class="btn btn-dark position-fixed top-0 start-0 m-2">🌙</button>
+
+<!-- LOGO -->
+<div class="text-center mb-3 logo-wrapper">
+  <img 
+    src="img/empresa.png"
+    id="logoEmpresa"
+    class="img-fluid logo-empresa"
+    style="max-width:250px"
+  >
 </div>
 
-  <div class="selector" id="selector">
-    <select id="tipSelect"></select>
-    <textarea id="tipText"></textarea>
-    <div class="actions">
-  <button id="copyBtn">Copiar</button>
-  <button id="resetBtn">Reset</button>
-    </div>
+<div class="card shadow p-4">
+
+<h1 class="text-center mb-4">Tipificaciones ZContactos</h1>
+
+<!-- BOTONES -->
+<div class="row g-2 mb-3">
+  <div class="col"><button class="btn btn-outline-success w-100 tip-btn" data-t="T01">T01</button></div>
+  <div class="col"><button class="btn btn-outline-success w-100 tip-btn" data-t="T05">T05</button></div>
+  <div class="col"><button class="btn btn-outline-success w-100 tip-btn" data-t="T11">T11</button></div>
+  <div class="col"><button class="btn btn-outline-success w-100 tip-btn" data-t="T12">T12</button></div>
+  <div class="col"><button class="btn btn-outline-success w-100 tip-btn" data-t="T40">T40</button></div>
+</div>
+
+<div class="d-flex gap-2 mb-3 flex-wrap">
+  <button class="btn btn-outline-success flex-fill tip-btn" data-t="Agil">Agilizaciones</button>
+
+  <button id="btnValidador" class="btn btn-outline-success flex-fill action-btn" onclick="mostrarValidador()">Validar Plazo</button>
+
+<button id="btnCP" class="btn btn-outline-success flex-fill action-btn" onclick="mostrarBuscadorCP()">Buscar CP</button>
+
+  <button class="btn btn-outline-success flex-fill tip-btn" data-t="FPO">Fuera de Plazo</button>
+</div>
+
+<!-- VALIDAR PLAZO -->
+<div id="validadorPlazo" class="border rounded p-3 mb-3 d-none">
+  <label class="form-label">Fecha entrega</label>
+  <input type="date" id="fechaEntrega" class="form-control mb-2">
+
+  <label class="form-label">Fecha actual</label>
+  <input type="date" id="fechaActual" class="form-control mb-2">
+
+  <button class="btn btn-primary w-100" onclick="calcularDias()">Calcular días</button>
+  <div id="resultadoDias" class="fw-bold mt-2"></div>
+</div>
+
+<!-- CP -->
+<div id="buscadorCP" class="d-none mb-3">
+  <label class="form-label">Código Postal</label>
+  <input type="text" id="codigoPostal" class="form-control" maxlength="5">
+  <div id="resultadoCP" class="mt-2"></div>
+</div>
+
+<!-- TIPIFICACIONES -->
+<div id="selector" class="d-none">
+  <select id="tipSelect" class="form-select mb-2"></select>
+  <div class="form-floating mb-3">
+  <textarea 
+    id="tipText" 
+    class="form-control textarea-pro" 
+    placeholder="Escribe aquí..." 
+    style="height:180px">
+  </textarea>
+</div>
+
+  <div class="d-flex gap-2">
+    <button id="copyBtn" class="btn btn-success flex-fill">Copiar</button>
+    <button id="resetBtn" class="btn btn-secondary flex-fill">Reset</button>
   </div>
 </div>
 
-<div id="toast" class="toast">Tipificación copiada</div>
+</div>
 
-<footer>
-  © Ing. Javier Mastrangelo. Todos los derechos reservados.
+<!-- TOAST -->
+<div class="toast position-fixed top-0 start-50 translate-middle-x mt-3" id="toast">
+  <div class="toast-body bg-success text-white">Tipificación copiada</div>
+</div>
+
+<footer class="text-center mt-4 text-muted">
+© Ing. Javier Mastrangelo. Todos los derechos reservados.
 </footer>
 
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
+
+/* =========================
+   VISTA CENTRAL
+========================= */
+function ocultarTodo(){
+
+  document.getElementById("selector").classList.add("d-none");
+  document.getElementById("validadorPlazo").classList.add("d-none");
+  document.getElementById("buscadorCP").classList.add("d-none");
+
+  // quitar activos
+  document.querySelectorAll(".tip-btn").forEach(b=>{
+    b.classList.remove("active");
+  });
+
+  document.querySelectorAll(".action-btn").forEach(b=>{
+    b.classList.remove("active");
+  });
+}
+
+/* =========================
+   DATA
+========================= */
 const data={
   T01: [
       "SE SOLICITA ALBARAN",
@@ -505,140 +298,167 @@ const data={
     "NO CONTACTO CON DTT":"IMPROCEDENTE: DENEGADO NO CONTACTO CON DTT", "FALTA DEF":"IMPROCEDENTE: FALTA DEF", "PENDIENTE ENTREGA":"PENDIENTE DE ENTREGA, ENTREGA ESTIMADA EN 24–48 HORAS LABORABLES.", "PEDIDO ESTA ANULADO":"IMPROCEDENTE: NO PODEMOS TRAMITAR ESTA SOLICITUD PORQUE EL PEDIDO ESTÁ ANULADO.", "PEDIDO ANULADO":"PEDIDO ANULADO SEGÚN LO SOLICITADO.", "NO ENTREGADO":"IMPROCEDENTE: PEDIDO NO CONSTA ENTREGADO", "TV >= 55”":"PENDIENTE DE CONCERTAR CITA CON EL CLIENTE EN 24/48/72H LABORABLES.", "ZPS":"GESTIONADO PEDIDO DE SUSTITUCIÓN, RECOGIDA Y ENTREGA SIMULTANEA ESTIMADA EN 24–48 HORAS LABORABLES.", "FUERA DE PLAZO +30":"IMPROCEDENTE: FUERA DE PLAZO +30 DIAS PARA LA RECLAMACIÓN","EN PROCESO DE DEVOLUCIÓN":"EN PROCESO DE DEVOLUCIÓN, DEVOLUCIÓN ESTIMADA EN 24/48 HORAS LABORALES", "NO DESEA EL ALBARAN":"IMPROCEDENTE: DENEGADO CLIENTE NO DESEA EL ALBARAN", "NO LO NECESITA":"IMPROCEDENTE: DENEGADO CLIENTE NO LO NECESITA", "NO PLAZAS/ ARIL (CUANDO SE BUSCA EN TODOS LOS APLICATIVOS Y NO APARECE NADA)":"IMPROCEDENTE: DENEGADO NO PLAZAS/ ARIL", "NO HAY EVIDENCIAS":"IMPROCEDENTE: NO HAY EVIDENCIAS", "PEDIDO CON INCIDENCIA DE TRANSPORTES":"IMPROCEDENTE: PEDIDO CON INCIDENCIA DE TRANSPORTES", "PEDIDO CONTABILIZADO":"IMPROCEDENTE: PEDIDO CONTABILIZADO", "PEDIDO EN DISTRIBUCIÓN O REPARTO":"IMPROCEDENTE: PEDIDO EN DISTRIBUCIÓN O REPARTO, ENTREGA ESTIMADA EN 24–48 HORAS LABORABLES.", "PEDIDO CON FALTA DE STOCK":"IMPROCEDENTE: PEDIDO CON FALTA DE STOCK", "PEDIDO ENTREGADO":"IMPROCEDENTE: PEDIDO ENTREGADO", "PEDIDO CON BLOQUEO DE ENTREGA / MANIPULACION PEDIDO":"IMPROCEDENTE: PEDIDO CON BLOQUEO DE ENTREGA / MANIPULACION PEDIDO", "PEDIDO INCOMPLETO FALTA TECNICO COMERCIAL":"IMPROCEDENTE:PEDIDO INCOMPLETO FALTA TECNICO COMERCIAL", "PEDIDO INCOMPLETO":"IMPROCEDENTE: PEDIDO INCOMPLETO FALTA DETERMINACION DE PRECIO", "SE SOLICITA ALBARAN": "COMPROBANTE DE ENTREGA SOLICITADO PARA SU ENVÍO AL CLIENTE.","ALBARAN ENVIADO":"EL COMPROBANTE DE ENTREGA HA SIDO ENVIADO AL CLIENTE.", "PENDIENTE DE CONCERTAR CITA CON EL CLIENTE PARA SU RECOGIDA":"PENDIENTE DE CONCERTAR CITA CON EL CLIENTE PARA SU RECOGIDA","MAL TABULADO": "IMPROCEDENTE: MAL TABULADO, TABULAR XXX", "FALTA CORREO": "IMPROCEDENTE: FALTA DE INFORMACION INDICAR CORREO", "FUERA DE PLAZO": "IMPROCEDENTE: FUERA DE PLAZO", "PEDIDO DEVUELTO": "IMPROCEDENTE: EL PEDIDO NO SE ENTREGÓ Y HA SIDO DEVUELTO AL ALMACÉN. LA DEVOLUCIÓN ESTÁ GESTIONADA.", "SE INFORMA PEDIDO IMEI XXXXX - ABONO": "IMPROCEDENTE: SE INFORMA PEDIDO IMEI XXXXX - ABONO", "TABULAR INCIDENCIA SOLICITUD ALBARAN SIN REPOSICIÓN.": "IMPROCEDENTE: TABULAR INCIDENCIA SOLICITUD ALBARAN SIN REPOSICIÓN.", "ENVIAR A TIENDA": "IMPROCEDENTE: AL SER UN EQUIPAMIENTO MÓVIL DE RENT EL DESISTIMIENTO TIENE QUE GESTIONARSE EN CUALQUIER TIENDA DE MOVISTAR","ENTREGADO":"ENTREGADO", "PENDIENTE DE RECOGIDA":"PENDIENTE DE RECOGIDA, RECOGIDA ESTIMADA EN 24–48 HORAS LABORABLES.", "FALTAN DATOS":"IMPROCEDENTE: FALTAN DATOS", "NO ES POSIBLE CAMBIO DE DIRECCION":"IMPROCEDENTE: NO ES POSIBLE CAMBIO DE DIRECCION", "ESCALAR A WF DE GAMA BLANCA (SE USA CUANDO APARECE 9014)":"IMPROCEDENTE: ESCALAR A WF DE GAMA BLANCA", "ESCALAR A POSVENTA":"IMPROCEDENTE: ESCALAR A POSVENTA", "NO ES POSIBLE CAMBIO DE TELEFONO POR TELCO":"IMPROCEDENTE: NO ES POSIBLE CAMBIO DE TELEFONO POR TELCO","SE ACTUALIZAN LOS DATOS":"SE ACTUALIZAN LOS DATOS", "TEXTO LIBRE": "10-12-2025 NOMBRE TRAMITADA RECOGIDA POR DESISTIMIENTO INC ", "NO CONSTA DEVUELTO":"IMPROCEDENTE: PEDIDO NO CONSTA DEVUELTO", "SOLICITADO REENVÍO":"SOLICITADO REENVÍO", "FALLIDA":"IMPROCEDENTE: RECOGIDA FALLIDA POR CLIENTE XXX; SI HAY QUE INTENTAR DE NUEVO LA RECOGIDA, HAY QUE GENERAR UN NUEVO ZCONTACTOS DE “REINTENTO DE RECOGIDA”."
   };
 
+/* =========================
+   TIPIFICACIONES
+========================= */
+const selector=document.getElementById("selector");
+const select=document.getElementById("tipSelect");
+const textarea=document.getElementById("tipText");
 
-// =========================
-// VARIABLES
-// =========================
-const selector = document.getElementById('selector');
-const select = document.getElementById('tipSelect');
-const textarea = document.getElementById('tipText');
+document.querySelectorAll(".tip-btn").forEach(btn=>{
+btn.addEventListener("click",()=>{
 
-let currentKey = "";
-let currentTip = "";
+ocultarTodo();
 
-// =========================
-// BOTÓN COPIAR
-// =========================
-const copyBtn = document.getElementById("copyBtn");
+document.querySelectorAll(".tip-btn").forEach(b=>b.classList.remove("active"));
+btn.classList.add("active");
 
-copyBtn.addEventListener("click", () => {
-  if (!textarea.value) return;
+const items=data[btn.dataset.t]||[];
 
-  navigator.clipboard.writeText(textarea.value)
-    .then(() => {
-      const toast = document.getElementById("toast");
-      toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), 2000);
-    })
-    .catch(() => {
-      alert("Error al copiar");
-    });
+select.innerHTML="";
+
+items.forEach(i=>{
+const opt=document.createElement("option");
+opt.value=i;
+opt.textContent=i;
+select.appendChild(opt);
 });
 
+selector.classList.remove("d-none");
 
-// =========================
-// BOTÓN RESET
-// =========================
-const resetBtn = document.getElementById("resetBtn");
-
-resetBtn.addEventListener("click", () => {
-  select.selectedIndex = 0;
-
-  if (select.options.length > 0) {
-    const firstValue = select.options[0].value;
-    textarea.value = descriptions[firstValue] ?? "";
-  } else {
-    textarea.value = "";
-  }
+textarea.value=descriptions[items[0]]||"";
+});
 });
 
-// =========================
-// EVENTO SELECT (CAMBIO MANUAL)
-// =========================
-select.addEventListener('change', (e) => {
-  currentTip = e.target.value;
-  textarea.value = descriptions[currentTip] ?? "";
+/* =========================
+   SELECT
+========================= */
+select.addEventListener("change",e=>{
+textarea.value=descriptions[e.target.value]||"";
 });
 
-// =========================
-// BOTONES TIP (CLIC EN CATEGORÍA)
-// =========================
-const tipButtons = document.querySelectorAll('button[data-t]');
-
-tipButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-
-    // 🔴 QUITAR active de todos
-    tipButtons.forEach(b => b.classList.remove('active'));
-
-    // 🟢 AGREGAR active al seleccionado
-    btn.classList.add('active');
-
-    document.getElementById("validadorPlazo").style.display = "none";
-    document.getElementById("buscadorCP").style.display = "none";
-
-    currentKey = btn.dataset.t;
-    const sorted = data[currentKey] || [];
-
-    select.innerHTML = '';
-    
-    if (sorted.length === 0) {
-      textarea.value = "No hay opciones para esta categoría";
-      selector.style.display = 'flex';
-      return;
-    }
-
-    sorted.forEach(item => {
-      const opt = document.createElement('option');
-      opt.value = item;
-      opt.textContent = item;
-      select.appendChild(opt);
-    });
-
-    currentTip = sorted[0]; 
-    textarea.value = descriptions[currentTip] ?? "Sin descripción";
-    selector.style.display = 'flex';
-  });
+/* =========================
+   COPIAR
+========================= */
+document.getElementById("copyBtn").addEventListener("click",()=>{
+navigator.clipboard.writeText(textarea.value);
+new bootstrap.Toast(document.getElementById("toast")).show();
 });
-// =========================
-// VALIDADOR PLAZO (CON FECHA AUTO)
-// =========================
+
+/* =========================
+   RESET
+========================= */
+document.getElementById("resetBtn").addEventListener("click",()=>{
+select.selectedIndex=0;
+textarea.value=descriptions[select.value]||"";
+});
+
+/* =========================
+   VALIDAR PLAZO
+========================= */
 function mostrarValidador() {
-  selector.style.display = "none";
-  document.getElementById("buscadorCP").style.display = "none";
-  
-  const div = document.getElementById("validadorPlazo");
-  const inputFechaActual = document.getElementById("fechaActual");
 
-  // Si el div se va a mostrar, fijamos la fecha de hoy
-  if (div.style.display === "none" || div.style.display === "") {
-    const hoy = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
-    inputFechaActual.value = hoy;
-    div.style.display = "flex";
-  } else {
-    div.style.display = "none";
-  }
+  // ocultar todas las vistas
+  ocultarTodo();
+
+  // quitar activos
+  document.querySelectorAll(".tip-btn").forEach(btn=>{
+    btn.classList.remove("active");
+  });
+
+  document.querySelectorAll(".action-btn").forEach(btn=>{
+    btn.classList.remove("active");
+  });
+
+  // activar botón validar
+  document.getElementById("btnValidador")
+    .classList.add("active");
+
+  // mostrar validador
+  document.getElementById("validadorPlazo")
+    .classList.remove("d-none");
+
+  const inputActual = document.getElementById("fechaActual");
+
+  // 📅 FECHA ACTUAL AUTOMÁTICA
+  const hoy = new Date();
+  const hoyISO = hoy.toISOString().split("T")[0];
+
+  inputActual.value = hoyISO;
+
+  // Mostrar también fecha actual visible
+  inputActual.dataset.realDate = hoy.toLocaleDateString("es-ES");
+
+  // limpiar resultado
+  document.getElementById("resultadoDias").innerHTML = "";
 }
 
 function calcularDias() {
-  const f1 = document.getElementById("fechaEntrega").value;
-  const f2 = document.getElementById("fechaActual").value;
-  if (!f1 || !f2) {
-    document.getElementById("resultadoDias").innerText = "Selecciona fechas";
+
+  const fEntrega = document.getElementById("fechaEntrega").value;
+  const fActual = document.getElementById("fechaActual").value;
+
+  const resultado = document.getElementById("resultadoDias");
+
+  if (!fEntrega) {
+    resultado.textContent = "⚠️ Selecciona fecha de entrega";
     return;
   }
-  const dias = Math.floor((new Date(f2) - new Date(f1)) / (1000 * 60 * 60 * 24));
-  document.getElementById("resultadoDias").innerText = dias + " días";
+
+  const fecha1 = new Date(fEntrega);
+  const fecha2 = new Date(fActual);
+
+  // 📊 diferencia real
+  const diffMs = fecha2 - fecha1;
+
+  const dias = Math.floor(
+    diffMs / (1000 * 60 * 60 * 24)
+  );
+
+  // 🧠 lógica clara
+  if (dias === 0) {
+
+    resultado.textContent = "📅 Mismo día";
+
+  } else if (dias > 0) {
+
+    resultado.textContent = `⏱ Han pasado ${dias} días`;
+
+  } else {
+
+    resultado.textContent = `📌 Faltan ${Math.abs(dias)} días`;
+  }
 }
 
-// =========================
-// BUSCADOR CP
-// =========================
+/* =========================
+   CP
+========================= */
 function mostrarBuscadorCP() {
-  selector.style.display = "none";
-  document.getElementById("validadorPlazo").style.display = "none";
+
+  // ocultar todas las vistas
+  ocultarTodo();
+
+  // quitar activos
+  document.querySelectorAll(".tip-btn").forEach(btn=>{
+    btn.classList.remove("active");
+  });
+
+  document.querySelectorAll(".action-btn").forEach(btn=>{
+    btn.classList.remove("active");
+  });
+
+  // activar botón CP
+  document.getElementById("btnCP")
+    .classList.add("active");
+
+  // mostrar solo CP
   const div = document.getElementById("buscadorCP");
-  div.style.display = div.style.display === "none" ? "flex" : "none";
+
+  div.classList.remove("d-none");
+
+  // limpiar campos
+  document.getElementById("codigoPostal").value = "";
+  document.getElementById("resultadoCP").innerHTML = "";
 }
 
 const plataformas = [
@@ -657,69 +477,104 @@ const inputCP = document.getElementById("codigoPostal");
 const resultadoCP = document.getElementById("resultadoCP");
 
 if (inputCP) {
+
   inputCP.addEventListener("input", function() {
-    this.value = this.value.replace(/\D/g, "").slice(0, 5);
+
+    this.value = this.value
+      .replace(/\D/g, "")
+      .slice(0, 5);
+
     if (this.value.length < 2) {
-      resultadoCP.innerText = "✍️ Escribe al menos 2 dígitos...";
+
+      resultadoCP.innerText =
+        "✍️ Escribe al menos 2 dígitos...";
+
       return;
     }
+
     let prefijo = this.value.substring(0, 2);
-    prefijo = String(parseInt(prefijo)).padStart(2, "0");
 
+    prefijo = String(
+      parseInt(prefijo)
+    ).padStart(2, "0");
+
+    // excepción VALENCIA
     if (prefijo === "12" || prefijo === "46") {
-      resultadoCP.innerText = "📦 VALENCIA - usuario jmbellido";
+
+      resultadoCP.innerText =
+        "📦 VALENCIA - usuario jmbellido";
+
       return;
     }
 
+    // búsqueda plataformas
     for (let grupo of plataformas) {
+
       if (grupo.codigos.includes(prefijo)) {
-        resultadoCP.innerText = `📦 ${grupo.principal}`;
+
+        resultadoCP.innerText =
+          `📦 ${grupo.principal}`;
+
         return;
       }
     }
+
     resultadoCP.innerText = "❌ No encontrado";
   });
 }
 
-// =========================
-// HORA DINÁMICA
-// =========================
-document.addEventListener("DOMContentLoaded", () => {
-  function actualizarHoraEspana() {
-    const opciones = {
-      timeZone: "Europe/Madrid",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: true
-    };
-    const el = document.getElementById("hora-dinamica");
-    if (el) {
-      el.textContent = new Intl.DateTimeFormat("es-ES", opciones).format(new Date());
-    }
+/* =========================
+   HORA 12H + EFECTO SLIDE
+========================= */
+
+const horaSpan = document.getElementById("hora-dinamica");
+
+const horaBox = document.querySelector(".hora-espana");
+
+const contenedorHora =
+  document.getElementById("contenedorHora");
+
+let visible = true;
+
+// CLICK
+horaBox.addEventListener("click",()=>{
+
+  visible = !visible;
+
+  if(visible){
+
+    contenedorHora.classList.remove("oculto");
+
+  }else{
+
+    contenedorHora.classList.add("oculto");
   }
-  actualizarHoraEspana();
-  setInterval(actualizarHoraEspana, 1000);
 });
 
-// =========================
-// MODO OSCURO (NUEVO)
-// =========================
-const btnOscuro = document.getElementById('toggleDarkMode'); // Asegúrate de que el ID en tu HTML coincida
-if (btnOscuro) {
-  btnOscuro.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    
-    // Opcional: Guardar preferencia en el navegador
-    const modo = document.body.classList.contains('dark-mode') ? 'oscuro' : 'claro';
-    localStorage.setItem('tema', modo);
-  });
+// ACTUALIZAR HORA
+function hora(){
+
+  horaSpan.textContent =
+    new Date().toLocaleTimeString("es-ES",{
+      timeZone:"Europe/Madrid",
+      hour:"2-digit",
+      minute:"2-digit",
+      second:"2-digit",
+      hour12:true
+    });
 }
 
-// Cargar preferencia al iniciar
-if (localStorage.getItem('tema') === 'oscuro') {
-  document.body.classList.add('dark-mode');
-}
+setInterval(hora,1000);
+
+hora();
+
+/* =========================
+   DARK MODE
+========================= */
+document.getElementById("toggleDarkMode").addEventListener("click",()=>{
+document.body.classList.toggle("dark-mode");
+});
+
 </script>
 
 </body>

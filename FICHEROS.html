@@ -15,12 +15,33 @@ textarea {
     resize: none;
     overflow: hidden;
 }
+
+    /* Estilo para el contenedor de la hora */
+        .hora-esquina {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 1rem;
+            font-weight: 500;
+            background: rgba(0,0,0,0.05);
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-family: monospace;
+            letter-spacing: 0.5px;
+            color: #2c3e66;
+            border: 1px solid #dee2e6;
+            backdrop-filter: blur(2px);
+            z-index: 10;
+        }
 </style>
 </head>
 
 <body class="bg-light">
 
 <div class="container my-4">
+     <!-- Reloj en esquina superior derecha (España, formato 12H) -->
+    <div id="relojEspana" class="hora-esquina">--:-- --</div>
+    <h2 class="text-center mb-4">Gestor de Incidencias</h2>
 
 <h2 class="text-center mb-4">Gestor de Incidencias</h2>
 
@@ -171,6 +192,47 @@ textarea {
 </div>
 
 <script>
+
+    // ---------- FUNCIÓN RELOJ ESPAÑA (formato 12H) ----------
+function actualizarRelojEspana() {
+    const relojDiv = document.getElementById("relojEspana");
+    if (!relojDiv) return;
+    
+    // Obtener hora actual en la zona horaria de España (Europe/Madrid)
+    const opciones = {
+        timeZone: "Europe/Madrid",
+        hour12: true,       // Formato 12 horas (AM/PM)
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+    };
+    const ahora = new Date();
+    const horaFormateada = ahora.toLocaleTimeString("es-ES", opciones);
+    // toLocaleTimeString devuelve algo como "02:15:34 PM" o "02:15:34 p. m." según el navegador.
+    // Limpiamos para formato más limpio '02:15:34 PM'
+    let horaLimpia = horaFormateada;
+    // Reemplazar posibles variaciones de AM/PM
+    horaLimpia = horaLimpia.replace(/\./g, "").replace(/\s+/g, " ").replace(/p\.?\s?m\.?/i, "PM").replace(/a\.?\s?m\.?/i, "AM");
+    relojDiv.innerText = horaLimpia;
+}
+
+// Iniciar el reloj (se actualiza cada segundo)
+setInterval(actualizarRelojEspana, 1000);
+// Llamada inicial para que no tarde en aparecer
+actualizarRelojEspana();
+
+async function initDB() {
+    return new Promise((resolve) => {
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+        request.onupgradeneeded = (e) => {
+            let dbInst = e.target.result;
+            if (!dbInst.objectStoreNames.contains("config")) dbInst.createObjectStore("config");
+            if (!dbInst.objectStoreNames.contains("data")) dbInst.createObjectStore("data", { keyPath: "id", autoIncrement: true });
+        };
+        request.onsuccess = (e) => { db = e.target.result; resolve(); };
+    });
+}
+// -------------------------------------------------------
 
 // =========================
 // UI

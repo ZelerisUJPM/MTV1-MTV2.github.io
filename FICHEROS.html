@@ -321,10 +321,12 @@
 const DB_NAME = "GestorIncidenciasDB";
 const DB_VERSION = 2;
 let db;
-let state = { data: [], index: 0, agente: "", gestion: "" };
+let state = { data: [], index: 0, agente: "", gestion: "", fromSearch: false };
 let registrosExistentes = new Set();
 let indiceEncontrado = -1;
 let modalBusquedaInstance = null;
+let datosOriginalesCarga = [];
+let modalFiltroInstance = null;
 
 // ========== FUNCIÓN RELOJ ESPAÑA ==========
 function actualizarRelojEspana() {
@@ -555,6 +557,7 @@ function irAResultadoModal() {
     if (indiceEncontrado !== -1 && state.data[indiceEncontrado]) {
         guardar();
         state.index = indiceEncontrado;
+        state.fromSearch = true;
         
         if (db) {
             db.transaction("config", "readwrite").objectStore("config").put({ 
@@ -605,7 +608,7 @@ function normalizarFila(d) {
     }
     
     // 🔥 PARA FECHA: puede ser "Fecha" o "Creado el"
-    let fechaValue = d["Fecha"] || d["Creado el"] || "";
+    let fechaValue = d["Fecha"] || d["Creado el"] || d["Fecha creacion"] || "";
     if (typeof fechaValue === "number") {
         fechaValue = convertirFechaExcel(fechaValue);
     }
@@ -623,7 +626,7 @@ function normalizarFila(d) {
         fecha: fechaValue,
         texto: textoValue,
         albaran: alb ? d[alb] : "",
-        vende: d["Cod. Vende"] || "",
+        vende: d["Cod. Vende"] || d["Codigo Vendedor"] || "",
         grupo: d["Grupo de vendedores"] || "",
         estado: d["Estado SAP"] || "",
         casuistica: d["Casuistica"] || "",
@@ -692,99 +695,164 @@ function calcularVende(d) {
 }
 
 // ========== INICIAR NUEVA CARGA ==========
-async function iniciarNuevaCarga() {
+async function iniciarNuevaCarga(filtroForzado = null) {
     const fileInput = document.getElementById("fileInput");
     const agenteInput = document.getElementById("agente").value.trim();
-    if (!fileInput.files.length || !agenteInput) return mostrarToast("Falta archivo o nombre de agente", "danger");
+
+    if (!fileInput.files.length || !agenteInput) {
+        return mostrarToast("Falta archivo o nombre de agente", "danger");
+    }
 
     document.getElementById("loader").style.display = "flex";
     document.getElementById("loaderTexto").innerText = "Leyendo archivo Excel...";
-    
+
     await cargarClavesExistentes();
-    
+
     const reader = new FileReader();
+
     reader.onload = async (e) => {
-        document.getElementById("loaderTexto").innerText = "Procesando datos del archivo...";
-        
-        const wb = XLSX.read(new Uint8Array(e.target.result), { type: "array" });
-        const raw = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
-        
-        // Mostrar columnas detectadas para depuración
-        if (raw.length > 0) {
-            console.log("📊 Columnas detectadas:", Object.keys(raw[0]));
-        }
-        
-        let gestion = document.getElementById("gestion").value;
-        let tipoFiltro = document.getElementById("tipoRecogida").value;
-        let centroFiltro = document.getElementById("centroRecogidaFiltro").value;
-        
-        let nuevos = raw.map(normalizarFila);
+        try {
+            document.getElementById("loaderTexto").innerText = "Procesando datos del archivo...";
 
-        document.getElementById("loaderTexto").innerText = "Aplicando filtros de gestión...";
+            const wb = XLSX.read(new Uint8Array(e.target.result), { type: "array" });
+            const raw = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
 
-        if (gestion === "RECOGIDAS") {
-            if (tipoFiltro && tipoFiltro !== "") {
-                nuevos = nuevos.filter(d => (d.tipo || "").toString().toUpperCase() === tipoFiltro.toUpperCase());
+            if (raw.length > 0) {
+                console.log("📊 Columnas detectadas:", Object.keys(raw[0]));
             }
-            if (tipoFiltro === "T05" && centroFiltro && centroFiltro !== "") {
-                if (centroFiltro === "GRUPO1500") {
-                    nuevos = nuevos.filter(d => ["1500", "1140"].includes((d.centro || "").toString()));
-                    nuevos.sort((a, b) => {
-                        const prioritarios = ["A042", "A025"];
-                        const aPrio = prioritarios.includes(a.clase) ? 0 : 1;
-                        const bPrio = prioritarios.includes(b.clase) ? 0 : 1;
-                        return aPrio - bPrio;
-                    });
-                } else if (centroFiltro === "GRUPO9010") {
-                    nuevos = nuevos.filter(d => ["9010", "1100"].includes((d.centro || "").toString()));
-                    nuevos.sort((a, b) => {
-                        const aPrio = a.clase === "A055" ? 0 : 1;
-                        const bPrio = b.clase === "A055" ? 0 : 1;
-                        return aPrio - bPrio;
-                    });
+
+            let gestion = document.getElementById("gestion").value;
+            let tipoFiltro = document.getElementById("tipoRecogida").value;
+            let centroFiltro = document.getElementById("centroRecogidaFiltro").value;
+
+            let nuevos = raw.map(normalizarFila);
+            datosOriginalesCarga = nuevos;
+
+            // ==========================
+            // 🔥 DETECCIÓN DE GESTIONADOS
+            // ==========================
+            const hayGestionados = nuevos.some(d =>
+                (d.albaran && d.albaran !== "") ||
+                (d.vende && d.vende !== "") ||
+                (d.estado && d.estado !== "") ||
+                (d.casuistica && d.casuistica !== "")
+            );
+
+            // ==========================
+            // 🔥 SI HAY GESTIONADOS Y NO HAY FILTRO FORZADO → PAUSAR
+            // ==========================
+            if (hayGestionados && !filtroForzado) {
+                document.getElementById("loader").style.display = "none";
+
+                if (!modalFiltroInstance) {
+                    modalFiltroInstance = new bootstrap.Modal(
+                        document.getElementById("modalFiltroCarga")
+                    );
+                }
+
+                modalFiltroInstance.show();
+                return;
+            }
+
+            // ==========================
+            // 🔥 APLICAR FILTRO SELECCIONADO
+            // ==========================
+            const filtroActivo = filtroForzado || "TODAS";
+
+            document.getElementById("loaderTexto").innerText = "Aplicando filtros...";
+
+            if (filtroActivo === "TRATAMIENTO") {
+                nuevos = nuevos.filter(d => (d.estado || "").toUpperCase() === "TRATAMIENTO");
+            }
+
+            if (filtroActivo === "CERRADO") {
+                nuevos = nuevos.filter(d => (d.estado || "").toUpperCase() === "CERRADO");
+            }
+
+            if (filtroActivo === "SOLICITADO") {
+                nuevos = nuevos.filter(d => (d.estado || "").toUpperCase() === "SOLICITADO");
+            }
+
+            // filtros existentes RECOGIDAS
+            if (gestion === "RECOGIDAS") {
+                if (tipoFiltro) {
+                    nuevos = nuevos.filter(d =>
+                        (d.tipo || "").toString().toUpperCase() === tipoFiltro.toUpperCase()
+                    );
+                }
+
+                if (tipoFiltro === "T05" && centroFiltro) {
+                    if (centroFiltro === "GRUPO1500") {
+                        nuevos = nuevos.filter(d => ["1500", "1140"].includes((d.centro || "").toString()));
+                    } else if (centroFiltro === "GRUPO9010") {
+                        nuevos = nuevos.filter(d => ["9010", "1100"].includes((d.centro || "").toString()));
+                    }
                 }
             }
-        }
 
-        if (nuevos.length === 0) {
-            document.getElementById("loader").style.display = "none";
-            return mostrarToast("No hay registros coincidentes con los filtros", "warning");
-        }
-
-        document.getElementById("loaderTexto").innerText = `Validando ${nuevos.length} registros contra existentes...`;
-        
-        const nuevosUnicos = eliminarDuplicadosCarga(nuevos);
-        
-        if (nuevosUnicos.length === 0) {
-            document.getElementById("loader").style.display = "none";
-            mostrarToast("Todos los registros ya existen en la base de datos. No se añadió ninguno nuevo.", "info");
-            return;
-        }
-
-        document.getElementById("loaderTexto").innerText = `Guardando ${nuevosUnicos.length} registros nuevos...`;
-
-        const tx = db.transaction(["data", "config"], "readwrite");
-        nuevosUnicos.forEach(item => tx.objectStore("data").add(item));
-        state.agente = agenteInput;
-        state.gestion = gestion;
-        tx.objectStore("config").put({ agente: state.agente, gestion: state.gestion, index: state.index }, "current_state");
-
-        tx.oncomplete = () => {
-            db.transaction("data", "readonly").objectStore("data").getAll().onsuccess = (ev) => {
-                state.data = ev.target.result;
-                actualizarClavesDesdeState();
+            if (nuevos.length === 0) {
                 document.getElementById("loader").style.display = "none";
-                mostrarApp();
-                mostrar();
-                mostrarToast(`✅ Se añadieron ${nuevosUnicos.length} registro(s) nuevo(s). Total: ${state.data.length}`, "success");
+                return mostrarToast("No hay registros coincidentes", "warning");
+            }
+
+            document.getElementById("loaderTexto").innerText =
+                `Validando ${nuevos.length} registros...`;
+
+            const nuevosUnicos = eliminarDuplicadosCarga(nuevos);
+
+            if (nuevosUnicos.length === 0) {
+                document.getElementById("loader").style.display = "none";
+                return mostrarToast("No hay registros nuevos", "info");
+            }
+
+            document.getElementById("loaderTexto").innerText =
+                `Guardando ${nuevosUnicos.length} registros...`;
+
+            const tx = db.transaction(["data", "config"], "readwrite");
+
+            nuevosUnicos.forEach(item => tx.objectStore("data").add(item));
+
+            state.agente = agenteInput;
+            state.gestion = gestion;
+
+            tx.objectStore("config").put({
+                agente: state.agente,
+                gestion: state.gestion,
+                index: state.index
+            }, "current_state");
+
+            tx.oncomplete = () => {
+                db.transaction("data", "readonly")
+                    .objectStore("data")
+                    .getAll().onsuccess = (ev) => {
+
+                    state.data = ev.target.result;
+                    actualizarClavesDesdeState();
+
+                    document.getElementById("loader").style.display = "none";
+
+                    mostrarApp();
+                    mostrar();
+
+                    mostrarToast(
+                        `✅ Cargados ${nuevosUnicos.length} registros. Total: ${state.data.length}`,
+                        "success"
+                    );
+                };
             };
-        };
-        
-        tx.onerror = () => {
+
+            tx.onerror = () => {
+                document.getElementById("loader").style.display = "none";
+                mostrarToast("Error al guardar datos", "danger");
+            };
+
+        } catch (err) {
+            console.error(err);
             document.getElementById("loader").style.display = "none";
-            mostrarToast("Error al guardar los datos", "danger");
-        };
+            mostrarToast("Error procesando el archivo", "danger");
+        }
     };
+
     reader.readAsArrayBuffer(fileInput.files[0]);
 }
 
@@ -844,6 +912,22 @@ async function siguiente() {
     if (!est || !cas) return mostrarToast("Estado y Casuística son obligatorios", "danger");
 
     guardar();
+    if (state.fromSearch) {
+    const primeraPendiente = encontrarPrimeraPendiente();
+
+    if (primeraPendiente !== -1) {
+        state.index = primeraPendiente;
+        state.fromSearch = false;
+
+        mostrar();
+        mostrarToast("📌 Saltando a la primera incidencia pendiente de gestión", "info");
+        return;
+    } else {
+        state.fromSearch = false;
+        mostrarToast("No hay incidencias pendientes de gestión", "success");
+        return;
+    }
+}
 
     if (state.index < state.data.length - 1) {
         state.index++;
@@ -956,8 +1040,143 @@ function borrarYReiniciar() {
     tx.oncomplete = () => location.reload();
 }
 
+function encontrarPrimeraPendiente() {
+    return state.data.findIndex(d => !d.estado || !d.casuistica);
+}
+
+function aplicarFiltroCarga(tipo) {
+
+    let data = [...datosOriginalesCarga];
+
+    if (tipo === "TRATAMIENTO") {
+        data = data.filter(d => (d.estado || "").toUpperCase() === "TRATAMIENTO");
+    }
+
+    if (tipo === "CERRADO") {
+        data = data.filter(d => (d.estado || "").toUpperCase() === "CERRADO");
+    }
+
+    if (tipo === "SOLICITADO") {
+        data = data.filter(d => (d.estado || "").toUpperCase() === "SOLICITADO");
+    }
+
+    // TODAS -> no filtra
+
+    if (data.length === 0) {
+        mostrarToast("No hay registros con ese filtro", "warning");
+        return;
+    }
+
+    const gestion = document.getElementById("gestion").value;
+    const agenteInput = document.getElementById("agente").value.trim();
+
+    // continuar flujo original
+    procesarCargaFinal(data, gestion, agenteInput);
+
+    modalFiltroInstance.hide();
+}
+
+function procesarCargaFinal(nuevos, gestion, agenteInput) {
+
+    document.getElementById("loader").style.display = "flex";
+    document.getElementById("loaderTexto").innerText = "Procesando datos...";
+
+    let tipoFiltro = document.getElementById("tipoRecogida").value;
+    let centroFiltro = document.getElementById("centroRecogidaFiltro").value;
+
+    // aplicar filtros originales
+    if (gestion === "RECOGIDAS") {
+        if (tipoFiltro) {
+            nuevos = nuevos.filter(d => (d.tipo || "").toUpperCase() === tipoFiltro.toUpperCase());
+        }
+
+        if (tipoFiltro === "T05" && centroFiltro) {
+            if (centroFiltro === "GRUPO1500") {
+                nuevos = nuevos.filter(d => ["1500", "1140"].includes(d.centro));
+            }
+        }
+    }
+
+    if (nuevos.length === 0) {
+        document.getElementById("loader").style.display = "none";
+        mostrarToast("No hay registros tras el filtro", "warning");
+        return;
+    }
+
+    const nuevosUnicos = eliminarDuplicadosCarga(nuevos);
+
+    const tx = db.transaction(["data", "config"], "readwrite");
+    nuevosUnicos.forEach(item => tx.objectStore("data").add(item));
+
+    state.agente = agenteInput;
+    state.gestion = gestion;
+
+    tx.objectStore("config").put({
+        agente: state.agente,
+        gestion: state.gestion,
+        index: state.index
+    }, "current_state");
+
+    tx.oncomplete = () => {
+        db.transaction("data", "readonly").objectStore("data").getAll().onsuccess = (ev) => {
+            state.data = ev.target.result;
+            actualizarClavesDesdeState();
+
+            // 🔥 reset importante
+            state.index = 0;
+            state.fromSearch = false;
+
+            // UI
+            document.getElementById("loader").style.display = "none";
+
+            mostrarApp();
+
+            // 🔥 asegurar que se vea el primer registro cargado
+            if (state.data.length > 0) {
+                mostrar();
+            } else {
+                mostrarToast("No hay datos para mostrar", "warning");
+            }
+    };
+    }
+}
 window.addEventListener("load", arrancarAplicacion);
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<div class="modal fade" id="modalFiltroCarga" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header bg-dark text-white">
+        <h5 class="modal-title">Filtrado de incidencias</h5>
+      </div>
+
+      <div class="modal-body text-center">
+        <p>El archivo contiene incidencias ya gestionadas.</p>
+        <p><strong>¿Qué deseas visualizar?</strong></p>
+      </div>
+
+      <div class="modal-footer d-flex flex-column gap-2">
+
+        <button class="btn btn-primary w-100" onclick="aplicarFiltroCarga('TODAS')">
+          📋 Todas las incidencias
+        </button>
+
+        <button class="btn btn-warning w-100" onclick="aplicarFiltroCarga('TRATAMIENTO')">
+          🔄 Solo TRATAMIENTO
+        </button>
+
+        <button class="btn btn-success w-100" onclick="aplicarFiltroCarga('CERRADO')">
+          ❌ Solo CERRADO
+        </button>
+
+        <button class="btn btn-info w-100" onclick="aplicarFiltroCarga('SOLICITADO')">
+          ⏳ Solo SOLICITADO
+        </button>
+
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>

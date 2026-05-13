@@ -14,6 +14,7 @@ body{
   height:100vh;
   display:flex;
   overflow:hidden;
+  
 }
 
 /* ===== TOGGLE ===== */
@@ -22,12 +23,13 @@ body{
   top:10px;
   left:10px;
   z-index:1002;
-  background:rgba(0,0,0,0.2);
+  background:rgba(0,0,0,0.25);
   border:none;
-  font-size:18px;
-  padding:6px 10px;
+  font-size:22px;
+  padding:6px 12px;
   border-radius:6px;
   cursor:pointer;
+  color:white;
 }
 
 /* ===== SIDEBAR ===== */
@@ -95,6 +97,18 @@ body{
   flex-direction:column;
   align-items:center;
   width:100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;   /* centra verticalmente */
+  align-items: center;       /* centra horizontalmente */
+  min-height: 70vh;          /* hace que ocupe altura suficiente */
+}
+
+#ceutra .ceutra-content{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 /* LOGO ARRIBA */
@@ -294,20 +308,42 @@ body{
 .mensaje-box button:hover{
   background:#2563eb;
 }
+
+.logo-empresa {
+  filter: drop-shadow(0 0 6px rgba(255,255,255,0.8))
+          drop-shadow(0 0 15px rgba(255,255,255,0.5));
+}
+.footer-text{
+  width: 100%;
+  text-align: center;
+  font-size: 15px;
+  color: #6b7280;
+  padding: 15px 0;
+  margin-top: auto;
+}
 </style>
 </head>
-
 <body>
 
 <button class="btn-toggle-sidebar" id="toggle">☰</button>
 
 <!-- SIDEBAR -->
-<div class="sidebar" id="sidebar">
-  <h2>ZELERIS</h2>
-
+<div class="sidebar" id="sidebar"><br>
+  <div style="text-align:center; margin-bottom:20px;">
+  <img 
+    src="img/empresa.png" 
+    alt="Empresa"
+    class="logo-empresa"
+    style="
+      width:100%;
+      max-width:160px;
+      object-fit:contain;
+    "
+  >
+</div>
   <button class="menu-btn active" onclick="cambiar('mtv',this)">MTV</button>
   <button class="menu-btn" onclick="cambiar('bo',this)">BO</button>
-  <button class="menu-btn" onclick="cambiar('ficheros',this)">FICHEROS</button>
+  <button class="menu-btn" onclick="cambiar('ficheros',this)">ZCONTACTOS</button>
   <button class="menu-btn" onclick="cambiar('ceutra',this)">CEUTRA</button>
 </div>
 
@@ -334,12 +370,6 @@ body{
 <div id="ceutra" class="modulo">
 
   <div class="ceutra-wrapper">
-
-    <!-- LOGO ARRIBA -->
-    <div class="ceutra-logo">
-      <img src="img/empresa.png" alt="CEUTRA">
-    </div>
-
     <!-- CONTENIDO ABAJO -->
     <div class="ceutra-content">
 
@@ -731,6 +761,8 @@ function cerrarMensaje(){
 </script>
 
 </script>
-
+<div class="footer-text">
+  © Ing. Javier Mastrangelo. Todos los derechos reservados.
+</div>
 </body>
 </html>

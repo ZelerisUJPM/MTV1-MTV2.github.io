@@ -702,6 +702,82 @@ function normalizarFila(d) {
     };
 }
 
+//VALIDACION DEL EXCEL ANTES DE INICIAR GESTION
+function validarEstructuraExcel(raw) {
+
+    if (!raw || raw.length === 0) {
+
+        return {
+            ok: false,
+            msg: "El archivo Excel está vacío"
+        };
+    }
+
+    const columnasOriginales = Object.keys(raw[0]);
+
+    const columnas = columnasOriginales.map(c =>
+        c.toLowerCase().trim()
+    );
+
+    const obligatorias = [
+
+        // incidencia
+        ["nº incidencia", "nº incidencia", "inc"],
+
+        // documento
+        ["documento comercial", "doc. comercial"],
+
+        // tipo
+        ["tipo inc.", "tipo"],
+
+        // clase
+        ["clase inc.", "clase"],
+
+        // centro
+        ["centro"],
+
+        // fecha
+        [
+            "fecha",
+            "creado el",
+            "fecha creacion",
+            "fecha de creacion"
+        ],
+
+        // texto
+        [
+            "texto incidencia",
+            "texto status"
+        ]
+    ];
+
+    const faltantes = [];
+
+    obligatorias.forEach(grupo => {
+
+        const existe = grupo.some(opcion =>
+            columnas.includes(opcion.toLowerCase())
+        );
+
+        if (!existe) {
+            faltantes.push(grupo[0]);
+        }
+    });
+
+    if (faltantes.length > 0) {
+
+        return {
+
+            ok: false,
+
+            msg:
+                "❌ Archivo Excel incorrecto."
+        };
+    }
+
+    return { ok: true };
+}
+
 // ========== ELIMINAR DUPLICADOS ==========
 function eliminarDuplicadosCarga(nuevosRegistros) {
     const duplicadosEncontrados = [];
@@ -784,6 +860,14 @@ async function iniciarNuevaCarga(filtroForzado = null) {
 
             const wb = XLSX.read(new Uint8Array(e.target.result), { type: "array" });
             const raw = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+            const validacion = validarEstructuraExcel(raw);
+
+if (!validacion.ok) {
+
+    document.getElementById("loader").style.display = "none";
+
+    return mostrarToast(validacion.msg, "danger");
+}
 
             if (raw.length > 0) {
                 console.log("📊 Columnas detectadas:", Object.keys(raw[0]));

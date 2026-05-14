@@ -252,7 +252,7 @@
                     <option value="RECOGIDA PENDIENTE TRANSPORTE">RECOGIDA PENDIENTE TRANSPORTE</option>
                     <option value="ZPS FALTA DE STOCK">ZPS FALTA DE STOCK</option>
                     <option value="PENDIENTE RESPUESTA CORREO">PENDIENTE RESPUESTA CORREO</option>
-                    <option value="PENDIENTE RESPUESTA CORREO">PENDIENTE DISTRIBUCION</option>
+                    <option value="PENDIENTE DISTRIBUCION">PENDIENTE DISTRIBUCION</option>
                 </select>
                 <div id="avisoCasuisticaBloqueada" class="alert-cerrado d-none">
                     <small>🔒 Casuística bloqueada automáticamente por tener Estado = CERRADO</small>
@@ -1023,7 +1023,7 @@ function mostrar() {
     document.getElementById("denominacion").value = d.denominacion || "";
     document.getElementById("texto").value = d.texto || "";
     document.getElementById("albaran").value = d.albaran || "";
-    document.getElementById("vende").value = d.vende || calculateVende(d);
+    document.getElementById("vende").value = d.vende || calcularVende(d);
     document.getElementById("estado").value = d.estado || "";
     document.getElementById("casuistica").value = d.casuistica || "";
     document.getElementById("zps").value = d.zps || "";
@@ -1040,10 +1040,6 @@ function mostrar() {
     autoResize(document.getElementById("texto"));
 }
 
-// Alias para mantener compatibilidad
-function calculateVende(d) {
-    return calcularVende(d);
-}
 function ordenarIncidenciasEspeciales(data) {
 
     const clasesPrioridad = ["A055", "A042", "A025"];
@@ -1117,15 +1113,17 @@ if (esEspecial && est !== "CERRADO" && est !== "TRATAMIENTO") {
 
     if (primeraPendiente !== -1) {
         state.index = primeraPendiente;
-        state.fromSearch = false;
-
-        mostrar();
         mostrarToast("📌 Saltando a la primera incidencia pendiente de gestión", "info");
-        return;
     } else {
-        state.fromSearch = false;
-        mostrarToast("No hay incidencias pendientes de gestión", "success");
-        return;
+        // 🔥 NO hay pendientes → ir a la última incidencia
+        state.index = state.data.length - 1;
+        mostrarToast("ℹ️ No hay incidencias pendientes. Mostrando la última incidencia", "warning");
+    }
+
+    state.fromSearch = false;
+
+    mostrar();
+    return;
     }
 }
 

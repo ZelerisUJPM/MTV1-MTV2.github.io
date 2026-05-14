@@ -463,44 +463,34 @@ function verificarBloqueoCasuistica() {
         avisoBloqueo.classList.add("d-none");
     }
 }
+
 function validarClaseEspecial() {
-
     const clase = (document.getElementById("clase").value || "").toUpperCase();
-
     const esEspecial = ["A055", "A042", "A025"].includes(clase);
-
     const zpsContainer = document.getElementById("zpsContainer");
     const tipoServicioContainer = document.getElementById("tipoServicioContainer");
     const labelVende = document.getElementById("labelVende");
 
     if (esEspecial) {
-
         zpsContainer.classList.remove("d-none");
         tipoServicioContainer.classList.remove("d-none");
-
         labelVende.innerText = "Solicitante";
-
     } else {
-
         zpsContainer.classList.add("d-none");
         tipoServicioContainer.classList.add("d-none");
-
         labelVende.innerText = "Cod. Vende";
-
         document.getElementById("zps").value = "";
         document.getElementById("tipoServicio").value = "";
     }
 }
 
 function validarTipoServicio(input) {
-
     input.value = input.value.replace(/[^38]/g, "");
-
 }
 
 // ========== INICIALIZAR INDEXEDDB ==========
 async function initDB() {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         const request = indexedDB.open(DB_NAME, DB_VERSION);
         request.onupgradeneeded = (e) => {
             let dbInst = e.target.result;
@@ -512,7 +502,14 @@ async function initDB() {
                 store.createIndex("claveUnica", "claveUnica", { unique: false });
             }
         };
-        request.onsuccess = (e) => { db = e.target.result; resolve(); };
+        request.onsuccess = (e) => { 
+            db = e.target.result; 
+            resolve();
+        };
+        request.onerror = (e) => {
+            console.error("Error abriendo DB:", e);
+            reject(e);
+        };
     });
 }
 
@@ -654,11 +651,11 @@ function limpiarModalBusqueda() {
     indiceEncontrado = -1;
 }
 
-// ========== NORMALIZAR FILA - MODIFICADO ==========
+// ========== NORMALIZAR FILA ==========
 function normalizarFila(d) {
     let alb = Object.keys(d).find(k => k.toLowerCase().includes("albar"));
     
-    // 🔥 PARA DENOMINACIÓN: tomar la SEGUNDA columna si existe duplicada
+    // Para denominación: tomar la SEGUNDA columna si existe duplicada
     let denomValue = "";
     const todasLasKeys = Object.keys(d);
     const columnasDenominacion = todasLasKeys.filter(key => 
@@ -670,16 +667,16 @@ function normalizarFila(d) {
     } else if (columnasDenominacion.length === 1) {
         denomValue = d[columnasDenominacion[0]];
     } else {
-        denomValue = d["Denominación"] || d["Denominación Clase"] ||  "";
+        denomValue = d["Denominación"] || d["Denominación Clase"] || "";
     }
     
-    // 🔥 PARA FECHA: puede ser "Fecha" o "Creado el"
+    // Para fecha
     let fechaValue = d["Fecha"] || d["Creado el"] || d["Fecha creacion"] || d["FECHA DE CREACION "] || "";
     if (typeof fechaValue === "number") {
         fechaValue = convertirFechaExcel(fechaValue);
     }
     
-    // 🔥 PARA TEXTO: priorizar "Texto Incidencia" sobre "Texto Status"
+    // Para texto
     let textoValue = d["Texto Incidencia"] || d["Texto Status"] || "";
     
     return {
@@ -702,11 +699,9 @@ function normalizarFila(d) {
     };
 }
 
-//VALIDACION DEL EXCEL ANTES DE INICIAR GESTION
+// VALIDACION DEL EXCEL ANTES DE INICIAR GESTION
 function validarEstructuraExcel(raw) {
-
     if (!raw || raw.length === 0) {
-
         return {
             ok: false,
             msg: "El archivo Excel está vacío"
@@ -714,64 +709,33 @@ function validarEstructuraExcel(raw) {
     }
 
     const columnasOriginales = Object.keys(raw[0]);
-
-    const columnas = columnasOriginales.map(c =>
-        c.toLowerCase().trim()
-    );
+    const columnas = columnasOriginales.map(c => c.toLowerCase().trim());
 
     const obligatorias = [
-
-        // incidencia
         ["nº incidencia", "nº incidencia", "inc"],
-
-        // documento
         ["documento comercial", "doc. comercial"],
-
-        // tipo
         ["tipo inc.", "tipo"],
-
-        // clase
         ["clase inc.", "clase"],
-
-        // centro
         ["centro"],
-
-        // fecha
-        [
-            "fecha",
-            "creado el",
-            "fecha creacion",
-            "fecha de creacion"
-        ],
-
-        // texto
-        [
-            "texto incidencia",
-            "texto status"
-        ]
+        ["fecha", "creado el", "fecha creacion", "fecha de creacion"],
+        ["texto incidencia", "texto status"]
     ];
 
     const faltantes = [];
 
     obligatorias.forEach(grupo => {
-
         const existe = grupo.some(opcion =>
             columnas.includes(opcion.toLowerCase())
         );
-
         if (!existe) {
             faltantes.push(grupo[0]);
         }
     });
 
     if (faltantes.length > 0) {
-
         return {
-
             ok: false,
-
-            msg:
-                "❌ Archivo Excel incorrecto."
+            msg: "❌ Archivo Excel incorrecto. Faltan columnas requeridas."
         };
     }
 
@@ -824,12 +788,17 @@ function toggleCentroExtra() {
 }
 
 function convertirFechaExcel(n) {
-    let f = XLSX.SSF.parse_date_code(n);
-    return `${f.d.toString().padStart(2,'0')}/${f.m.toString().padStart(2,'0')}/${f.y}`;
+    try {
+        let f = XLSX.SSF.parse_date_code(n);
+        return `${f.d.toString().padStart(2,'0')}/${f.m.toString().padStart(2,'0')}/${f.y}`;
+    } catch(e) {
+        return n.toString();
+    }
 }
 
 function calcularVende(d) {
-    let c = d.centro; let g = (d.grupo || "").toString();
+    let c = d.centro; 
+    let g = (d.grupo || "").toString();
     if (c === "1140") return "003500150";
     if (c === "1500") {
         if (g === "69" || g === "361") return "002801282";
@@ -839,12 +808,16 @@ function calcularVende(d) {
 }
 
 // ========== INICIAR NUEVA CARGA ==========
-async function iniciarNuevaCarga(filtroForzado = null) {
+async function iniciarNuevaCarga(filtroForzado = null, continuarDesde = true) {
     const fileInput = document.getElementById("fileInput");
     const agenteInput = document.getElementById("agente").value.trim();
 
-    if (!fileInput.files.length || !agenteInput) {
-        return mostrarToast("Falta archivo o nombre de agente", "danger");
+    if (!fileInput.files.length) {
+        return mostrarToast("Falta archivo Excel", "danger");
+    }
+    
+    if (!agenteInput) {
+        return mostrarToast("Falta nombre de agente", "danger");
     }
 
     document.getElementById("loader").style.display = "flex";
@@ -852,39 +825,37 @@ async function iniciarNuevaCarga(filtroForzado = null) {
 
     await cargarClavesExistentes();
 
+    // Guardar el índice actual antes de cargar nuevos datos
+    const indiceAnterior = state.index;
+    const datosAnteriores = [...state.data];
+
     const reader = new FileReader();
 
     reader.onload = async (e) => {
         try {
             document.getElementById("loaderTexto").innerText = "Procesando datos del archivo...";
 
-            const wb = XLSX.read(new Uint8Array(e.target.result), { type: "array" });
-            const raw = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: "array" });
+            const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+            const raw = XLSX.utils.sheet_to_json(firstSheet);
+            
             const validacion = validarEstructuraExcel(raw);
-
-if (!validacion.ok) {
-
-    document.getElementById("loader").style.display = "none";
-
-    return mostrarToast(validacion.msg, "danger");
-}
-
-            if (raw.length > 0) {
-                console.log("📊 Columnas detectadas:", Object.keys(raw[0]));
+            if (!validacion.ok) {
+                document.getElementById("loader").style.display = "none";
+                return mostrarToast(validacion.msg, "danger");
             }
 
-            let gestion = document.getElementById("gestion").value;
-            let tipoFiltro = document.getElementById("tipoRecogida").value;
-            let centroFiltro = document.getElementById("centroRecogidaFiltro").value;
+            if (raw.length === 0) {
+                document.getElementById("loader").style.display = "none";
+                return mostrarToast("El archivo Excel está vacío", "danger");
+            }
 
             let nuevos = raw.map(normalizarFila);
-
             nuevos = ordenarIncidenciasEspeciales(nuevos);
-            datosOriginalesCarga = nuevos;
+            datosOriginalesCarga = [...nuevos];
 
-            // ==========================
-            // 🔥 DETECCIÓN DE GESTIONADOS
-            // ==========================
+            // Detección de gestionados
             const hayGestionados = nuevos.some(d =>
                 (d.albaran && d.albaran !== "") ||
                 (d.vende && d.vende !== "") ||
@@ -892,82 +863,79 @@ if (!validacion.ok) {
                 (d.casuistica && d.casuistica !== "")
             );
 
-            // ==========================
-            // 🔥 SI HAY GESTIONADOS Y NO HAY FILTRO FORZADO → PAUSAR
-            // ==========================
+            // Si hay gestionados y no hay filtro forzado → pausar
             if (hayGestionados && !filtroForzado) {
                 document.getElementById("loader").style.display = "none";
-
                 if (!modalFiltroInstance) {
-                    modalFiltroInstance = new bootstrap.Modal(
-                        document.getElementById("modalFiltroCarga")
-                    );
+                    modalFiltroInstance = new bootstrap.Modal(document.getElementById("modalFiltroCarga"));
                 }
-
                 modalFiltroInstance.show();
                 return;
             }
 
-            // ==========================
-            // 🔥 APLICAR FILTRO SELECCIONADO
-            // ==========================
+            // Aplicar filtro seleccionado
             const filtroActivo = filtroForzado || "TODAS";
-
-            document.getElementById("loaderTexto").innerText = "Aplicando filtros...";
+            let gestion = document.getElementById("gestion").value;
 
             if (filtroActivo === "TRATAMIENTO") {
                 nuevos = nuevos.filter(d => (d.estado || "").toUpperCase() === "TRATAMIENTO");
-            }
-
-            if (filtroActivo === "CERRADO") {
+            } else if (filtroActivo === "CERRADO") {
                 nuevos = nuevos.filter(d => (d.estado || "").toUpperCase() === "CERRADO");
-            }
-
-            if (filtroActivo === "SOLICITADO") {
+            } else if (filtroActivo === "SOLICITADO") {
                 nuevos = nuevos.filter(d => (d.estado || "").toUpperCase() === "SOLICITADO");
             }
 
             // filtros existentes RECOGIDAS
             if (gestion === "RECOGIDAS") {
+                let tipoFiltro = document.getElementById("tipoRecogida").value;
+                let centroFiltro = document.getElementById("centroRecogidaFiltro").value;
+                
                 if (tipoFiltro) {
-                    nuevos = nuevos.filter(d =>
-                        (d.tipo || "").toString().toUpperCase() === tipoFiltro.toUpperCase()
-                    );
+                    nuevos = nuevos.filter(d => (d.tipo || "").toString().toUpperCase() === tipoFiltro.toUpperCase());
                 }
 
                 if (tipoFiltro === "T05" && centroFiltro) {
                     if (centroFiltro === "GRUPO1500") {
-                        nuevos = nuevos.filter(d => ["1500", "1140"].includes((d.centro || "").toString()));
+                        nuevos = nuevos.filter(d => {
+                            const centro = (d.centro || "").toString();
+                            return centro === "1500" || centro === "1140";
+                        });
                     } else if (centroFiltro === "GRUPO9010") {
-                        nuevos = nuevos.filter(d => ["9010", "1100"].includes((d.centro || "").toString()));
+                        nuevos = nuevos.filter(d => {
+                            const centro = (d.centro || "").toString();
+                            return centro === "9010" || centro === "1100";
+                        });
                     }
                 }
             }
 
             if (nuevos.length === 0) {
                 document.getElementById("loader").style.display = "none";
-                return mostrarToast("No hay registros coincidentes", "warning");
+                return mostrarToast("No hay registros coincidentes con los filtros aplicados", "warning");
             }
-
-            document.getElementById("loaderTexto").innerText =
-                `Validando ${nuevos.length} registros...`;
 
             const nuevosUnicos = eliminarDuplicadosCarga(nuevos);
 
             if (nuevosUnicos.length === 0) {
                 document.getElementById("loader").style.display = "none";
-                return mostrarToast("No hay registros nuevos", "info");
+                return mostrarToast("No hay registros nuevos para añadir (todos ya existen)", "info");
             }
 
-            document.getElementById("loaderTexto").innerText =
-                `Guardando ${nuevosUnicos.length} registros...`;
-
             const tx = db.transaction(["data", "config"], "readwrite");
-
-            nuevosUnicos.forEach(item => tx.objectStore("data").add(item));
+            
+            for (const item of nuevosUnicos) {
+                tx.objectStore("data").add(item);
+            }
 
             state.agente = agenteInput;
             state.gestion = gestion;
+            
+            // 🔥 IMPORTANTE: Mantener el índice si estamos continuando
+            if (continuarDesde && indiceAnterior < state.data.length) {
+                state.index = indiceAnterior;
+            } else {
+                state.index = 0;
+            }
 
             tx.objectStore("config").put({
                 agente: state.agente,
@@ -976,35 +944,40 @@ if (!validacion.ok) {
             }, "current_state");
 
             tx.oncomplete = () => {
-                db.transaction("data", "readonly")
-                    .objectStore("data")
-                    .getAll().onsuccess = (ev) => {
-
+                const getRequest = db.transaction("data", "readonly").objectStore("data").getAll();
+                getRequest.onsuccess = (ev) => {
                     state.data = ev.target.result;
                     actualizarClavesDesdeState();
-
                     document.getElementById("loader").style.display = "none";
-
                     mostrarApp();
                     mostrar();
-
-                    mostrarToast(
-                        `✅ Cargados ${nuevosUnicos.length} registros. Total: ${state.data.length}`,
-                        "success"
-                    );
+                    
+                    // Mostrar mensaje con la posición
+                    if (continuarDesde && indiceAnterior < state.data.length) {
+                        mostrarToast(`✅ Cargados ${nuevosUnicos.length} registros nuevos. Continuando en incidencia ${state.index + 1} de ${state.data.length}`, "success");
+                    } else {
+                        mostrarToast(`✅ Cargados ${nuevosUnicos.length} registros nuevos. Total: ${state.data.length}`, "success");
+                    }
                 };
             };
 
-            tx.onerror = () => {
+            tx.onerror = (e) => {
+                console.error("Error en transacción:", e);
                 document.getElementById("loader").style.display = "none";
-                mostrarToast("Error al guardar datos", "danger");
+                mostrarToast("Error al guardar datos en la base de datos", "danger");
             };
 
         } catch (err) {
-            console.error(err);
+            console.error("Error procesando archivo:", err);
             document.getElementById("loader").style.display = "none";
-            mostrarToast("Error procesando el archivo", "danger");
+            mostrarToast("Error procesando el archivo: " + err.message, "danger");
         }
+    };
+
+    reader.onerror = (err) => {
+        console.error("Error leyendo archivo:", err);
+        document.getElementById("loader").style.display = "none";
+        mostrarToast("Error al leer el archivo", "danger");
     };
 
     reader.readAsArrayBuffer(fileInput.files[0]);
@@ -1041,24 +1014,12 @@ function mostrar() {
 }
 
 function ordenarIncidenciasEspeciales(data) {
-
     const clasesPrioridad = ["A055", "A042", "A025"];
-
     return data.sort((a, b) => {
-
-        const aEspecial = clasesPrioridad.includes(
-            (a.clase || "").toUpperCase()
-        );
-
-        const bEspecial = clasesPrioridad.includes(
-            (b.clase || "").toUpperCase()
-        );
-
-        // especiales primero
+        const aEspecial = clasesPrioridad.includes((a.clase || "").toUpperCase());
+        const bEspecial = clasesPrioridad.includes((b.clase || "").toUpperCase());
         if (aEspecial && !bEspecial) return -1;
-
         if (!aEspecial && bEspecial) return 1;
-
         return 0;
     });
 }
@@ -1087,57 +1048,50 @@ async function siguiente() {
     const est = document.getElementById("estado").value;
     const cas = document.getElementById("casuistica").value;
     const clase = (document.getElementById("clase").value || "").toUpperCase();
+    const esEspecial = ["A055", "A042", "A025"].includes(clase);
 
-const esEspecial = ["A055", "A042", "A025"].includes(clase);
-
-if (!est || !cas) {
-    return mostrarToast("Estado y Casuística son obligatorios", "danger");
-}
-
-if (esEspecial && est !== "CERRADO" && est !== "TRATAMIENTO") {
-
-    const tipoServicio = document.getElementById("tipoServicio").value;
-
-    if (tipoServicio !== "3" && tipoServicio !== "8") {
-
-        return mostrarToast(
-            "⚠️ Tipo de Servicio obligatorio. Solo se permite 3 u 8",
-            "danger"
-        );
+    if (!est || !cas) {
+        return mostrarToast("Estado y Casuística son obligatorios", "danger");
     }
-}
+
+    if (esEspecial && est !== "CERRADO" && est !== "TRATAMIENTO") {
+        const tipoServicio = document.getElementById("tipoServicio").value;
+        if (tipoServicio !== "3" && tipoServicio !== "8") {
+            return mostrarToast("⚠️ Tipo de Servicio obligatorio. Solo se permite 3 u 8", "danger");
+        }
+    }
 
     guardar();
+    
     if (state.fromSearch) {
-    const primeraPendiente = encontrarPrimeraPendiente();
-
-    if (primeraPendiente !== -1) {
-        state.index = primeraPendiente;
-        mostrarToast("📌 Saltando a la primera incidencia pendiente de gestión", "info");
-    } else {
-        // 🔥 NO hay pendientes → ir a la última incidencia
-        state.index = state.data.length - 1;
-        mostrarToast("ℹ️ No hay incidencias pendientes. Mostrando la última incidencia", "warning");
+        const primeraPendiente = encontrarPrimeraPendiente();
+        if (primeraPendiente !== -1) {
+            state.index = primeraPendiente;
+            mostrarToast("📌 Saltando a la primera incidencia pendiente de gestión", "info");
+        } else {
+            state.index = state.data.length - 1;
+            mostrarToast("ℹ️ No hay incidencias pendientes. Mostrando la última incidencia", "warning");
+        }
+        state.fromSearch = false;
+        mostrar();
+        return;
     }
-
-    state.fromSearch = false;
-
-    mostrar();
-    return;
-    }
-}
 
     if (state.index < state.data.length - 1) {
         state.index++;
         if (db) {
-            db.transaction("config", "readwrite").objectStore("config").put({ agente: state.agente, gestion: state.gestion, index: state.index }, "current_state");
+            db.transaction("config", "readwrite").objectStore("config").put({ 
+                agente: state.agente, 
+                gestion: state.gestion, 
+                index: state.index 
+            }, "current_state");
         }
         mostrar();
     } else {
         mostrarToast("¡Fin de la lista alcanzado!", "success");
         document.getElementById("btnFinales").style.display = "flex";
     }
-
+}
 
 function anterior() {
     guardar();
@@ -1174,83 +1128,51 @@ function descargar() {
         XLSX.writeFile(wb, `Gestion_${state.agente}_${new Date().toLocaleDateString().replace(/\//g,'-')}.xlsx`);
     };
 }
+
 function descargarEspeciales() {
-
     guardar();
-
     if (!db) return;
 
-    db.transaction("data", "readonly")
-    .objectStore("data")
-    .getAll()
-    .onsuccess = (e) => {
-
+    db.transaction("data", "readonly").objectStore("data").getAll().onsuccess = (e) => {
         const especiales = e.target.result.filter(d =>
-            ["A055", "A042", "A025"].includes(
-                (d.clase || "").toUpperCase()
-            )
+            ["A055", "A042", "A025"].includes((d.clase || "").toUpperCase())
         );
 
         if (especiales.length === 0) {
-
-            mostrarToast(
-                "No existen incidencias especiales para exportar",
-                "warning"
-            );
-
+            mostrarToast("No existen incidencias especiales para exportar", "warning");
             return;
         }
 
         const dataExport = especiales.map(d => ({
-
             "INC": d.inc || "",
-
             "FECHA DE CREACION": d.fecha || "",
-
             "DOC.COMERCIAL": d.zps || "",
-
             "ALBARAN": d.albaran || "",
-
             "SOLICITANTE": d.vende || "",
-
             "FECHA": d.fechaGestion || "",
-
             "ESTADO": d.estado || "",
-
             "CAUSISTICA": d.casuistica || "",
-
             "AGENTE": d.agente || "",
-
             "Tipo Servicio": d.tipoServicio || ""
-
         }));
 
         const ws = XLSX.utils.json_to_sheet(dataExport);
-
         const wb = XLSX.utils.book_new();
-
-        XLSX.utils.book_append_sheet(
-            wb,
-            ws,
-            "INCIDENCIAS EPECIALES"
-        );
-
-        XLSX.writeFile(
-            wb,
-            `ZPS_${new Date()
-                .toLocaleDateString()
-                .replace(/\//g, "-")}.xlsx`
-        );
-
-        mostrarToast(
-            `✅ Exportadas ${especiales.length} incidencias especiales`,
-            "success"
-        );
+        XLSX.utils.book_append_sheet(wb, ws, "INCIDENCIAS ESPECIALES");
+        XLSX.writeFile(wb, `ZPS_${new Date().toLocaleDateString().replace(/\//g, "-")}.xlsx`);
+        mostrarToast(`✅ Exportadas ${especiales.length} incidencias especiales`, "success");
     };
 }
 
-function autoResize(el) { el.style.height = "auto"; el.style.height = el.scrollHeight + "px"; }
-function mostrarApp() { document.getElementById("inicio").classList.add("d-none"); document.getElementById("app").classList.remove("d-none"); }
+function autoResize(el) { 
+    el.style.height = "auto"; 
+    el.style.height = el.scrollHeight + "px"; 
+}
+
+function mostrarApp() { 
+    document.getElementById("inicio").classList.add("d-none"); 
+    document.getElementById("app").classList.remove("d-none"); 
+}
 
 function irAInicio() { 
     guardar();
@@ -1261,9 +1183,17 @@ function irAInicio() {
     document.getElementById("btnFinales").style.display = "none";
     document.getElementById("agente").value = state.agente;
     document.getElementById("fileInput").value = "";
+    
+    // Mostrar información de la sesión actual
+    if (state.data.length > 0) {
+        mostrarToast(`📌 Sesión actual: ${state.data.length} incidencias cargadas. Posición: ${state.index + 1} de ${state.data.length}`, "info");
+    }
 }
 
-function recuperarSesionDirecto() { mostrarApp(); mostrar(); }
+function recuperarSesionDirecto() { 
+    mostrarApp(); 
+    mostrar(); 
+}
 
 function mostrarToast(msg, tipo) {
     document.getElementById("toastBody").innerText = msg;
@@ -1273,30 +1203,46 @@ function mostrarToast(msg, tipo) {
 }
 
 async function arrancarAplicacion() {
-    await initDB();
-    await cargarClavesExistentes();
-    toggleFiltrosRecogida();
-    setTimeout(() => {
-        if (db) {
-            db.transaction("config", "readonly").objectStore("config").get("current_state").onsuccess = (e) => {
-                if (e.target.result && e.target.result.agente) {
-                    db.transaction("data", "readonly").objectStore("data").getAll().onsuccess = (ev) => {
-                        if (ev.target.result.length > 0) new bootstrap.Modal(document.getElementById('modalSesion')).show();
-                    };
-                }
-            };
-        }
-    }, 400);
+    try {
+        await initDB();
+        await cargarClavesExistentes();
+        toggleFiltrosRecogida();
+        setTimeout(() => {
+            if (db) {
+                const tx = db.transaction("config", "readonly");
+                const request = tx.objectStore("config").get("current_state");
+                request.onsuccess = (e) => {
+                    if (e.target.result && e.target.result.agente) {
+                        const dataTx = db.transaction("data", "readonly");
+                        const dataRequest = dataTx.objectStore("data").getAll();
+                        dataRequest.onsuccess = (ev) => {
+                            if (ev.target.result.length > 0) {
+                                new bootstrap.Modal(document.getElementById('modalSesion')).show();
+                            }
+                        };
+                    }
+                };
+            }
+        }, 400);
+    } catch(e) {
+        console.error("Error iniciando app:", e);
+        mostrarToast("Error al iniciar la aplicación", "danger");
+    }
 }
 
 function recuperarSesion() {
-    db.transaction("config", "readonly").objectStore("config").get("current_state").onsuccess = (e) => {
+    const tx = db.transaction("config", "readonly");
+    const request = tx.objectStore("config").get("current_state");
+    request.onsuccess = (e) => {
         state = {...state, ...e.target.result};
-        db.transaction("data", "readonly").objectStore("data").getAll().onsuccess = (ev) => {
+        const dataTx = db.transaction("data", "readonly");
+        const dataRequest = dataTx.objectStore("data").getAll();
+        dataRequest.onsuccess = (ev) => {
             state.data = ev.target.result;
             actualizarClavesDesdeState();
             bootstrap.Modal.getInstance(document.getElementById('modalSesion')).hide();
-            mostrarApp(); mostrar();
+            mostrarApp(); 
+            mostrar();
             if (state.index === state.data.length - 1 && state.data[state.index].estado) {
                 document.getElementById("btnFinales").style.display = "flex";
             }
@@ -1317,23 +1263,16 @@ function encontrarPrimeraPendiente() {
 }
 
 function aplicarFiltroCarga(tipo) {
-
     let data = [...datosOriginalesCarga];
     data = ordenarIncidenciasEspeciales(data);
 
     if (tipo === "TRATAMIENTO") {
         data = data.filter(d => (d.estado || "").toUpperCase() === "TRATAMIENTO");
-    }
-
-    if (tipo === "CERRADO") {
+    } else if (tipo === "CERRADO") {
         data = data.filter(d => (d.estado || "").toUpperCase() === "CERRADO");
-    }
-
-    if (tipo === "SOLICITADO") {
+    } else if (tipo === "SOLICITADO") {
         data = data.filter(d => (d.estado || "").toUpperCase() === "SOLICITADO");
     }
-
-    // TODAS -> no filtra
 
     if (data.length === 0) {
         mostrarToast("No hay registros con ese filtro", "warning");
@@ -1343,29 +1282,40 @@ function aplicarFiltroCarga(tipo) {
     const gestion = document.getElementById("gestion").value;
     const agenteInput = document.getElementById("agente").value.trim();
 
-    // continuar flujo original
     procesarCargaFinal(data, gestion, agenteInput);
-
-    modalFiltroInstance.hide();
+    
+    if (modalFiltroInstance) {
+        modalFiltroInstance.hide();
+    }
 }
 
 function procesarCargaFinal(nuevos, gestion, agenteInput) {
-
     document.getElementById("loader").style.display = "flex";
     document.getElementById("loaderTexto").innerText = "Procesando datos...";
 
     let tipoFiltro = document.getElementById("tipoRecogida").value;
     let centroFiltro = document.getElementById("centroRecogidaFiltro").value;
 
+    // Guardar el índice actual
+    const indiceAnterior = state.index;
+
     // aplicar filtros originales
     if (gestion === "RECOGIDAS") {
         if (tipoFiltro) {
-            nuevos = nuevos.filter(d => (d.tipo || "").toUpperCase() === tipoFiltro.toUpperCase());
+            nuevos = nuevos.filter(d => (d.tipo || "").toString().toUpperCase() === tipoFiltro.toUpperCase());
         }
 
         if (tipoFiltro === "T05" && centroFiltro) {
             if (centroFiltro === "GRUPO1500") {
-                nuevos = nuevos.filter(d => ["1500", "1140"].includes(d.centro));
+                nuevos = nuevos.filter(d => {
+                    const centro = (d.centro || "").toString();
+                    return centro === "1500" || centro === "1140";
+                });
+            } else if (centroFiltro === "GRUPO9010") {
+                nuevos = nuevos.filter(d => {
+                    const centro = (d.centro || "").toString();
+                    return centro === "9010" || centro === "1100";
+                });
             }
         }
     }
@@ -1377,12 +1327,28 @@ function procesarCargaFinal(nuevos, gestion, agenteInput) {
     }
 
     const nuevosUnicos = eliminarDuplicadosCarga(nuevos);
+    
+    if (nuevosUnicos.length === 0) {
+        document.getElementById("loader").style.display = "none";
+        mostrarToast("Todos los registros ya existen en la base de datos", "warning");
+        return;
+    }
 
     const tx = db.transaction(["data", "config"], "readwrite");
-    nuevosUnicos.forEach(item => tx.objectStore("data").add(item));
+    
+    for (const item of nuevosUnicos) {
+        tx.objectStore("data").add(item);
+    }
 
     state.agente = agenteInput;
     state.gestion = gestion;
+
+    // 🔥 Mantener el índice actual si es válido
+    if (indiceAnterior < state.data.length) {
+        state.index = indiceAnterior;
+    } else {
+        state.index = 0;
+    }
 
     tx.objectStore("config").put({
         agente: state.agente,
@@ -1391,28 +1357,29 @@ function procesarCargaFinal(nuevos, gestion, agenteInput) {
     }, "current_state");
 
     tx.oncomplete = () => {
-        db.transaction("data", "readonly").objectStore("data").getAll().onsuccess = (ev) => {
+        const getRequest = db.transaction("data", "readonly").objectStore("data").getAll();
+        getRequest.onsuccess = (ev) => {
             state.data = ev.target.result;
             actualizarClavesDesdeState();
-
-            // 🔥 reset importante
-            state.index = 0;
             state.fromSearch = false;
-
-            // UI
             document.getElementById("loader").style.display = "none";
-
             mostrarApp();
-
-            // 🔥 asegurar que se vea el primer registro cargado
             if (state.data.length > 0) {
                 mostrar();
+                mostrarToast(`✅ Cargados ${nuevosUnicos.length} registros nuevos. Continuando en incidencia ${state.index + 1} de ${state.data.length}`, "success");
             } else {
                 mostrarToast("No hay datos para mostrar", "warning");
             }
+        };
     };
-    }
+    
+    tx.onerror = (e) => {
+        console.error("Error en transacción:", e);
+        document.getElementById("loader").style.display = "none";
+        mostrarToast("Error al guardar los datos", "danger");
+    };
 }
+
 window.addEventListener("load", arrancarAplicacion);
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

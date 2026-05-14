@@ -1098,7 +1098,7 @@ if (!est || !cas) {
     return mostrarToast("Estado y Casuística son obligatorios", "danger");
 }
 
-if (esEspecial && est !== "CERRADO") {
+if (esEspecial && est !== "CERRADO" && est !== "TRATAMIENTO") {
 
     const tipoServicio = document.getElementById("tipoServicio").value;
 

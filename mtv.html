@@ -216,12 +216,81 @@
         max-height: 350px;
       }
     }
+/* ===== ESTILOS DE LA HORA - CENTRADO SIN SEPARACIÓN ===== */
+.hora-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  user-select: none;
+  margin-bottom: 15px;
+  padding: 0;
+}
+
+.hora-label {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--text-light);
+  padding: 0;
+  background: transparent;
+}
+
+body.dark-mode .hora-label {
+  background: transparent;
+  color: var(--text-dark);
+}
+
+/* Contenedor que recorta el movimiento */
+.hora-wrapper {
+  display: inline-block;
+  overflow: hidden;
+  width: 105px;
+  position: relative;
+}
+
+/* Animación de la hora */
+#hora-dinamica {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: monospace;
+  padding: 0;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+  transform: translateX(0);
+  opacity: 1;
+  background: transparent;
+}
+
+body.dark-mode #hora-dinamica {
+  background: transparent;
+  color: var(--text-dark);
+}
+
+/* Estado oculto - se desliza hacia la izquierda */
+.hora-oculta #hora-dinamica {
+  transform: translateX(-120%);
+  opacity: 0;
+}
+
+/* Estado visible - normal */
+.hora-visible #hora-dinamica {
+  transform: translateX(0);
+  opacity: 1;
+}
   </style>
 </head>
 <body>
 
 <div class="main-card">
-  <h2 class="mb-4">Tipificaciones MTV</h2>
+  <!-- HORA DE ESPAÑA -->
+  <div class="hora-container" id="horaContainer">
+    <span class="hora-label">Hora en España:</span>
+    <div class="hora-wrapper">
+      <span id="hora-dinamica">--:--:--</span>
+    </div>
+  </div>
+  <h2 class="mb-4">Tipificaciones Zeleris</h2>
 
   <!-- BOTONES PRINCIPALES -->
   <div id="botones-principales" class="d-flex justify-content-center gap-3 flex-wrap mb-4">
@@ -235,6 +304,67 @@
 </div>
 
 <script>
+
+  // =========================
+// ===== HORA DE ESPAÑA CON EFECTO SLIDE =====
+// =========================
+
+// Estado de visibilidad de la hora
+let horaVisible = true;
+
+// Función para actualizar la hora
+// Función para actualizar la hora
+function actualizarHora() {
+  const horaElement = document.getElementById('hora-dinamica');
+  if (horaElement) {
+    const ahora = new Date();
+    let horaFormateada = ahora.toLocaleTimeString('es-ES', {
+      timeZone: 'Europe/Madrid',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    });
+    
+    // Convertir a formato 12 horas con AM/PM en la misma línea
+    let horas = ahora.getHours();
+    let minutos = ahora.getMinutes();
+    let segundos = ahora.getSeconds();
+    let ampm = horas >= 12 ? 'PM' : 'AM';
+    horas = horas % 12;
+    horas = horas ? horas : 12;
+    const hora12 = `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')} ${ampm}`;
+    
+    horaElement.textContent = hora12;
+  }
+}
+
+// Iniciar el reloj
+setInterval(actualizarHora, 1000);
+actualizarHora();
+
+// Función para toggle de la hora con efecto slide
+function toggleHora() {
+  const container = document.getElementById('horaContainer');
+  
+  if (horaVisible) {
+    // Ocultar hora - añadir clase que desliza hacia la izquierda
+    container.classList.remove('hora-visible');
+    container.classList.add('hora-oculta');
+    horaVisible = false;
+  } else {
+    // Mostrar hora - quitar clase oculta
+    container.classList.remove('hora-oculta');
+    container.classList.add('hora-visible');
+    horaVisible = true;
+  }
+}
+
+// Agregar evento de clic al contenedor de hora
+document.getElementById('horaContainer').addEventListener('click', toggleHora);
+
+// Estado inicial visible
+document.getElementById('horaContainer').classList.add('hora-visible');
 // =========================
 // ===== MODO OSCURO =====
 // =========================
@@ -361,23 +491,11 @@ const descripcionesAFR = ordenarOpcionesAlfabeticamente([
   { opcion: "Abandono", texto: "Llamada cortada, cliente abandono la comunicación. Hablo con " }
 ]);
 
-// Descripciones para ASOS
-const descripcionesASOS = ordenarOpcionesAlfabeticamente([
-  { opcion: "No desea el servicio", texto: "Cliente no desea el servicio. Hablo con " },
-  { opcion: "Cliente desea el servicio.", texto: "Cliente autoinstalable, confirmo envío. Hablo con " },
-  { opcion: "Cliente no contesta", texto: "Cliente no contesta." },
-  { opcion: "Contestador automático", texto: "Contestador automático, cliente no contesta." },
-  { opcion: "Abandono", texto: "Llamada cortada, cliente abandono la comunicación. Hablo con " }
-]);
+// Descripciones para ASOS se repiten con IMATV-VDT
 
-// Descripciones para HGUW6-P
-const descripcionesHGUW6P = ordenarOpcionesAlfabeticamente([
-  { opcion: "No desea el servicio", texto: "Cliente no desea el servicio. Hablo con " },
-  { opcion: "Cliente desea el servicio.", texto: "Cliente autoinstalable, confirmo envío. Hablo con " },
-  { opcion: "Cliente no contesta", texto: "Cliente no contesta." },
-  { opcion: "Contestador automático", texto: "Contestador automático, cliente no contesta." },
-  { opcion: "Abandono", texto: "Llamada cortada, cliente abandono la comunicación. Hablo con " }
-]);
+
+// Descripciones para HGUW6-P se repiten con IMATV-VD
+
 
 // Descripciones para MTV 2 (genéricas)
 const descripcionesGenericas = ordenarOpcionesAlfabeticamente([
@@ -434,12 +552,12 @@ const configMTV = {
     { 
       nombre: "ASOS", 
       imgs: ["img/ASOS-VD.png", "img/ASOS-VDT.png"],
-      descripciones: descripcionesASOS
+      descripciones: descripcionesIMATVVDT
     },
     { 
       nombre: "HGUW6-P", 
       imgs: ["img/WIFI-6.png"],
-      descripciones: descripcionesHGUW6P
+      descripciones: descripcionesIMATVVD
     }
   ],
   "MTV 2": [
@@ -574,6 +692,9 @@ function mostrarImagenes(imgs, skill) {
 function volverAlInicio() {
   const botonesPrincipales = document.getElementById('botones-principales');
   const contenidoDinamico = document.getElementById('contenido-dinamico');
+  const titulo = document.querySelector('.main-card h2');
+  // Restaurar el título original
+  titulo.textContent = "Tipificaciones Zeleris";
   
   botonesPrincipales.classList.remove('hidden');
   contenidoDinamico.classList.add('hidden');
@@ -587,7 +708,13 @@ function volverAlInicio() {
 function mostrarSubBotonesMTV(skill) {
   const contenidoDinamico = document.getElementById('contenido-dinamico');
   const botonesPrincipales = document.getElementById('botones-principales');
-  
+  const titulo = document.querySelector('.main-card h2');
+   // Cambiar el título según la selección
+  if (skill === "MTV 1") {
+    titulo.textContent = "MTV 1";
+  } else if (skill === "MTV 2") {
+    titulo.textContent = "MTV 2";
+  }
   // Ocultar botones principales
   botonesPrincipales.classList.add('hidden');
   
@@ -662,6 +789,9 @@ function mostrarSubBotonesMTV(skill) {
 function mostrarCAC() {
   const contenidoDinamico = document.getElementById('contenido-dinamico');
   const botonesPrincipales = document.getElementById('botones-principales');
+  const titulo = document.querySelector('.main-card h2');
+  // Cambiar el título
+  titulo.textContent = "CAC";
   
   // Ocultar botones principales
   botonesPrincipales.classList.add('hidden');

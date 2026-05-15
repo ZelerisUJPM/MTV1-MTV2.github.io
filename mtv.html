@@ -312,30 +312,25 @@ body.dark-mode #hora-dinamica {
 // Estado de visibilidad de la hora
 let horaVisible = true;
 
-// Función para actualizar la hora
-// Función para actualizar la hora
+// Función para actualizar la hora de España
 function actualizarHora() {
   const horaElement = document.getElementById('hora-dinamica');
   if (horaElement) {
     const ahora = new Date();
-    let horaFormateada = ahora.toLocaleTimeString('es-ES', {
+    
+    // Opción 1: Usar toLocaleTimeString con timeZone 'Europe/Madrid'
+    const horaEspana = ahora.toLocaleTimeString('es-ES', {
       timeZone: 'Europe/Madrid',
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
-      hour12: false
+      hour12: true
     });
     
-    // Convertir a formato 12 horas con AM/PM en la misma línea
-    let horas = ahora.getHours();
-    let minutos = ahora.getMinutes();
-    let segundos = ahora.getSeconds();
-    let ampm = horas >= 12 ? 'PM' : 'AM';
-    horas = horas % 12;
-    horas = horas ? horas : 12;
-    const hora12 = `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')} ${ampm}`;
+    // Limpiar el formato (quitar puntos y espacios extra)
+    let horaLimpia = horaEspana.replace(/\./g, '').replace(/\s+/g, ' ');
     
-    horaElement.textContent = hora12;
+    horaElement.textContent = horaLimpia;
   }
 }
 

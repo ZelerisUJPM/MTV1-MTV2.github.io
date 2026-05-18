@@ -32,6 +32,7 @@
             border: 1px solid #dee2e6;
             backdrop-filter: blur(2px);
             z-index: 10;
+            cursor: pointer;
         }
 
         .btn-buscar-icono {
@@ -99,7 +100,89 @@
                 padding: 3px 8px;
             }
         }
-    </style>
+        /* ===== MODO OSCURO PARA FICHEROS ===== */
+body.dark-mode {
+  background: #1a1a2e !important;
+}
+
+body.dark-mode .card {
+  background: #16213e !important;
+  color: #e0e0e0 !important;
+  border-color: #2a2a4a !important;
+}
+
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+  background: #0f3460 !important;
+  color: #e0e0e0 !important;
+  border-color: #2a2a4a !important;
+}
+
+body.dark-mode .form-control:disabled,
+body.dark-mode .form-select:disabled {
+  background: #1a1a2e !important;
+}
+
+body.dark-mode .hora-esquina {
+  background: rgba(255,255,255,0.1);
+  color: #54eb36;
+  border-color: #2a2a4a;
+}
+
+body.dark-mode .modal-content {
+  background: #16213e;
+  color: #e0e0e0;
+}
+
+body.dark-mode .modal-header {
+  border-bottom-color: #2a2a4a;
+}
+
+body.dark-mode .modal-footer {
+  border-top-color: #2a2a4a;
+}
+
+body.dark-mode .btn-close {
+  filter: invert(1);
+}
+
+body.dark-mode .alert-info {
+  background-color: #0f3460;
+  color: #e0e0e0;
+  border-color: #2a2a4a;
+}
+
+body.dark-mode .alert-cerrado {
+  background-color: #0f3460;
+  color: #e0e0e0;
+  border-color: #2a2a4a;
+}
+/* Corregir color del título y textos generales en modo oscuro */
+body.dark-mode .container.my-4 h2 {
+  color: #e0e0e0 !important;
+}
+
+body.dark-mode .card .form-label,
+body.dark-mode .card .text-center,
+body.dark-mode .card h5,
+body.dark-mode .card .btn-buscar-icono {
+  color: #e0e0e0;
+}
+
+body.dark-mode .card .btn-buscar-icono:hover {
+  color: #54eb36;
+}
+
+/* Asegurar color de los textos dentro de los modales */
+body.dark-mode .modal .modal-title {
+  color: white;
+}
+
+body.dark-mode .modal .modal-body,
+body.dark-mode .modal .modal-footer {
+  color: #e0e0e0;
+}
+</style>
 </head>
 <body class="bg-light">
 
@@ -109,7 +192,7 @@
 </div>
 
 <div class="container my-4">
-    <div id="relojEspana" class="hora-esquina">--:-- --</div>
+    <div id="relojEspana" class="hora-esquina" onclick="toggleHoraFicheros()">--:-- --</div>
     <h2 class="text-center mb-4">Gestor de Incidencias</h2>
 
     <!-- VISTA INICIO -->
@@ -247,7 +330,6 @@
                 <label class="form-label">Casuistica <span class="text-danger">*</span></label>
                 <select id="casuistica" class="form-select">
                     <option value="" selected disabled>Seleccionar...</option>
-                    <option value="CERRADO">CERRADO</option>
                     <option value="RECOGIDA PENDIENTE CONTACTOS">RECOGIDA PENDIENTE ZCONTACTOS</option>
                     <option value="RECOGIDA PENDIENTE TRANSPORTE">RECOGIDA PENDIENTE TRANSPORTE</option>
                     <option value="ZPS FALTA DE STOCK">ZPS FALTA DE STOCK</option>
@@ -350,6 +432,18 @@
 </div>
 
 <script>
+    // ========== RECIBIR MODO OSCURO DEL PADRE ==========
+window.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'DARK_MODE') {
+    if (event.data.darkMode) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+  }
+});
+// Notificar al padre que estamos listos
+window.parent.postMessage({ type: 'IFRAME_READY' }, '*');
 const DB_NAME = "GestorIncidenciasDB";
 const DB_VERSION = 2;
 let db;
@@ -359,6 +453,7 @@ let indiceEncontrado = -1;
 let modalBusquedaInstance = null;
 let datosOriginalesCarga = [];
 let modalFiltroInstance = null;
+let horaVisibleFicheros = true;
 
 // ========== FUNCIÓN RELOJ ESPAÑA ==========
 function actualizarRelojEspana() {
@@ -375,11 +470,32 @@ function actualizarRelojEspana() {
     const ahora = new Date();
     const horaFormateada = ahora.toLocaleTimeString("es-ES", opciones);
     let horaLimpia = horaFormateada.replace(/\./g, "").replace(/\s+/g, " ").replace(/p\.?\s?m\.?/i, "PM").replace(/a\.?\s?m\.?/i, "AM");
-    relojDiv.innerText = horaLimpia;
+    if (horaVisibleFicheros) {
+        relojDiv.innerText = horaLimpia;
+    } else {
+        relojDiv.innerText = "--:-- --";
+    }
+}
+
+function toggleHoraFicheros() {
+    horaVisibleFicheros = !horaVisibleFicheros;
+    actualizarRelojEspana();
 }
 
 setInterval(actualizarRelojEspana, 1000);
 actualizarRelojEspana();
+
+// ========== ORDENAR INCIDENCIAS ESPECIALES (DEFINIDA PRIMERO) ==========
+function ordenarIncidenciasEspeciales(data) {
+    const clasesPrioridad = ["A055", "A042", "A025"];
+    return data.sort((a, b) => {
+        const aEspecial = clasesPrioridad.includes((a.clase || "").toUpperCase());
+        const bEspecial = clasesPrioridad.includes((b.clase || "").toUpperCase());
+        if (aEspecial && !bEspecial) return -1;
+        if (!aEspecial && bEspecial) return 1;
+        return 0;
+    });
+}
 
 // ========== FUNCIÓN PARA IR A LA ÚLTIMA INCIDENCIA GESTIONADA ==========
 function irUltimaGestionada() {
@@ -436,14 +552,57 @@ function onEstadoChange() {
     const casuisticaSelect = document.getElementById("casuistica");
     const avisoBloqueo = document.getElementById("avisoCasuisticaBloqueada");
     
+    // Obtener las opciones base (todas excepto CERRADO)
+    const opcionesBase = [
+        "RECOGIDA PENDIENTE CONTACTOS",
+        "RECOGIDA PENDIENTE TRANSPORTE",
+        "ZPS FALTA DE STOCK",
+        "PENDIENTE RESPUESTA CORREO",
+        "PENDIENTE DISTRIBUCION"
+    ];
+    
     if (estadoSelect.value === "CERRADO") {
+        // Agregar la opción CERRADO si no existe
+        let tieneCerrado = false;
+        for (let i = 0; i < casuisticaSelect.options.length; i++) {
+            if (casuisticaSelect.options[i].value === "CERRADO") {
+                tieneCerrado = true;
+                break;
+            }
+        }
+        if (!tieneCerrado) {
+            const option = document.createElement("option");
+            option.value = "CERRADO";
+            option.textContent = "CERRADO";
+            casuisticaSelect.appendChild(option);
+        }
         casuisticaSelect.value = "CERRADO";
         casuisticaSelect.disabled = true;
         avisoBloqueo.classList.remove("d-none");
-        mostrarToast("🔒 Estado CERRADO seleccionado. Casuística automática: CERRADO (campo bloqueado)", "info");
+        mostrarToast("🔒 Estado CERRADO seleccionado. Casuística fijada a CERRADO", "info");
     } else {
+        // Eliminar la opción CERRADO si existe
+        for (let i = 0; i < casuisticaSelect.options.length; i++) {
+            if (casuisticaSelect.options[i].value === "CERRADO") {
+                casuisticaSelect.remove(i);
+                break;
+            }
+        }
+        // Restaurar opciones base si el select está vacío (por si acaso)
+        if (casuisticaSelect.options.length === 0) {
+            opcionesBase.forEach(opt => {
+                const option = document.createElement("option");
+                option.value = opt;
+                option.textContent = opt;
+                casuisticaSelect.appendChild(option);
+            });
+        }
         casuisticaSelect.disabled = false;
         avisoBloqueo.classList.add("d-none");
+        // Si el valor actual era CERRADO, lo reseteamos a vacío
+        if (casuisticaSelect.value === "CERRADO") {
+            casuisticaSelect.value = "";
+        }
     }
 }
 
@@ -453,14 +612,36 @@ function verificarBloqueoCasuistica() {
     const avisoBloqueo = document.getElementById("avisoCasuisticaBloqueada");
     
     if (estadoSelect.value === "CERRADO") {
+        // Aseguramos que la opción CERRADO existe
+        let tieneCerrado = false;
+        for (let i = 0; i < casuisticaSelect.options.length; i++) {
+            if (casuisticaSelect.options[i].value === "CERRADO") {
+                tieneCerrado = true;
+                break;
+            }
+        }
+        if (!tieneCerrado) {
+            const option = document.createElement("option");
+            option.value = "CERRADO";
+            option.textContent = "CERRADO";
+            casuisticaSelect.appendChild(option);
+        }
+        casuisticaSelect.value = "CERRADO";
         casuisticaSelect.disabled = true;
         avisoBloqueo.classList.remove("d-none");
-        if (casuisticaSelect.value !== "CERRADO") {
-            casuisticaSelect.value = "CERRADO";
-        }
     } else {
+        // Eliminar la opción CERRADO
+        for (let i = 0; i < casuisticaSelect.options.length; i++) {
+            if (casuisticaSelect.options[i].value === "CERRADO") {
+                casuisticaSelect.remove(i);
+                break;
+            }
+        }
         casuisticaSelect.disabled = false;
         avisoBloqueo.classList.add("d-none");
+        if (casuisticaSelect.value === "CERRADO") {
+            casuisticaSelect.value = "";
+        }
     }
 }
 
@@ -930,7 +1111,7 @@ async function iniciarNuevaCarga(filtroForzado = null, continuarDesde = true) {
             state.agente = agenteInput;
             state.gestion = gestion;
             
-            // 🔥 IMPORTANTE: Mantener el índice si estamos continuando
+            // Mantener el índice si estamos continuando
             if (continuarDesde && indiceAnterior < state.data.length) {
                 state.index = indiceAnterior;
             } else {
@@ -953,7 +1134,7 @@ async function iniciarNuevaCarga(filtroForzado = null, continuarDesde = true) {
                     mostrar();
                     
                     // Mostrar mensaje con la posición
-                    if (continuarDesde && indiceAnterior < state.data.length) {
+                    if (continuarDesde && indiceAnterior < datosAnteriores.length) {
                         mostrarToast(`✅ Cargados ${nuevosUnicos.length} registros nuevos. Continuando en incidencia ${state.index + 1} de ${state.data.length}`, "success");
                     } else {
                         mostrarToast(`✅ Cargados ${nuevosUnicos.length} registros nuevos. Total: ${state.data.length}`, "success");
@@ -1011,17 +1192,6 @@ function mostrar() {
         document.getElementById("btnFinales").style.display = "flex";
     }
     autoResize(document.getElementById("texto"));
-}
-
-function ordenarIncidenciasEspeciales(data) {
-    const clasesPrioridad = ["A055", "A042", "A025"];
-    return data.sort((a, b) => {
-        const aEspecial = clasesPrioridad.includes((a.clase || "").toUpperCase());
-        const bEspecial = clasesPrioridad.includes((b.clase || "").toUpperCase());
-        if (aEspecial && !bEspecial) return -1;
-        if (!aEspecial && bEspecial) return 1;
-        return 0;
-    });
 }
 
 function guardar() {
@@ -1126,6 +1296,7 @@ function descargar() {
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Gestión");
         XLSX.writeFile(wb, `Gestion_${state.agente}_${new Date().toLocaleDateString().replace(/\//g,'-')}.xlsx`);
+        mostrarToast("✅ Excel descargado correctamente", "success");
     };
 }
 
@@ -1139,7 +1310,7 @@ function descargarEspeciales() {
         );
 
         if (especiales.length === 0) {
-            mostrarToast("No existen incidencias especiales para exportar", "warning");
+            mostrarToast("No existen ZPS para exportar", "warning");
             return;
         }
 
@@ -1199,7 +1370,8 @@ function mostrarToast(msg, tipo) {
     document.getElementById("toastBody").innerText = msg;
     const t = document.getElementById("toastMsg");
     t.className = `toast align-items-center text-bg-${tipo} border-0`;
-    new bootstrap.Toast(t, { autohide: tipo === "warning" ? false : true, delay: tipo === "warning" ? 5000 : 3000 }).show();
+    const toast = new bootstrap.Toast(t, { autohide: true, delay: 2500 });
+    toast.show();
 }
 
 async function arrancarAplicacion() {
@@ -1296,8 +1468,9 @@ function procesarCargaFinal(nuevos, gestion, agenteInput) {
     let tipoFiltro = document.getElementById("tipoRecogida").value;
     let centroFiltro = document.getElementById("centroRecogidaFiltro").value;
 
-    // Guardar el índice actual
+    // Guardar el índice actual y datos existentes
     const indiceAnterior = state.index;
+    const datosExistentes = [...state.data];
 
     // aplicar filtros originales
     if (gestion === "RECOGIDAS") {
@@ -1343,8 +1516,8 @@ function procesarCargaFinal(nuevos, gestion, agenteInput) {
     state.agente = agenteInput;
     state.gestion = gestion;
 
-    // 🔥 Mantener el índice actual si es válido
-    if (indiceAnterior < state.data.length) {
+    // Mantener el índice actual si es válido
+    if (indiceAnterior < datosExistentes.length) {
         state.index = indiceAnterior;
     } else {
         state.index = 0;
@@ -1366,7 +1539,7 @@ function procesarCargaFinal(nuevos, gestion, agenteInput) {
             mostrarApp();
             if (state.data.length > 0) {
                 mostrar();
-                mostrarToast(`✅ Cargados ${nuevosUnicos.length} registros nuevos. Continuando en incidencia ${state.index + 1} de ${state.data.length}`, "success");
+                mostrarToast(`✅ Cargados ${nuevosUnicos.length} registros nuevos. Total: ${state.data.length}`, "success");
             } else {
                 mostrarToast("No hay datos para mostrar", "warning");
             }

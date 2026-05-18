@@ -6,253 +6,214 @@
   <title>Zeleris - MTV</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    :root {
-      --primary-color: #54eb36;
-      --primary-hover: #42ba2c;
-      --bg-light: #f8f9fa;
-      --bg-dark: #1a1a2e;
-      --card-bg-light: #fff;
-      --card-bg-dark: #16213e;
-      --text-light: #333;
-      --text-dark: #e0e0e0;
-      --border-light: #dee2e6;
-      --border-dark: #2a2a4a;
-    }
+:root {
+  --primary-color: #54eb36;
+  --primary-hover: #42ba2c;
+  --bg-light: #f8f9fa;
+  --bg-dark: #1a1a2e;
+  --card-bg-light: #fff;
+  --card-bg-dark: #16213e;
+  --text-light: #333;
+  --text-dark: #e0e0e0;
+  --border-light: #dee2e6;
+  --border-dark: #2a2a4a;
+}
 
-    body {
-      font-family: 'Roboto', sans-serif;
-      background: var(--bg-light);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-top: 20px;
-      transition: all 0.3s ease;
-    }
+body {
+  font-family: 'Roboto', sans-serif;
+  background: var(--bg-light);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  transition: all 0.3s ease;
+}
 
-    body.dark-mode {
-      background: var(--bg-dark);
-    }
+body.dark-mode {
+  background: var(--bg-dark);
+}
 
-    body.dark-mode .main-card {
-      background: var(--card-bg-dark);
-      color: var(--text-dark);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    }
+body.dark-mode .main-card {
+  background: var(--card-bg-dark);
+  color: var(--text-dark);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
 
-    body.dark-mode .btn-custom {
-      border-color: var(--primary-color);
-      color: var(--primary-color);
-    }
+body.dark-mode .form-select,
+body.dark-mode .form-control {
+  background: #0f3460;
+  color: var(--text-dark);
+  border-color: var(--border-dark);
+}
 
-    body.dark-mode .btn-custom:hover {
-      background-color: var(--primary-color);
-      color: #000;
-    }
+body.dark-mode .form-select:focus,
+body.dark-mode .form-control:focus {
+  background: #1a1a2e;
+  color: var(--text-dark);
+}
 
-    body.dark-mode .form-select,
-    body.dark-mode .form-control {
-      background: #0f3460;
-      color: var(--text-dark);
-      border-color: var(--border-dark);
-    }
+body.dark-mode .alert-light {
+  background: #0f3460;
+  color: var(--text-dark);
+  border-color: var(--border-dark);
+}
 
-    body.dark-mode .form-select:focus,
-    body.dark-mode .form-control:focus {
-      background: #1a1a2e;
-      color: var(--text-dark);
-    }
+.main-card {
+  background: var(--card-bg-light);
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  padding: 30px;
+  width: 95%;
+  max-width: 1100px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
 
-    body.dark-mode .alert-light {
-      background: #0f3460;
-      color: var(--text-dark);
-      border-color: var(--border-dark);
-    }
+.form-select-custom {
+  width: 100%;
+  max-width: 750px;
+  min-height: 45px;
+  font-size: 14px;
+  margin: 0 auto;
+}
 
-    .main-card {
-      background: var(--card-bg-light);
-      border-radius: 15px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-      padding: 30px;
-      width: 95%;
-      max-width: 1100px;
-      text-align: center;
-      transition: all 0.3s ease;
-    }
+#texto-mtv {
+  resize: none;
+  overflow: hidden;
+  height: auto;
+}
 
-    .btn-custom {
-      background-color: transparent;
-      border: 1.5px solid var(--primary-hover);
-      color: var(--primary-hover);
-      font-weight: 500;
-      border-radius: 8px;
-      padding: 8px 14px;
-      transition: all 0.3s ease;
-    }
+/* ESTILOS PARA IMÁGENES EN LÍNEA - UNA AL LADO DE LA OTRA */
+.imagenes-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
 
-    .btn-custom:hover {
-      background-color: var(--primary-color);
-      color: #000;
-      border-color: var(--primary-color);
-    }
+.imagen-item {
+  flex: 1;
+  min-width: 350px;
+  max-width: 45%;
+  text-align: center;
+  background: transparent;
+  border-radius: 12px;
+  padding: 10px;
+}
 
-    .btn-custom.active {
-      background-color: var(--primary-color);
-      color: #000;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 10px var(--primary-color);
-    }
+.imagen-item img {
+  width: 100%;
+  height: auto;
+  max-height: 450px;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
 
-    .form-select-custom {
-      width: 100%;
-      max-width: 750px;
-      min-height: 45px;
-      font-size: 14px;
-      margin: 0 auto;
-    }
+.imagen-item a {
+  display: block;
+  text-decoration: none;
+}
 
-    #texto-mtv {
-      resize: none;
-      overflow: hidden;
-      height: auto;
-    }
+/* Cuando solo hay una imagen */
+.imagen-sola {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+}
 
-    /* ESTILOS PARA IMÁGENES EN LÍNEA - UNA AL LADO DE LA OTRA MÁS GRANDES */
-    .imagenes-wrapper {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 40px;
-      flex-wrap: wrap;
-      margin: 20px 0;
-    }
+.imagen-sola img {
+  max-width: 80%;
+  max-height: 500px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
 
-    .imagen-item {
-      flex: 1;
-      min-width: 350px;
-      max-width: 45%;
-      text-align: center;
-      background: transparent;
-      border-radius: 12px;
-      padding: 10px;
-    }
+.imagen-sola a {
+  display: block;
+  text-decoration: none;
+}
 
-    .imagen-item img {
-      width: 100%;
-      height: auto;
-      max-height: 450px;
-      object-fit: contain;
-      border-radius: 8px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-    }
+/* Contenedor oculto */
+.hidden {
+  display: none !important;
+}
 
-    .imagen-item a {
-      display: block;
-      text-decoration: none;
-    }
+.btn-volver {
+  margin-top: 30px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 16px;
+}
 
-    /* Cuando solo hay una imagen - SIN CONTENEDOR EXTRA, más grande */
-    .imagen-sola {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 20px 0;
-    }
+.btn-volver:hover {
+  background: #5a6268;
+  transform: scale(1.02);
+}
 
-    .imagen-sola img {
-      max-width: 80%;
-      max-height: 500px;
-      width: auto;
-      height: auto;
-      object-fit: contain;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    }
+body.dark-mode .btn-volver {
+  background: #4b5563;
+}
 
-    .imagen-sola a {
-      display: block;
-      text-decoration: none;
-    }
+body.dark-mode .btn-volver:hover {
+  background: #374151;
+}
 
-    /* Contenedor oculto */
-    .hidden {
-      display: none !important;
-    }
+/* Ajustes responsive */
+@media (max-width: 768px) {
+  .imagen-item {
+    min-width: 280px;
+    max-width: 100%;
+  }
+  
+  .imagen-sola img {
+    max-width: 95%;
+    max-height: 350px;
+  }
+}
 
-    .btn-volver {
-      margin-top: 30px;
-      background: #6c757d;
-      color: white;
-      border: none;
-      padding: 12px 30px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-size: 16px;
-    }
-
-    .btn-volver:hover {
-      background: #5a6268;
-      transform: scale(1.02);
-    }
-
-    body.dark-mode .btn-volver {
-      background: #4b5563;
-    }
-
-    body.dark-mode .btn-volver:hover {
-      background: #374151;
-    }
-
-    /* Ajustes responsive */
-    @media (max-width: 768px) {
-      .imagen-item {
-        min-width: 280px;
-        max-width: 100%;
-      }
-      
-      .imagen-sola img {
-        max-width: 95%;
-        max-height: 350px;
-      }
-    }
-/* ===== ESTILOS DE LA HORA - CENTRADO SIN SEPARACIÓN ===== */
+/* ===== ESTILOS DE LA HORA - MISMA LÍNEA ===== */
 .hora-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   cursor: pointer;
   user-select: none;
   margin-bottom: 15px;
-  padding: 0;
+  white-space: nowrap;
 }
 
 .hora-label {
   font-size: 20px;
   font-weight: 500;
   color: var(--text-light);
-  padding: 0;
   background: transparent;
+  white-space: nowrap;
 }
 
-body.dark-mode .hora-label {
-  background: transparent;
-  color: var(--text-dark);
-}
-
-/* Contenedor que recorta el movimiento */
 .hora-wrapper {
   display: inline-block;
   overflow: hidden;
-  width: 105px;
   position: relative;
+  white-space: nowrap;
 }
 
-/* Animación de la hora */
 #hora-dinamica {
   display: inline-block;
-  font-size: 14px;
+  font-size: 20px;
   font-weight: 500;
   font-family: monospace;
   padding: 0;
@@ -260,25 +221,40 @@ body.dark-mode .hora-label {
   transform: translateX(0);
   opacity: 1;
   background: transparent;
+  white-space: nowrap;
 }
 
-body.dark-mode #hora-dinamica {
-  background: transparent;
-  color: var(--text-dark);
-}
-
-/* Estado oculto - se desliza hacia la izquierda */
 .hora-oculta #hora-dinamica {
   transform: translateX(-120%);
   opacity: 0;
 }
 
-/* Estado visible - normal */
 .hora-visible #hora-dinamica {
   transform: translateX(0);
   opacity: 1;
 }
-  </style>
+
+/* Corrección de color de la hora en modo oscuro */
+body.dark-mode .hora-label {
+  color: #e0e0e0 !important;
+}
+
+body.dark-mode #hora-dinamica {
+  color: #e0e0e0 !important;
+}
+
+body.dark-mode .hora-container {
+  color: #e0e0e0;
+}
+
+/* Estilo para botones activos (igual que en BO) */
+.btn-outline-success.active {
+  background-color: #198754 !important;
+  color: white !important;
+  border-color: #198754 !important;
+  box-shadow: 0 0 0 3px rgba(25,135,84, 0.35);
+}
+</style>
 </head>
 <body>
 
@@ -290,13 +266,14 @@ body.dark-mode #hora-dinamica {
       <span id="hora-dinamica">--:--:--</span>
     </div>
   </div>
-  <h2 class="mb-4">Tipificaciones Zeleris</h2>
+
+  <h2 class="mb-4">Tipificaciones MTV</h2>
 
   <!-- BOTONES PRINCIPALES -->
   <div id="botones-principales" class="d-flex justify-content-center gap-3 flex-wrap mb-4">
-    <button class="btn btn-custom" id="boton1">MTV 1</button>
-    <button class="btn btn-custom" id="boton2">MTV 2</button>
-    <button class="btn btn-custom" id="boton3">CAC</button>
+    <button class="btn btn-outline-success" id="boton1">MTV 1</button>
+    <button class="btn btn-outline-success" id="boton2">MTV 2</button>
+    <button class="btn btn-outline-success" id="boton3">CAC</button>
   </div>
 
   <!-- CONTENEDOR DE CONTENIDO DINÁMICO -->
@@ -304,67 +281,48 @@ body.dark-mode #hora-dinamica {
 </div>
 
 <script>
-
-  // =========================
-// ===== HORA DE ESPAÑA CON EFECTO SLIDE =====
 // =========================
-
-// Estado de visibilidad de la hora
+// ===== HORA DE ESPAÑA =====
+// =========================
 let horaVisible = true;
 
-// Función para actualizar la hora de España
 function actualizarHora() {
   const horaElement = document.getElementById('hora-dinamica');
   if (horaElement) {
     const ahora = new Date();
-    
-    // Opción 1: Usar toLocaleTimeString con timeZone 'Europe/Madrid'
-    const horaEspana = ahora.toLocaleTimeString('es-ES', {
+    const horaFormateada = ahora.toLocaleTimeString('es-ES', {
       timeZone: 'Europe/Madrid',
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
       hour12: true
     });
-    
-    // Limpiar el formato (quitar puntos y espacios extra)
-    let horaLimpia = horaEspana.replace(/\./g, '').replace(/\s+/g, ' ');
-    
-    horaElement.textContent = horaLimpia;
+    horaElement.textContent = horaFormateada.replace(/\./g, '').replace(/\s+/g, ' ');
   }
 }
 
-// Iniciar el reloj
 setInterval(actualizarHora, 1000);
 actualizarHora();
 
-// Función para toggle de la hora con efecto slide
 function toggleHora() {
   const container = document.getElementById('horaContainer');
-  
   if (horaVisible) {
-    // Ocultar hora - añadir clase que desliza hacia la izquierda
     container.classList.remove('hora-visible');
     container.classList.add('hora-oculta');
     horaVisible = false;
   } else {
-    // Mostrar hora - quitar clase oculta
     container.classList.remove('hora-oculta');
     container.classList.add('hora-visible');
     horaVisible = true;
   }
 }
 
-// Agregar evento de clic al contenedor de hora
 document.getElementById('horaContainer').addEventListener('click', toggleHora);
-
-// Estado inicial visible
 document.getElementById('horaContainer').classList.add('hora-visible');
+
 // =========================
 // ===== MODO OSCURO =====
 // =========================
-
-// Escuchar mensajes del padre (index.html)
 window.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'DARK_MODE') {
     if (event.data.darkMode) {
@@ -374,116 +332,105 @@ window.addEventListener('message', (event) => {
     }
   }
 });
-
-// Notificar al padre que está listo
 window.parent.postMessage({ type: 'IFRAME_READY' }, '*');
 
 // =========================
-// ===== DESCRIPCIONES POR PRODUCTO =====
+// ===== DESCRIPCIONES ORDENADAS =====
 // =========================
-
-// Función para ordenar alfabéticamente cualquier array de opciones
 function ordenarOpcionesAlfabeticamente(opcionesArray) {
-  return opcionesArray.sort((a, b) => {
-    return a.opcion.localeCompare(b.opcion, 'es');
-  });
+  return opcionesArray.sort((a, b) => a.opcion.localeCompare(b.opcion, 'es'));
 }
 
-// Descripciones para DESCO 4K (MTV 1)
-const descripcionesDESCO4K = ordenarOpcionesAlfabeticamente( [
-  { opcion: "No desea el servicio", texto: "Cliente no desea el servicio, se remite a la linea 1004. Hablo con " },
-  { opcion: "Cliente necesita cable HDMI", texto: "Cliente necesita cable hdmi, confirmo envio. Hablo con " },
-  { opcion: "Cliente no necesita cable HDMI", texto: "Cliente no necesita cable hdmi, confirmo envio. Hablo con " },
-  { opcion: "Cliente INSISTE querer ayuda técnica para la instalación", texto: "Cliente insiste en tener ayuda tecnica, se deriva a servicio tecnico. Hablo con " },
-  { opcion: "Cliente desea cambiar dirección de instalación.", texto: "Cliente desea cambiar dirección de instalación, se brinda linea 1004. Hablo con " },
-  { opcion: "Aplazamiento de llamada", texto: "Cliente solicita nueva comunicación, aplazamiento de llamada. Hablo con " },
-  { opcion: "Cliente no contesta", texto: "Cliente no contesta." },
-  { opcion: "Contestador automático", texto: "Contestador automático, cliente no contesta." },
-  { opcion: "Número equivocado Cliente sí conoce el producto y el destinatario.", texto: "Número equivocado, se actualiza información." },
-  { opcion: "Número equivocado Cliente no conoce ni el producto ni el destinatario.", texto: "Número equivocado, se brinda línea 1004" },
-  { opcion: "Cliente extranjero", texto: "Cliente no habla español, se brinda línea 1004." },
+const descripcionesDESCO4K = ordenarOpcionesAlfabeticamente([
+  { opcion: "Abandono", texto: "Llamada cortada, cliente abandono la comunicación. Hablo con " },
   { opcion: "Actualización de número telefónico", texto: "Cliente actualiza telefono, se genera aplazamiento de llamada. Hablo con " },
-  { opcion: "Abandono", texto: "Llamada cortada, cliente abandono la comunicación. Hablo con " }
+  { opcion: "Aplazamiento de llamada", texto: "Cliente solicita nueva comunicación, aplazamiento de llamada. Hablo con " },
+  { opcion: "Cliente desea cambiar dirección de instalación.", texto: "Cliente desea cambiar dirección de instalación, se brinda linea 1004. Hablo con " },
+  { opcion: "Cliente extranjero", texto: "Cliente no habla español, se brinda línea 1004." },
+  { opcion: "Cliente INSISTE querer ayuda técnica para la instalación", texto: "Cliente insiste en tener ayuda tecnica, se deriva a servicio tecnico. Hablo con " },
+  { opcion: "Cliente necesita cable HDMI", texto: "Cliente necesita cable hdmi, confirmo envio. Hablo con " },
+  { opcion: "Cliente no contesta", texto: "Cliente no contesta." },
+  { opcion: "Cliente no necesita cable HDMI", texto: "Cliente no necesita cable hdmi, confirmo envio. Hablo con " },
+  { opcion: "Contestador automático", texto: "Contestador automático, cliente no contesta." },
+  { opcion: "No desea el servicio", texto: "Cliente no desea el servicio, se remite a la linea 1004. Hablo con " },
+  { opcion: "Número equivocado Cliente no conoce ni el producto ni el destinatario.", texto: "Número equivocado, se brinda línea 1004" },
+  { opcion: "Número equivocado Cliente sí conoce el producto y el destinatario.", texto: "Número equivocado, se actualiza información." }
 ]);
 
-// Descripciones para IMATV
 const descripcionesIMATV = ordenarOpcionesAlfabeticamente([
-  { opcion: "No desea el servicio", texto: "Cliente no desea el servicio. Hablo con " },
+  { opcion: "Abandono", texto: "Llamada cortada, cliente abandono la comunicación. Hablo con " },
+  { opcion: "Actualización de número telefónico", texto: "Cliente actualiza telefono, se genera aplazamiento de llamada. Hablo con " },
+  { opcion: "Aplazamiento de llamada.", texto: "Cliente solicita nueva comunicación, aplazamiento de llamada. Hablo con " },
+  { opcion: "Cliente desea el servicio.", texto: "Cliente autoinstalable, confirmo envío. Hablo con " },
+  { opcion: "Cliente extranjero", texto: "Cliente no habla español, se brinda línea 1004." },
+  { opcion: "Cliente INSISTE querer ayuda técnica para la instalación", texto: "Cliente insiste en tener ayuda técnica, se deriva a servicio técnico. Hablo con " },
+  { opcion: "Cliente no contesta", texto: "Cliente no contesta." },
+  { opcion: "Cliente no cuenta con conexión HDMI", texto: "Cliente no tiene conexión HDMI, brindo la línea 1004. Hablo con " },
+  { opcion: "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)", texto: "Cliente manifiesta xxx, se genera retención. Hablo con " },
   { opcion: "Cliente no tiene cerca el router de la TV (Acepta amplificador).", texto: "Router no está cerca a la TV, cliente acepta amplificador, se confirma envío. Hablo con " },
   { opcion: "Cliente no tiene cerca el router de la TV (No acepta amplificador).", texto: "Router no está cerca a la TV, cliente no acepta amplificador, se deriva a servicio técnico. Hablo con " },
-  { opcion: "Cliente no cuenta con conexión HDMI", texto: "Cliente no tiene conexión HDMI, brindo la línea 1004. Hablo con " },
-  { opcion: "Cliente INSISTE querer ayuda técnica para la instalación", texto: "Cliente insiste en tener ayuda técnica, se deriva a servicio técnico. Hablo con " },
-  { opcion: "Cliente desea el servicio.", texto: "Cliente autoinstalable, confirmo envío. Hablo con " },
-  { opcion: "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)", texto: "Cliente manifiesta xxx, se genera retención. Hablo con " },
-  { opcion: "Aplazamiento de llamada.", texto: "Cliente solicita nueva comunicación, aplazamiento de llamada. Hablo con " },
-  { opcion: "Cliente no contesta", texto: "Cliente no contesta." },
   { opcion: "Contestador automático", texto: "Contestador automático, cliente no contesta." },
-  { opcion: "Número equivocado, cliente si conoce el producto y el destinatario.", texto: "Número equivocado, se actualiza información." },
+  { opcion: "No desea el servicio", texto: "Cliente no desea el servicio. Hablo con " },
   { opcion: "Número equivocado, cliente no conoce ni el producto, ni el destinatario.", texto: "Número equivocado, se brinda línea 1004." },
-  { opcion: "Cliente extranjero", texto: "Cliente no habla español, se brinda línea 1004." },
-  { opcion: "Actualización de número telefónico", texto: "Cliente actualiza telefono, se genera aplazamiento de llamada. Hablo con " },
-  { opcion: "Abandono", texto: "Llamada cortada, cliente abandono la comunicación. Hablo con " }
+  { opcion: "Número equivocado, cliente si conoce el producto y el destinatario.", texto: "Número equivocado, se actualiza información." }
 ]);
 
-// Descripciones para IMATV-VD
 const descripcionesIMATVVD = ordenarOpcionesAlfabeticamente([
-  { opcion: "No desea el servicio", texto: "Cliente no desea el servicio. Hablo con " },
-  { opcion: "Cliente no cuenta con roseta o clavija de fibra óptica", texto: "Cliente no cuenta con roseta de fibra óptica, se deriva a servicio técnico. Hablo con " },
-  { opcion: "No sabe si tiene roseta en el domicilio", texto: "Se aplaza llamada porque cliente no sabe si tiene roseta. Hablo con " },
-  { opcion: "No desea conectar terminal fijo", texto: "Cliente no conectará terminal fijo, se confirmo envio. Hablo con " },
-  { opcion: "Cliente INSISTE querer ayuda técnica para la instalación", texto: "Cliente insiste en tener ayuda tecnica, se deriva a servicio tecnico. Hablo con " },
-  { opcion: "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)", texto: "Cliente manifiesta xxx, se genera retención. Hablo con " },
-  { opcion: "Cliente desea el servicio.", texto: "Cliente autoinstalable, confirmo envio. Hablo con " },
-  { opcion: "Cliente desea cambiar dirección de instalación.", texto: "Cliente desea cambiar dirección de instalación, se brinda linea 1004. Hablo con " },
-  { opcion: "Cliente no contesta", texto: "Cliente no contesta." },
-  { opcion: "Contestador automático", texto: "Contestador automático, cliente no contesta." },
-  { opcion: "Número equivocado, cliente si conoce el producto y el destinatario.", texto: "Número equivocado, se actualiza información." },
-  { opcion: "Número equivocado, cliente no conoce ni el producto, ni el destinatario.", texto: "Número equivocado, se brinda línea 1004." },
-  { opcion: "Aplazamiento de llamada, cliente solicita nueva comunicación porque está ocupado.", texto: "Cliente solicita nueva comunicación, aplazamiento de llamada. Hablo con " },
-  { opcion: "Cliente extranjero", texto: "Cliente no habla español, se brinda línea 1004. Hablo con " },
+  { opcion: "Abandono", texto: "Llamada cortada, cliente abandono la comunicación. Hablo con " },
   { opcion: "Actualización de número telefónico", texto: "Cliente actualiza telefono, se genera aplazamiento de llamada. Hablo con " },
-  { opcion: "Abandono", texto: "Llamada cortada, cliente abandono la comunicación. Hablo con " }
+  { opcion: "Aplazamiento de llamada, cliente solicita nueva comunicación porque está ocupado.", texto: "Cliente solicita nueva comunicación, aplazamiento de llamada. Hablo con " },
+  { opcion: "Cliente desea cambiar dirección de instalación.", texto: "Cliente desea cambiar dirección de instalación, se brinda linea 1004. Hablo con " },
+  { opcion: "Cliente desea el servicio.", texto: "Cliente autoinstalable, confirmo envio. Hablo con " },
+  { opcion: "Cliente extranjero", texto: "Cliente no habla español, se brinda línea 1004. Hablo con " },
+  { opcion: "Cliente INSISTE querer ayuda técnica para la instalación", texto: "Cliente insiste en tener ayuda tecnica, se deriva a servicio tecnico. Hablo con " },
+  { opcion: "Cliente no contesta", texto: "Cliente no contesta." },
+  { opcion: "Cliente no cuenta con roseta o clavija de fibra óptica", texto: "Cliente no cuenta con roseta de fibra óptica, se deriva a servicio técnico. Hablo con " },
+  { opcion: "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)", texto: "Cliente manifiesta xxx, se genera retención. Hablo con " },
+  { opcion: "Contestador automático", texto: "Contestador automático, cliente no contesta." },
+  { opcion: "No desea conectar terminal fijo", texto: "Cliente no conectará terminal fijo, se confirmo envio. Hablo con " },
+  { opcion: "No desea el servicio", texto: "Cliente no desea el servicio. Hablo con " },
+  { opcion: "No sabe si tiene roseta en el domicilio", texto: "Se aplaza llamada porque cliente no sabe si tiene roseta. Hablo con " },
+  { opcion: "Número equivocado, cliente no conoce ni el producto, ni el destinatario.", texto: "Número equivocado, se brinda línea 1004." },
+  { opcion: "Número equivocado, cliente si conoce el producto y el destinatario.", texto: "Número equivocado, se actualiza información." }
 ]);
 
-// Descripciones para IMATV-VDT
 const descripcionesIMATVVDT = ordenarOpcionesAlfabeticamente([
-  { opcion: "No desea el servicio", texto: "Cliente no desea el servicio. Hablo con " },
+  { opcion: "Abandono", texto: "Llamada cortada, cliente abandono la comunicación. Hablo con " },
+  { opcion: "Actualización de número telefónico", texto: "Cliente actualiza telefono, se genera aplazamiento de llamada. Hablo con " },
+  { opcion: "Aplazamiento de llamada, cliente solicita nueva comunicación porque está ocupado.", texto: "Cliente solicita nueva comunicación, aplazamiento de llamada. Hablo con " },
+  { opcion: "Cliente desea cambiar dirección de instalación.", texto: "Cliente desea cambiar dirección de instalación, se brinda línea 1004. Hablo con " },
+  { opcion: "Cliente desea el servicio.", texto: "Cliente autoinstalable, confirmo envío. Hablo con " },
+  { opcion: "Cliente extranjero", texto: "Cliente no habla español, se brinda línea 1004. Hablo con " },
+  { opcion: "Cliente no contesta", texto: "Cliente no contesta." },
+  { opcion: "Cliente no cuenta con conexión HDMI", texto: "Cliente no tiene conexión HDMI, brindo la línea 1004. Hablo con " },
   { opcion: "Cliente no cuenta con roseta o clavija de fibra óptica", texto: "Cliente no cuenta con roseta de fibra óptica, se deriva a servicio técnico. Hablo con " },
+  { opcion: "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)", texto: "Cliente manifiesta xxx, se genera retención. Hablo con " },
   { opcion: "Cliente no sabe si tiene roseta en el domicilio", texto: "Se aplaza llamada porque cliente no sabe si tiene roseta. Hablo con " },
   { opcion: "Cliente no tiene cerca la roseta de la TV (Acepta amplificador)", texto: "Roseta no está cerca a la TV, cliente acepta amplificador, se confirma envió. Hablo con " },
   { opcion: "Cliente no tiene cerca la roseta de la TV (No acepta amplificador)", texto: "Roseta no está cerca a la TV, cliente no acepta amplificador, se deriva a servicio técnico. Hablo con " },
-  { opcion: "Cliente desea el servicio.", texto: "Cliente autoinstalable, confirmo envío. Hablo con " },
-  { opcion: "Cliente desea cambiar dirección de instalación.", texto: "Cliente desea cambiar dirección de instalación, se brinda línea 1004. Hablo con " },
-  { opcion: "No desea conectar terminal fijo", texto: "Cliente no conectará terminal fijo, se confirmó envío. Hablo con " },
   { opcion: "Cliente no tiene roseta pero acepta amplificador.", texto: "Cliente no tiene roseta pero acepta amplificador, se deriva a servicio tecnico. Hablo con " },
-  { opcion: "Cliente no cuenta con conexión HDMI", texto: "Cliente no tiene conexión HDMI, brindo la línea 1004. Hablo con " },
-  { opcion: "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)", texto: "Cliente manifiesta xxx, se genera retención. Hablo con " },
-  { opcion: "Cliente no contesta", texto: "Cliente no contesta." },
   { opcion: "Contestador automático", texto: "Contestador automático, cliente no contesta." },
-  { opcion: "Número equivocado, cliente si conoce el producto y el destinatario.", texto: "Número equivocado, se actualiza información." },
+  { opcion: "No desea conectar terminal fijo", texto: "Cliente no conectará terminal fijo, se confirmó envío. Hablo con " },
+  { opcion: "No desea el servicio", texto: "Cliente no desea el servicio. Hablo con " },
   { opcion: "Número equivocado, cliente no conoce ni el producto, ni el destinatario.", texto: "Número equivocado, se brinda línea 1004." },
-  { opcion: "Aplazamiento de llamada, cliente solicita nueva comunicación porque está ocupado.", texto: "Cliente solicita nueva comunicación, aplazamiento de llamada. Hablo con " },
-  { opcion: "Cliente extranjero", texto: "Cliente no habla español, se brinda línea 1004. Hablo con " },
-  { opcion: "Actualización de número telefónico", texto: "Cliente actualiza telefono, se genera aplazamiento de llamada. Hablo con " },
-  { opcion: "Abandono", texto: "Llamada cortada, cliente abandono la comunicación. Hablo con " }
+  { opcion: "Número equivocado, cliente si conoce el producto y el destinatario.", texto: "Número equivocado, se actualiza información." }
 ]);
 
-// Descripciones para AFR
 const descripcionesAFR = ordenarOpcionesAlfabeticamente([
-  { opcion: "No desea el servicio", texto: "Cliente no desea el servicio. Hablo con " },
-  { opcion: "Cliente desea el servicio.", texto: "Cliente autoinstalable, confirmo envío. Hablo con " },
-  { opcion: "Cliente tiene servicio incompatible", texto: "Cliente tiene servicio incompatible, se brinda línea 1004. Hablo con " },
-  { opcion: "Cliente desea cambiar dirección de instalación.", texto: "Cliente desea cambiar dirección de instalación, se brinda línea 1004. Hablo con " },
-  { opcion: "Cliente INSISTE en querer ayuda técnica para la instalación", texto: "Cliente insiste en tener ayuda técnica, se deriva a servicio técnico. Hablo con " },
-  { opcion: "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)", texto: "Cliente manifiesta xxx, se genera retención. Hablo con " },
-  { opcion: "Cliente no contesta", texto: "Cliente no contesta." },
-  { opcion: "Contestador automático", texto: "Contestador automático, cliente no contesta." },
-  { opcion: "Número equivocado, cliente si conoce el producto y el destinatario.", texto: "Número equivocado, se actualiza información." },
-  { opcion: "Número equivocado, cliente no conoce ni el producto, ni el destinatario.", texto: "Número equivocado, se brinda línea 1004." },
-  { opcion: "Aplazamiento de llamada, cliente solicita nueva comunicación porque está ocupado.", texto: "Cliente solicita nueva comunicación, aplazamiento de llamada. Hablo con " },
-  { opcion: "Cliente extranjero", texto: "Cliente no habla español, se brinda línea 1004. Hablo con " },
+  { opcion: "Abandono", texto: "Llamada cortada, cliente abandono la comunicación. Hablo con " },
   { opcion: "Actualización de número telefónico", texto: "Cliente actualiza telefono, se genera aplazamiento de llamada. Hablo con " },
-  { opcion: "Abandono", texto: "Llamada cortada, cliente abandono la comunicación. Hablo con " }
+  { opcion: "Aplazamiento de llamada, cliente solicita nueva comunicación porque está ocupado.", texto: "Cliente solicita nueva comunicación, aplazamiento de llamada. Hablo con " },
+  { opcion: "Cliente desea cambiar dirección de instalación.", texto: "Cliente desea cambiar dirección de instalación, se brinda línea 1004. Hablo con " },
+  { opcion: "Cliente desea el servicio.", texto: "Cliente autoinstalable, confirmo envío. Hablo con " },
+  { opcion: "Cliente extranjero", texto: "Cliente no habla español, se brinda línea 1004. Hablo con " },
+  { opcion: "Cliente INSISTE en querer ayuda técnica para la instalación", texto: "Cliente insiste en tener ayuda técnica, se deriva a servicio técnico. Hablo con " },
+  { opcion: "Cliente no contesta", texto: "Cliente no contesta." },
+  { opcion: "Cliente no puede recibir el producto dentro de los tiempos establecidos (RETENCIÓN)", texto: "Cliente manifiesta xxx, se genera retención. Hablo con " },
+  { opcion: "Cliente tiene servicio incompatible", texto: "Cliente tiene servicio incompatible, se brinda línea 1004. Hablo con " },
+  { opcion: "Contestador automático", texto: "Contestador automático, cliente no contesta." },
+  { opcion: "No desea el servicio", texto: "Cliente no desea el servicio. Hablo con " },
+  { opcion: "Número equivocado, cliente no conoce ni el producto, ni el destinatario.", texto: "Número equivocado, se brinda línea 1004." },
+  { opcion: "Número equivocado, cliente si conoce el producto y el destinatario.", texto: "Número equivocado, se actualiza información." }
 ]);
 
 // Descripciones para ASOS se repiten con IMATV-VDT
@@ -491,26 +438,24 @@ const descripcionesAFR = ordenarOpcionesAlfabeticamente([
 
 // Descripciones para HGUW6-P se repiten con IMATV-VD
 
-
-// Descripciones para MTV 2 (genéricas)
 const descripcionesGenericas = ordenarOpcionesAlfabeticamente([
-  { opcion: "Cliente asegura que no recibio el paquete (reportar a tu lider)", texto: "Cliente asegura que no recibió el paquete, se brinda línea 1004. Hablo con " },
-  { opcion: "Ya instalo y realizo configuración del equipo nuevo.", texto: "Equipo instalado y configurado, se espera comprobación de Arce y Magia. Hablo con " },
-  { opcion: "Equipo instalado y en funcionamiento, se requiere cerrar orden.", texto: "Equipo instalado y configurado, se espera comprobación de Arce y Magia, Hablo con " },
-  { opcion: "Cliente INSISTE querer ayuda técnica para la instalación y configuración", texto: "Cliente insiste en tener ayuda técnica, se deriva a servicio técnico. Hablo con " },
   { opcion: "(AFR)Phonebox-migración: Cliente cuenta con servicio incompatible con tecnologia radio.", texto: "Cliente tiene servicio incompatible con tecnología radio, se brinda línea 1004. Hablo con " },
-  { opcion: "Material averiado o roto.", texto: "Cliente tiene el equipo dañado y/o roto. Hablo con " },
-  { opcion: "Se realizamos varios intentos de instalación y/o configuración, pero no se pudo completar el proceso", texto: "No se puede generar instalación y configuración por xxx, se deriva a servicio técnico. Hablo con " },
-  { opcion: "Cliente rechaza el servicio de instalación y configuración (devolver)", texto: "Cliente rechaza el servicio por xxx, se brinda línea 1002. Hablo con " },
+  { opcion: "Abandono", texto: "Llamada cortada, cliente abandono la comunicación. Hablo con " },
   { opcion: "Aplazamiento de llamada.", texto: "Se reprograma llamada debido a que xxxx, aplazamiento de llamada. Hablo con " },
-  { opcion: "Retención de llamada.", texto: "Se reprograma llamada debido a que xxxx, retención de llamada. Hablo con " },
-  { opcion: "Contestador automático", texto: "Contestador automático, cliente no contesta." },
-  { opcion: "Cliente no contesta", texto: "Cliente no contesta." },
-  { opcion: "Número equivocado, cliente si conoce el producto y el destinatario.", texto: "Número equivocado, se actualiza información." },
-  { opcion: "Número equivocado, cliente no conoce ni el producto, ni el destinatario.", texto: "Número equivocado, se brinda línea 1004." },
+  { opcion: "Cliente asegura que no recibio el paquete (reportar a tu lider)", texto: "Cliente asegura que no recibió el paquete, se brinda línea 1004. Hablo con " },
   { opcion: "Cliente extranjero", texto: "Cliente no habla español, se brinda línea 1002." },
+  { opcion: "Cliente INSISTE querer ayuda técnica para la instalación y configuración", texto: "Cliente insiste en tener ayuda técnica, se deriva a servicio técnico. Hablo con " },
+  { opcion: "Cliente no contesta", texto: "Cliente no contesta." },
   { opcion: "Cliente no cuenta con roseta o clavija de fibra óptica", texto: "Cliente no cuenta con roseta de fibra óptica, se deriva a servicio técnico. Hablo con " },
-  { opcion: "Abandono", texto: "Llamada cortada, cliente abandono la comunicación. Hablo con " }
+  { opcion: "Cliente rechaza el servicio de instalación y configuración (devolver)", texto: "Cliente rechaza el servicio por xxx, se brinda línea 1002. Hablo con " },
+  { opcion: "Contestador automático", texto: "Contestador automático, cliente no contesta." },
+  { opcion: "Equipo instalado y en funcionamiento, se requiere cerrar orden.", texto: "Equipo instalado y configurado, se espera comprobación de Arce y Magia, Hablo con " },
+  { opcion: "Material averiado o roto.", texto: "Cliente tiene el equipo dañado y/o roto. Hablo con " },
+  { opcion: "Número equivocado, cliente no conoce ni el producto, ni el destinatario.", texto: "Número equivocado, se brinda línea 1004." },
+  { opcion: "Número equivocado, cliente si conoce el producto y el destinatario.", texto: "Número equivocado, se actualiza información." },
+  { opcion: "Retención de llamada.", texto: "Se reprograma llamada debido a que xxxx, retención de llamada. Hablo con " },
+  { opcion: "Se realizamos varios intentos de instalación y/o configuración, pero no se pudo completar el proceso", texto: "No se puede generar instalación y configuración por xxx, se deriva a servicio técnico. Hablo con " },
+  { opcion: "Ya instalo y realizo configuración del equipo nuevo.", texto: "Equipo instalado y configurado, se espera comprobación de Arce y Magia. Hablo con " }
 ]);
 
 // =========================
@@ -519,82 +464,25 @@ const descripcionesGenericas = ordenarOpcionesAlfabeticamente([
 
 const configMTV = {
   "MTV 1": [
-    { 
-      nombre: "DESCO 4K", 
-      imgs: ["img/DESCO4K.png"],
-      descripciones: descripcionesDESCO4K
-    },
-    { 
-      nombre: "IMATV", 
-      imgs: ["img/IMATV.png"],
-      descripciones: descripcionesIMATV
-    },
-    { 
-      nombre: "IMATV-VD", 
-      imgs: ["img/IMATV-VD.png"],
-      descripciones: descripcionesIMATVVD
-    },
-    { 
-      nombre: "IMATV-VDT", 
-      imgs: ["img/IMATV-VDT.png"],
-      descripciones: descripcionesIMATVVDT
-    },
-    { 
-      nombre: "AFR", 
-      imgs: ["img/AFR-V.png", "img/AFR-MIGRACION.png"],
-      descripciones: descripcionesAFR
-    },
-    { 
-      nombre: "ASOS", 
-      imgs: ["img/ASOS-VD.png", "img/ASOS-VDT.png"],
-      descripciones: descripcionesIMATVVDT
-    },
-    { 
-      nombre: "HGUW6-P", 
-      imgs: ["img/WIFI-6.png"],
-      descripciones: descripcionesIMATVVD
-    }
+    { nombre: "DESCO 4K", imgs: ["img/DESCO4K.png"], descripciones: descripcionesDESCO4K },
+    { nombre: "IMATV", imgs: ["img/IMATV.png"], descripciones: descripcionesIMATV },
+    { nombre: "IMATV-VD", imgs: ["img/IMATV-VD.png"], descripciones: descripcionesIMATVVD },
+    { nombre: "IMATV-VDT", imgs: ["img/IMATV-VDT.png"], descripciones: descripcionesIMATVVDT },
+    { nombre: "AFR", imgs: ["img/AFR-V.png", "img/AFR-MIGRACION.png"], descripciones: descripcionesAFR },
+    { nombre: "ASOS", imgs: ["img/ASOS-VD.png", "img/ASOS-VDT.png"], descripciones: descripcionesIMATVVDT },
+    { nombre: "HGUW6-P", imgs: ["img/WIFI-6.png"], descripciones: descripcionesIMATVVD }
   ],
   "MTV 2": [
-    { 
-      nombre: "DESCO 4K", 
-      imgs: ["img/Desco.png"],
-      descripciones: descripcionesGenericas
-    },
-    { 
-      nombre: "IMATV", 
-      imgs: ["img/Desco.png"],
-      descripciones: descripcionesGenericas
-    },
-    { 
-      nombre: "IMATV-VD", 
-      imgs: ["img/HGU.png", "img/WIFI6.png"],
-      descripciones: descripcionesGenericas
-    },
-    { 
-      nombre: "IMATV-VDT", 
-      imgs: ["img/WIFI6.png", "img/Desco.png"],
-      descripciones: descripcionesGenericas
-    },
-    { 
-      nombre: "AFR", 
-      imgs: ["img/Radio.png"],
-      descripciones: descripcionesGenericas
-    },
-    { 
-      nombre: "ASOS", 
-      imgs: ["img/WIFI6.png", "img/Desco.png"],
-      descripciones: descripcionesGenericas
-    },
-    { 
-      nombre: "HGUW6-P", 
-      imgs: ["img/WIFI6.png"],
-      descripciones: descripcionesGenericas
-    }
+    { nombre: "DESCO 4K", imgs: ["img/Desco.png"], descripciones: descripcionesGenericas },
+    { nombre: "IMATV", imgs: ["img/Desco.png"], descripciones: descripcionesGenericas },
+    { nombre: "IMATV-VD", imgs: ["img/HGU.png", "img/WIFI6.png"], descripciones: descripcionesGenericas },
+    { nombre: "IMATV-VDT", imgs: ["img/WIFI6.png", "img/Desco.png"], descripciones: descripcionesGenericas },
+    { nombre: "AFR", imgs: ["img/Radio.png"], descripciones: descripcionesGenericas },
+    { nombre: "ASOS", imgs: ["img/WIFI6.png", "img/Desco.png"], descripciones: descripcionesGenericas },
+    { nombre: "HGUW6-P", imgs: ["img/WIFI6.png"], descripciones: descripcionesGenericas }
   ]
 };
 
-// Datos para CAC
 const datosCAC = {
   s1: { n: "TME FUSION SAP", i: "img/TME FUSION SAP.png" },
   s2: { n: "AUTOMANTENIMIENTO", i: "img/AUTOMANTENIMIENTO.png" },
@@ -607,113 +495,62 @@ const datosCAC = {
 };
 
 // =========================
-// ===== FUNCIÓN PARA MOSTRAR IMÁGENES =====
+// ===== FUNCIONES DE IMÁGENES =====
 // =========================
 
 function mostrarImagenes(imgs, skill) {
-  // Si es una sola imagen
   if (imgs.length === 1) {
     let src = imgs[0];
     if (skill === "MTV 2") {
       let url = "https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf";
-      if (src.includes("Desco")) {
-        url = "https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=7";
-      } else if (src.includes("Radio")) {
-        url = "https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=12";
-      }
-      else if (src.includes("WIFI6")) {
-        url = "https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=4";
-      }
-      else if (src.includes("HGU")) {
-        url = "https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=3";
-      }
-      return `
-        <div class="imagen-sola">
-          <a href='${url}' target='_blank'>
-            <img src='${src}' onerror="this.style.display='none'">
-          </a>
-        </div>
-      `;
+      if (src.includes("Desco")) url = "https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=7";
+      else if (src.includes("Radio")) url = "https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=12";
+      else if (src.includes("WIFI6")) url = "https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=4";
+      else if (src.includes("HGU")) url = "https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=3";
+      return `<div class="imagen-sola"><a href='${url}' target='_blank'><img src='${src}' onerror="this.style.display='none'"></a></div>`;
     } else {
-      return `
-        <div class="imagen-sola">
-          <img src='${src}' onerror="this.style.display='none'">
-        </div>
-      `;
+      return `<div class="imagen-sola"><img src='${src}' onerror="this.style.display='none'"></div>`;
     }
   }
   
-  // Si son 2 o más imágenes
   let html = '<div class="imagenes-wrapper">';
-  
   imgs.forEach(src => {
     if (skill === "MTV 2") {
       let url = "https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=8";
-      if (src.includes("Desco") || src.includes("WIFI6")) {
-        url = "https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=5";
-      } else if (src.includes("Radio")) {
-        url = "https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=13";
-      }
-      else if (src.includes("WIFI6")) {
-        url = "https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=4";
-      }
-      else if (src.includes("HGU")) {
-        url = "https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=3";
-      }
-      html += `
-        <div class="imagen-item">
-          <a href='${url}' target='_blank'>
-            <img src='${src}' onerror="this.style.display='none'">
-          </a>
-        </div>
-      `;
+      if (src.includes("Desco") || src.includes("WIFI6")) url = "https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=5";
+      else if (src.includes("Radio")) url = "https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=13";
+      else if (src.includes("WIFI6")) url = "https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=4";
+      else if (src.includes("HGU")) url = "https://zeleris.abaigroup.co/wp-content/uploads/2025/04/SOPORTE_TECNICO__5_.pdf#page=3";
+      html += `<div class="imagen-item"><a href='${url}' target='_blank'><img src='${src}' onerror="this.style.display='none'"></a></div>`;
     } else {
-      html += `
-        <div class="imagen-item">
-          <img src='${src}' onerror="this.style.display='none'">
-        </div>
-      `;
+      html += `<div class="imagen-item"><img src='${src}' onerror="this.style.display='none'"></div>`;
     }
   });
-  
   html += '</div>';
   return html;
 }
 
 // =========================
-// ===== FUNCIÓN PARA VOLVER AL INICIO =====
+// ===== FUNCIONES DE CAMBIO DE VISTA =====
 // =========================
 
 function volverAlInicio() {
   const botonesPrincipales = document.getElementById('botones-principales');
   const contenidoDinamico = document.getElementById('contenido-dinamico');
   const titulo = document.querySelector('.main-card h2');
-  // Restaurar el título original
-  titulo.textContent = "Tipificaciones Zeleris";
-  
+  titulo.textContent = "Tipificaciones MTV";
   botonesPrincipales.classList.remove('hidden');
   contenidoDinamico.classList.add('hidden');
   contenidoDinamico.innerHTML = '';
 }
 
-// =========================
-// ===== FUNCIONES PARA MOSTRAR CONTENIDO =====
-// =========================
-
 function mostrarSubBotonesMTV(skill) {
   const contenidoDinamico = document.getElementById('contenido-dinamico');
   const botonesPrincipales = document.getElementById('botones-principales');
   const titulo = document.querySelector('.main-card h2');
-   // Cambiar el título según la selección
-  if (skill === "MTV 1") {
-    titulo.textContent = "MTV 1";
-  } else if (skill === "MTV 2") {
-    titulo.textContent = "MTV 2";
-  }
-  // Ocultar botones principales
+  titulo.textContent = skill === "MTV 1" ? "Tipificaciones MTV 1" : "Tipificaciones MTV 2";
   botonesPrincipales.classList.add('hidden');
   
-  // Generar HTML
   let html = `
     <div id="area-mtv">
       <div id="sub-botones-mtv" class="d-flex justify-content-center gap-2 flex-wrap mb-3"></div>
@@ -721,50 +558,38 @@ function mostrarSubBotonesMTV(skill) {
         <select id="selector-mtv" class="form-select form-select-custom hidden"></select>
       </div>
       <div id="desc-mtv" class="alert alert-light border hidden mx-auto" style="max-width: 600px;">
-        <textarea id="texto-mtv" class="form-control" rows="3"></textarea>
-        <div class="d-flex justify-content-end gap-2 mt-2">
-          <button class="btn btn-success btn-sm" onclick="copiarTexto()">📋 Copiar</button>
-        </div>
+        <textarea id="texto-mtv" class="form-control" rows="1"></textarea>
       </div>
       <div id="img-global" class="hidden"></div>
       <button class="btn-volver" onclick="volverAlInicio()">◀ Volver al Inicio</button>
     </div>
   `;
-  
   contenidoDinamico.innerHTML = html;
   contenidoDinamico.classList.remove('hidden');
   
-  // Cargar los sub-botones
   const cont = document.getElementById('sub-botones-mtv');
   const selector = document.getElementById('selector-mtv');
   
   configMTV[skill].forEach(item => {
     const btn = document.createElement('button');
-    btn.className = "btn btn-custom";
+    btn.className = "btn btn-outline-success";
     btn.textContent = item.nombre;
     btn.onclick = () => {
-      document.querySelectorAll('#sub-botones-mtv .btn-custom').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#sub-botones-mtv .btn-outline-success').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      
-      // Mostrar imágenes
       const imgDiv = document.getElementById('img-global');
       imgDiv.innerHTML = mostrarImagenes(item.imgs, skill);
       imgDiv.classList.remove('hidden');
-
-      // Cargar selector con las descripciones específicas del producto
       selector.innerHTML = '<option value="">-- Selecciona una opción --</option>';
       const descripciones = item.descripciones || descripcionesGenericas;
-      
       descripciones.forEach(opt => {
         const o = document.createElement('option');
         o.value = opt.texto;
         o.textContent = opt.opcion;
         selector.appendChild(o);
       });
-      
       selector.classList.remove('hidden');
       document.getElementById('desc-mtv').classList.add('hidden');
-
       selector.onchange = () => {
         if (selector.value) {
           const desc = document.getElementById('desc-mtv');
@@ -785,13 +610,9 @@ function mostrarCAC() {
   const contenidoDinamico = document.getElementById('contenido-dinamico');
   const botonesPrincipales = document.getElementById('botones-principales');
   const titulo = document.querySelector('.main-card h2');
-  // Cambiar el título
-  titulo.textContent = "CAC";
-  
-  // Ocultar botones principales
+  titulo.textContent = "Tipificaciones CAC";
   botonesPrincipales.classList.add('hidden');
   
-  // Generar HTML
   let html = `
     <div id="area-cac">
       <div class="row align-items-center justify-content-center g-3 mb-3">
@@ -806,21 +627,17 @@ function mostrarCAC() {
       <button class="btn-volver" onclick="volverAlInicio()">◀ Volver al Inicio</button>
     </div>
   `;
-  
   contenidoDinamico.innerHTML = html;
   contenidoDinamico.classList.remove('hidden');
   
-  // Cargar sub-botones CAC
   const cont = document.getElementById('sub-botones-cac');
   const selector = document.getElementById('selector-cac');
   cont.innerHTML = "";
-
   const nombres = ["Buzón CAC", "Códigos", "O2", "Abreviaturas"];
   const imgs = ["Buzon CAC", "Codigos", "O2", "Abreviaturas"];
-
   nombres.forEach((nom, i) => {
     const btn = document.createElement('button');
-    btn.className = "btn btn-custom";
+    btn.className = "btn btn-outline-success";
     btn.textContent = nom;
     btn.onclick = () => {
       cont.querySelectorAll('button').forEach(b => b.classList.remove('active'));
@@ -832,7 +649,6 @@ function mostrarCAC() {
     };
     cont.appendChild(btn);
   });
-
   selector.innerHTML = '<option value="">-- Opciones CAC --</option>';
   Object.keys(datosCAC).forEach(k => {
     const o = document.createElement('option');
@@ -840,7 +656,6 @@ function mostrarCAC() {
     o.textContent = datosCAC[k].n;
     selector.appendChild(o);
   });
-
   selector.onchange = () => {
     if (selector.value) {
       cont.querySelectorAll('button').forEach(b => b.classList.remove('active'));
@@ -852,26 +667,8 @@ function mostrarCAC() {
 }
 
 // =========================
-// ===== UTILIDADES =====
+// ===== AUTO-RESIZE TEXTAREA =====
 // =========================
-
-function copiarTexto() {
-  const textarea = document.getElementById("texto-mtv");
-  if (textarea) {
-    textarea.select();
-    textarea.setSelectionRange(0, 99999);
-    navigator.clipboard.writeText(textarea.value);
-    
-    // Mostrar notificación temporal
-    const btn = event.target;
-    const originalText = btn.textContent;
-    btn.textContent = "✓ Copiado!";
-    setTimeout(() => {
-      btn.textContent = originalText;
-    }, 1500);
-  }
-}
-
 function ajustarTextarea() {
   const textarea = document.getElementById("texto-mtv");
   if (textarea) {
@@ -883,11 +680,9 @@ function ajustarTextarea() {
 // =========================
 // ===== EVENTOS PRINCIPALES =====
 // =========================
-
 document.getElementById('boton1').onclick = () => mostrarSubBotonesMTV("MTV 1");
 document.getElementById('boton2').onclick = () => mostrarSubBotonesMTV("MTV 2");
 document.getElementById('boton3').onclick = () => mostrarCAC();
-
 </script>
 </body>
 </html>

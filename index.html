@@ -4,26 +4,71 @@
 <meta charset="UTF-8">
 <title>Zeleris App</title>
 <link rel="icon" href="img/logo.ico" type="image/x-icon">
-
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-JN37NFW5XH"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-JN37NFW5XH');
-</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
 <style>
-body{
+*{
   margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
   font-family:Arial;
   height:100vh;
   display:flex;
   overflow:hidden;
-  
+  position:relative;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ----- MODO OSCURO (global) ----- */
+body.dark-mode {
+  background: #121212 !important;
+}
+body.dark-mode .main {
+  background: #1e1e2f !important;
+}
+body.dark-mode .sidebar {
+  background: #0a0a1a !important;
+}
+body.dark-mode .menu-btn {
+  background: #1f1f3a !important;
+  color: #e0e0e0 !important;
+}
+body.dark-mode .menu-btn:hover {
+  background: #2a2a4a !important;
+}
+body.dark-mode .menu-btn.active {
+  background: #54eb36 !important;
+  color: #000 !important;
+  box-shadow: 0 0 10px #54eb36;
+}
+body.dark-mode .sidebar-footer {
+  border-top-color: #2a2a4a !important;
+  color: #aaa !important;
+}
+body.dark-mode .drop-box {
+  background: #1e1e2f;
+  border-color: #4a4a6a;
+  color: #ddd;
+}
+body.dark-mode .drop-box:hover {
+  background: #2a2a4a;
+}
+body.dark-mode .modal-content {
+  background: #1e1e2f;
+  color: #eee;
+}
+body.dark-mode .modal-content button {
+  background: #2a2a4a;
+  color: white;
+}
+body.dark-mode .btn-close {
+  filter: invert(1);
+}
+body.dark-mode .main-footer {
+  background: #121212;
+  color: #aaa;
 }
 
 /* ===== TOGGLE ===== */
@@ -40,6 +85,10 @@ body{
   cursor:pointer;
   color:white;
 }
+body.dark-mode .btn-toggle-sidebar {
+  background: rgba(255,255,255,0.15);
+  color:#eee;
+}
 
 /* ===== SIDEBAR ===== */
 .sidebar{
@@ -49,10 +98,82 @@ body{
   display:flex;
   flex-direction:column;
   padding:20px;
+  height:100vh;
+  overflow-y:auto;
+  position:relative;
+  z-index:1001;
+  transition: background 0.3s;
 }
-
 .sidebar.oculto{
   display:none;
+}
+.sidebar-logo{
+  text-align:center;
+  margin-bottom:30px;
+  flex-shrink:0;
+}
+.sidebar-logo img{
+  width:100%;
+  max-width:180px;
+  object-fit:contain;
+}
+.menu-buttons{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.menu-btn{
+  padding:12px;
+  background:#374151;
+  border:none;
+  color:#fff;
+  cursor:pointer;
+  border-radius:5px;
+  text-align:left;
+  font-size:14px;
+  transition:all 0.2s;
+}
+.menu-btn:hover{
+  background:#4b5563;
+}
+.menu-btn.active{
+  background:#4b5563;
+  box-shadow:0 0 10px #54eb36;
+}
+.sidebar-footer{
+  margin-top:20px;
+  padding-top:15px;
+  border-top:1px solid #4b5563;
+  text-align:center;
+  font-size:11px;
+  color:#9ca3af;
+  flex-shrink:0;
+}
+/* Botón modo oscuro dentro del sidebar */
+.dark-mode-toggle {
+  margin-top: 20px;
+  padding: 10px;
+  background: #374151;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: 0.2s;
+}
+.dark-mode-toggle:hover {
+  background: #4b5563;
+  transform: scale(1.02);
+}
+body.dark-mode .dark-mode-toggle {
+  background: #54eb36;
+  color: #000;
+  box-shadow: 0 0 10px #54eb36;
 }
 
 /* ===== MAIN ===== */
@@ -63,82 +184,32 @@ body{
   align-items:flex-start;
   background:#f3f4f6;
   overflow:auto;
+  height:100vh;
+  transition: background 0.3s;
 }
-
 .contenido{
   width:100%;
   max-width:1200px;
   padding:20px;
 }
-
-/* ===== MODULOS ===== */
 .modulo{display:none;}
 .modulo.active{display:block;}
-
-/* ===== BOTONES SIDEBAR ===== */
-.menu-btn{
-  padding:12px;
-  margin:5px 0;
-  background:#374151;
-  border:none;
-  color:#fff;
-  cursor:pointer;
-  border-radius:5px;
-  text-align:left;
-}
-
-.menu-btn.active{
-  background:#4b5563;
-  box-shadow:0 0 10px #54eb36;
-}
-
-/* ===== IFRAME ===== */
 .frame{
   width:100%;
   height:90vh;
   border:none;
   border-radius:10px;
 }
-
-/* ===== CEUTRA LAYOUT ===== */
 .ceutra-wrapper{
   display:flex;
   flex-direction:column;
   align-items:center;
   width:100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;   /* centra verticalmente */
-  align-items: center;       /* centra horizontalmente */
-  min-height: 70vh;          /* hace que ocupe altura suficiente */
-}
-
-#ceutra .ceutra-content{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-
-/* LOGO ARRIBA */
-.ceutra-logo{
-  margin-top:20px;
-  margin-bottom:40px;
-}
-
-.ceutra-logo img{
-  max-width:250px;
-}
-
-/* CONTENIDO */
-.ceutra-content{
-  width:100%;
-  display:flex;
+  min-height:70vh;
   justify-content:center;
+  align-items:center;
 }
-
-/* DROP AREA */
-#drop{
+.drop-box{
   border:2px dashed #aaa;
   padding:40px;
   border-radius:10px;
@@ -146,9 +217,16 @@ body{
   cursor:pointer;
   text-align:center;
   width:400px;
+  transition:0.2s;
 }
-
-/* ===== PROGRESO MODAL ===== */
+.drop-box:hover{
+  background:#f9fafb;
+  border-color:#666;
+}
+.drop-box.dragover{
+  background:#e0f2fe;
+  border-color:#3b82f6;
+}
 #progressModal{
   position:fixed;
   top:0;
@@ -161,7 +239,6 @@ body{
   align-items:center;
   z-index:2000;
 }
-
 #progressBox{
   background:#fff;
   padding:30px;
@@ -169,20 +246,17 @@ body{
   width:300px;
   text-align:center;
 }
-
 #barContainer{
   background:#ddd;
   border-radius:10px;
   overflow:hidden;
 }
-
 #bar{
   height:20px;
   width:0%;
   background:#54eb36;
+  transition:width 0.3s;
 }
-
-/* ===== MODAL ===== */
 .modal{
   position:fixed;
   top:0;
@@ -193,13 +267,11 @@ body{
   display:none;
   justify-content:center;
   align-items:center;
+  z-index:2001;
 }
-
 .modal.show{
   display:flex;
 }
-
-/* ===== MODAL CONTENT ===== */
 .modal-content{
   background:#fff;
   padding:30px;
@@ -207,8 +279,6 @@ body{
   text-align:center;
   box-shadow:0 10px 30px rgba(0,0,0,0.25);
 }
-
-/* ===== BOTONES MODAL MEJORADOS ===== */
 .modal-content button{
   width:160px;
   margin:10px;
@@ -217,118 +287,139 @@ body{
   border:none;
   font-weight:600;
   cursor:pointer;
-  transition:all 0.25s ease;
+  transition:all 0.25s;
   box-shadow:0 3px 8px rgba(0,0,0,0.12);
 }
-
-/* ===== SEPARAR (AZUL) ===== */
-.modal-content button:nth-child(2){
-  background:#3b82f6;
-  color:#fff;
-}
-
-.modal-content button:nth-child(2):hover{
-  background:#2563eb;
-  transform:translateY(-2px);
-  box-shadow:0 6px 14px rgba(59,130,246,0.35);
-}
-
-/* ===== ELIMINAR (ROJO) ===== */
-.modal-content button:nth-child(3){
-  background:#ef4444;
-  color:#fff;
-}
-
-.modal-content button:nth-child(3):hover{
-  background:#dc2626;
-  transform:translateY(-2px);
-  box-shadow:0 6px 14px rgba(239,68,68,0.35);
-}
-
-/* ===== AMBOS (VERDE) ===== */
-.modal-content button:nth-child(4){
-  background:#10b981;
-  color:#fff;
-}
-
-.modal-content button:nth-child(4):hover{
-  background:#059669;
-  transform:translateY(-2px);
-  box-shadow:0 6px 14px rgba(16,185,129,0.35);
-}
-
-/* click suave */
-.modal-content button:active{
-  transform:scale(0.97);
-}
-
-/* ===== TOAST ===== */
-.toast{
+.modal-content button:nth-child(2){ background:#3b82f6; color:#fff; }
+.modal-content button:nth-child(2):hover{ background:#2563eb; transform:translateY(-2px); }
+.modal-content button:nth-child(3){ background:#ef4444; color:#fff; }
+.modal-content button:nth-child(3):hover{ background:#dc2626; transform:translateY(-2px); }
+.modal-content button:nth-child(4){ background:#10b981; color:#fff; }
+.modal-content button:nth-child(4):hover{ background:#059669; transform:translateY(-2px); }
+.modal-content button:active{ transform:scale(0.97); }
+.toast-notification{
   position:fixed;
-  bottom:20px;
-  right:20px;
-  background:#000;
+  bottom:30px;
+  right:30px;
+  background:#333;
   color:#fff;
-  padding:10px;
-  border-radius:5px;
+  padding:12px 24px;
+  border-radius:8px;
+  font-size:14px;
+  z-index:9999;
+  animation:slideIn 0.3s ease;
+  box-shadow:0 4px 12px rgba(0,0,0,0.15);
 }
-
-
-.drop-box{
-  border:2px dashed #aaa;
-  padding:30px;
-  border-radius:10px;
-  background:#fff;
-  cursor:pointer;
-  text-align:center;
-  width:300px;
-  transition:0.2s;
+.toast-notification.success{ background:#10b981; }
+.toast-notification.error{ background:#ef4444; }
+.toast-notification.warning{ background:#f59e0b; }
+@keyframes slideIn{
+  from{ transform:translateX(100%); opacity:0; }
+  to{ transform:translateX(0); opacity:1; }
 }
-
-.drop-box:hover{
-  background:#f9fafb;
-  border-color:#666;
-}
-
-.drop-box.dragover{
-  background:#e0f2fe;
-  border-color:#3b82f6;
-}
-
-.mensaje-box{
-  max-width:350px;
-}
-
-.mensaje-box h3{
-  margin-bottom:10px;
-}
-
-.mensaje-box p{
-  margin-bottom:20px;
-  line-height:1.4;
-}
-
-/* botón más elegante */
-.mensaje-box button{
-  background:#3b82f6;
-  color:#fff;
-}
-
-.mensaje-box button:hover{
-  background:#2563eb;
-}
-
 .logo-empresa {
-  filter: drop-shadow(0 0 6px rgba(255,255,255,0.8))
-          drop-shadow(0 0 15px rgba(255,255,255,0.5));
+  filter: drop-shadow(0 0 6px rgba(255,255,255,0.8)) drop-shadow(0 0 15px rgba(255,255,255,0.5));
 }
-.footer-text{
-  width: 100%;
+.main-footer{
+  position:fixed;
+  bottom:0;
+  left:220px;
+  right:0;
+  text-align:center;
+  font-size:12px;
+  color:#6b7280;
+  padding:8px;
+  background:#f3f4f6;
+  z-index:1000;
+  transition: left 0.3s, background 0.3s;
+}
+.sidebar.oculto + .main .main-footer,
+.sidebar.oculto ~ .main-footer{ left:0; }
+/* Posición relativa para el sidebar-logo */
+.sidebar-logo {
+  position: relative;
   text-align: center;
-  font-size: 15px;
-  color: #6b7280;
-  padding: 15px 0;
-  margin-top: auto;
+  margin-bottom: 30px;
+  flex-shrink: 0;
+}
+
+/* Botón modo oscuro en la esquina superior derecha del sidebar */
+.dark-mode-toggle {
+  position: absolute;
+  top: -8px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  color: #fff;
+}
+
+.dark-mode-toggle:hover {
+  background: rgba(255,255,255,0.2);
+  transform: scale(1.05);
+}
+
+body.dark-mode .dark-mode-toggle {
+  color: #54eb36;
+}
+/* Estilo base del botón modo oscuro */
+.dark-mode-toggle {
+  position: absolute;
+  top: -6px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  color: #fff;
+  /* Animación suave */
+  transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1), background 0.2s;
+}
+
+.dark-mode-toggle:hover {
+  background: rgba(255,255,255,0.2);
+  transform: scale(1.1);
+}
+
+/* Clase para la animación de rotación y cambio de ícono */
+.dark-mode-toggle.rotating {
+  animation: spinAndFade 0.4s ease forwards;
+}
+
+@keyframes spinAndFade {
+  0% {
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: rotate(180deg) scale(0.8);
+    opacity: 0.5;
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+    opacity: 1;
+  }
+}
+
+body.dark-mode .dark-mode-toggle {
+  color: #54eb36;
 }
 </style>
 </head>
@@ -337,441 +428,305 @@ body{
 <button class="btn-toggle-sidebar" id="toggle">☰</button>
 
 <!-- SIDEBAR -->
-<div class="sidebar" id="sidebar"><br>
-  <div style="text-align:center; margin-bottom:20px;">
-  <img 
-    src="img/empresa.png" 
-    alt="Empresa"
-    class="logo-empresa"
-    style="
-      width:100%;
-      max-width:160px;
-      object-fit:contain;
-    "
-  >
-</div>
-  <button class="menu-btn active" onclick="cambiar('mtv',this)">MTV</button>
-  <button class="menu-btn" onclick="cambiar('bo',this)">BO</button>
-  <button class="menu-btn" onclick="cambiar('ficheros',this)">ZCONTACTOS</button>
-  <button class="menu-btn" onclick="cambiar('ceutra',this)">CEUTRA</button>
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <img src="img/empresa2.png" alt="Empresa" class="logo-empresa" style="width:100%; max-width:180px; object-fit:contain;">
+  </div>
+  <!-- Botón modo oscuro global -->
+  <button id="globalDarkModeBtn" class="dark-mode-toggle">🌙</button>
+  <div class="menu-buttons">
+    <button class="menu-btn active" onclick="cambiar('mtv',this)">📺 MTV</button>
+    <button class="menu-btn" onclick="cambiar('bo',this)">📋 BO</button>
+    <button class="menu-btn" onclick="cambiar('ficheros',this)">📁 ZCONTACTOS</button>
+    <button class="menu-btn" onclick="cambiar('ceutra',this)">⚙️ CEUTRA</button>
+  </div>
 </div>
 
 <!-- MAIN -->
 <div class="main">
 <div class="contenido">
-
-<!-- MTV -->
-<div id="mtv" class="modulo active">
-  <iframe class="frame" src="mtv.html"></iframe>
-</div>
-
-<!-- BO -->
-<div id="bo" class="modulo">
-  <iframe class="frame" src="BO.html"></iframe>
-</div>
-
-<!-- FICHEROS-->
-<div id="ficheros" class="modulo">
-  <iframe class="frame" src="FICHEROS.html"></iframe>
-</div>
-
-<!-- CEUTRA -->
+<div id="mtv" class="modulo active"><iframe id="iframeMtv" class="frame" src="mtv.html"></iframe></div>
+<div id="bo" class="modulo"><iframe id="iframeBo" class="frame" src="BO.html"></iframe></div>
+<div id="ficheros" class="modulo"><iframe id="iframeFicheros" class="frame" src="FICHEROS.html"></iframe></div>
 <div id="ceutra" class="modulo">
-
   <div class="ceutra-wrapper">
-    <!-- CONTENIDO ABAJO -->
     <div class="ceutra-content">
-
       <div style="display:flex; flex-direction:column; gap:20px; align-items:center;">
-
-        <!-- BOTON PROCESAR -->
-        <div id="dropProcesar" class="drop-box">
-          Procesar archivo
-          <input type="file" id="fileProcesar" hidden accept=".xlsx,.xls,.xlsm,.xlsb,.csv">
-        </div>
-
-        <!-- BOTON UNIR -->
-        <div id="dropUnir" class="drop-box">
-          Unir archivos Excel / CSV
-          <input type="file" id="fileUnir" multiple hidden accept=".xlsx,.xls,.xlsm,.xlsb,.csv">
-        </div>
-
+        <div id="dropProcesar" class="drop-box">📁 Procesar archivo Excel<input type="file" id="fileProcesar" hidden accept=".xlsx,.xls,.xlsm,.xlsb,.csv"></div>
+        <div id="dropUnir" class="drop-box">🔗 Unir archivos Excel / CSV<input type="file" id="fileUnir" multiple hidden accept=".xlsx,.xls,.xlsm,.xlsb,.csv"></div>
       </div>
-
     </div>
-
   </div>
 </div>
-
-<!-- PROGRESO -->
-<div id="progressModal">
-  <div id="progressBox">
-    <h3>Procesando...</h3>
-
-    <div id="barContainer">
-      <div id="bar"></div>
-    </div>
-
-    <p id="percent">0%</p>
-  </div>
+</div>
 </div>
 
-<!-- MODAL ACCIONES -->
-<div class="modal" id="modalAcciones">
-  <div class="modal-content">
-    <h3>Acción</h3>
-    <button onclick="accion('separar')">Separar</button>
-    <button onclick="accion('eliminar')">Eliminar</button>
-    <button onclick="accion('ambos')">Ambos</button>
-  </div>
-</div>
+<div class="main-footer">© Ing. Javier Mastrangelo. Todos los derechos reservados.</div>
 
-<!-- MODAL MENSAJES -->
-<div class="modal" id="modalMensaje">
-  <div class="modal-content mensaje-box">
-    <h3 id="mensajeTitulo">Aviso</h3>
-    <p id="mensajeTexto"></p>
-    <button onclick="cerrarMensaje()">Aceptar</button>
-  </div>
-</div>
+<div id="progressModal"><div id="progressBox"><h3>Procesando...</h3><div id="barContainer"><div id="bar"></div></div><p id="percent">0%</p></div></div>
+<div class="modal" id="modalAcciones"><div class="modal-content"><h3>¿Qué acción deseas realizar?</h3><button onclick="accion('separar')">Separar</button><button onclick="accion('eliminar')">Eliminar</button><button onclick="accion('ambos')">Ambas acciones</button></div></div>
 
 <script>
-
 // =========================
-// ===== NOMBRE ARCHIVO ====
+// ===== MODO OSCURO GLOBAL =====
 // =========================
-function nombreArchivoCEUTRA(){
-  const hoy = new Date();
-  const dd = String(hoy.getDate()).padStart(2, "0");
-  const mm = String(hoy.getMonth() + 1).padStart(2, "0");
-  const yyyy = hoy.getFullYear();
-  return `CEUTRA_${dd}-${mm}-${yyyy}.xlsx`;
+function aplicarModoOscuroGlobal(activar) {
+  if(activar) {
+    document.body.classList.add('dark-mode');
+    localStorage.setItem('zelerisDarkMode', 'true');
+    document.getElementById('globalDarkModeBtn').innerHTML = '☀️';
+  } else {
+    document.body.classList.remove('dark-mode');
+    localStorage.setItem('zelerisDarkMode', 'false');
+    document.getElementById('globalDarkModeBtn').innerHTML = '🌙';
+  }
+  // Enviar a todos los iframes
+  const iframes = ['iframeMtv', 'iframeBo', 'iframeFicheros'];
+  iframes.forEach(id => {
+    const iframe = document.getElementById(id);
+    if(iframe && iframe.contentWindow) {
+      iframe.contentWindow.postMessage({ type: 'DARK_MODE', darkMode: activar }, '*');
+    }
+  });
+  // Aplicar también a elementos dentro del mismo index (CEUTRA inline)
+  const dropBoxes = document.querySelectorAll('.drop-box');
+  if(activar) {
+    dropBoxes.forEach(box => box.style.background = '#1e1e2f');
+  } else {
+    dropBoxes.forEach(box => box.style.background = '#fff');
+  }
 }
 
+function toggleDarkModeGlobal() {
+  const btn = document.getElementById('globalDarkModeBtn');
+  // Añadir clase de rotación
+  btn.classList.add('rotating');
+  
+  
+  const isDark = !document.body.classList.contains('dark-mode');
+  aplicarModoOscuroGlobal(isDark);
+
+  // Eliminar la clase después de que termine la animación (300ms)
+  setTimeout(() => {
+    btn.classList.remove('rotating');
+  }, 300);
+}
+
+// Cargar preferencia guardada
+function cargarModoOscuro() {
+  const saved = localStorage.getItem('zelerisDarkMode');
+  if(saved === 'true') {
+    aplicarModoOscuroGlobal(true);
+  }
+}
+
+// Evento para el botón
+document.getElementById('globalDarkModeBtn').addEventListener('click', toggleDarkModeGlobal);
+
 // =========================
-// ===== VALIDACION ========
+// ===== TOAST y otras funciones =====
 // =========================
+function mostrarToast(mensaje, tipo="success"){
+  const toast = document.createElement("div");
+  toast.className = `toast-notification ${tipo}`;
+  toast.innerText = mensaje;
+  document.body.appendChild(toast);
+  setTimeout(()=>toast.remove(), 3000);
+}
+function nombreArchivoCEUTRA(){
+  const hoy=new Date();
+  const dd=String(hoy.getDate()).padStart(2,"0");
+  const mm=String(hoy.getMonth()+1).padStart(2,"0");
+  const yyyy=hoy.getFullYear();
+  const hh=String(hoy.getHours()).padStart(2,"0");
+  const min=String(hoy.getMinutes()).padStart(2,"0");
+  return `CEUTRA_${dd}-${mm}-${yyyy}_${hh}-${min}.xlsx`;
+}
 function esExcel(file){
-  const ext = file.name.split(".").pop().toLowerCase();
+  const ext=file.name.split(".").pop().toLowerCase();
   return ["xlsx","xls","xlsm","xlsb","csv"].includes(ext);
 }
-
-// =========================
-// ===== UI CONTROL ========
-// =========================
+// UI Sidebar toggle
 document.getElementById("toggle").onclick=()=>{
-  document.getElementById("sidebar").classList.toggle("oculto");
+  const sidebar=document.getElementById("sidebar");
+  const footer=document.querySelector(".main-footer");
+  sidebar.classList.toggle("oculto");
+  footer.style.left=sidebar.classList.contains("oculto")?"0":"220px";
 };
-
 function cambiar(id,btn){
   document.querySelectorAll(".modulo").forEach(m=>m.classList.remove("active"));
   document.getElementById(id).classList.add("active");
-
   document.querySelectorAll(".menu-btn").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
 }
-
-// =========================
-// ===== DATA GLOBAL =======
-// =========================
-let data=[];
-
-// =========================
-// ===== PROCESAR =========
-// =========================
-const fileProcesar = document.getElementById("fileProcesar");
-const dropProcesar = document.getElementById("dropProcesar");
-
-["dragenter","dragover"].forEach(event=>{
-  dropProcesar.addEventListener(event, e=>{
-    e.preventDefault();
-    dropProcesar.classList.add("dragover");
-  });
+// Variables para CEUTRA
+let datosProcesar=[];
+const fileProcesar=document.getElementById("fileProcesar");
+const dropProcesar=document.getElementById("dropProcesar");
+["dragenter","dragover"].forEach(ev=>{
+  dropProcesar.addEventListener(ev,e=>{e.preventDefault();dropProcesar.classList.add("dragover");});
 });
-
-["dragleave","drop"].forEach(event=>{
-  dropProcesar.addEventListener(event, e=>{
-    e.preventDefault();
-    dropProcesar.classList.remove("dragover");
-  });
+["dragleave","drop"].forEach(ev=>{
+  dropProcesar.addEventListener(ev,e=>{e.preventDefault();dropProcesar.classList.remove("dragover");});
 });
-
-dropProcesar.addEventListener("drop", (e)=>{
-  const files = e.dataTransfer.files;
-  if(files.length === 0) return;
-
-  fileProcesar.files = files;
-  fileProcesar.onchange({target:{files}});
+dropProcesar.addEventListener("drop",e=>{
+  e.preventDefault();
+  const files=e.dataTransfer.files;
+  if(files.length) procesarArchivo(files[0]);
 });
-
-dropProcesar.onclick = () => fileProcesar.click();
-
-fileProcesar.onchange = e => {
-
-  let f = e.target.files[0];
-
-  if(!f){
-    mostrarMensaje("No seleccionaste archivo", "Error");
-    return;
-  }
-
-  if(!esExcel(f)){
-    mostrarMensaje("Solo se permiten archivos Excel o CSV", "Archivo no válido");
-    return;
-  }
-
-  let r = new FileReader();
-
-  r.onload = ev => {
-    let wb = XLSX.read(ev.target.result,{type:"binary"});
-    let ws = wb.Sheets[wb.SheetNames[0]];
-    data = XLSX.utils.sheet_to_json(ws);
-
-    document.getElementById("modalAcciones").classList.add("show");
+dropProcesar.onclick=()=>fileProcesar.click();
+fileProcesar.onchange=e=>{if(e.target.files.length) procesarArchivo(e.target.files[0]);};
+function procesarArchivo(file){
+  if(!file) return mostrarToast("No seleccionaste archivo","error");
+  if(!esExcel(file)) return mostrarToast("Solo Excel/CSV","error");
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const data=new Uint8Array(ev.target.result);
+      const wb=XLSX.read(data,{type:"array"});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const json=XLSX.utils.sheet_to_json(ws);
+      if(!json.length) return mostrarToast("Archivo vacío","error");
+      datosProcesar=json;
+      document.getElementById("modalAcciones").classList.add("show");
+    }catch(e){ mostrarToast("Error al leer","error"); }
   };
-
-  r.readAsBinaryString(f);
-};
-
-// =========================
-// ===== UNIR ARCHIVOS =====
-// =========================
-const fileUnir = document.getElementById("fileUnir");
-const dropUnir = document.getElementById("dropUnir");
-
-["dragenter","dragover"].forEach(event=>{
-  dropUnir.addEventListener(event, e=>{
-    e.preventDefault();
-    dropUnir.classList.add("dragover");
-  });
+  reader.readAsArrayBuffer(file);
+}
+// Unir archivos
+const fileUnir=document.getElementById("fileUnir");
+const dropUnir=document.getElementById("dropUnir");
+["dragenter","dragover"].forEach(ev=>{
+  dropUnir.addEventListener(ev,e=>{e.preventDefault();dropUnir.classList.add("dragover");});
 });
-
-["dragleave","drop"].forEach(event=>{
-  dropUnir.addEventListener(event, e=>{
-    e.preventDefault();
-    dropUnir.classList.remove("dragover");
-  });
+["dragleave","drop"].forEach(ev=>{
+  dropUnir.addEventListener(ev,e=>{e.preventDefault();dropUnir.classList.remove("dragover");});
 });
-
-dropUnir.addEventListener("drop", (e)=>{
-  const files = Array.from(e.dataTransfer.files);
-  if(files.length === 0) return;
-
-  const dt = new DataTransfer();
-  files.forEach(f=>dt.items.add(f));
-  fileUnir.files = dt.files;
-
-  fileUnir.onchange({target:{files}});
+dropUnir.addEventListener("drop",e=>{
+  e.preventDefault();
+  const files=Array.from(e.dataTransfer.files);
+  if(files.length){
+    const dt=new DataTransfer();
+    files.forEach(f=>dt.items.add(f));
+    fileUnir.files=dt.files;
+    unirArchivos(files);
+  }
 });
-
-dropUnir.onclick = () => fileUnir.click();
-
-// =========================
-// ===== PROGRESO =========
-// =========================
+dropUnir.onclick=()=>fileUnir.click();
+fileUnir.onchange=e=>{if(e.target.files.length) unirArchivos(Array.from(e.target.files));};
 function progreso(p){
   document.getElementById("progressModal").style.display="flex";
   document.getElementById("bar").style.width=p+"%";
   document.getElementById("percent").innerText=Math.round(p)+"%";
-
-  if(p>=100){
-    setTimeout(()=>cerrarProgreso(),500);
-  }
+  if(p>=100) setTimeout(()=>document.getElementById("progressModal").style.display="none",500);
 }
-
-function cerrarProgreso(){
-  document.getElementById("progressModal").style.display="none";
-}
-
-// =========================
-// ===== UNIR LOGICA =======
-// =========================
-fileUnir.onchange = async (e) => {
-
+function cerrarProgreso(){ document.getElementById("progressModal").style.display="none"; }
+async function unirArchivos(files){
   try{
-
-    const files = Array.from(e.target.files);
-
-    if(files.length === 0){
-      mostrarMensaje("No seleccionaste archivos", "Error");
-      return;
-    }
-
+    if(!files.length) return mostrarToast("No archivos","error");
     progreso(5);
-
-    let resultado = [];
-    let encabezadoBase = null;
-
-    const filaValida = row =>
-      row.some(cell => String(cell || "").trim() !== "");
-
-    for(let i=0; i<files.length; i++){
-
-      const file = files[i];
-
-      if(!esExcel(file)){
-        cerrarProgreso();
-        mostrarMensaje("Archivo no válido:\n\n" + file.name, "Error");
-        return;
-      }
-
-      let buffer = await file.arrayBuffer();
-      let wb = XLSX.read(buffer, {type:"array"});
-      let ws = wb.Sheets[wb.SheetNames[0]];
-
-      let json = XLSX.utils.sheet_to_json(ws, {header:1});
-      json = json.filter(filaValida);
-
-      if(json.length === 0) continue;
-
-      let encabezadoActual = json[0].map(h => String(h).toLowerCase().trim());
-
-      if(i === 0){
-        encabezadoBase = encabezadoActual;
-        resultado.push(...json);
+    let resultado=[], encabezadoBase=null;
+    const filaValida=row=>row.some(cell=>String(cell||"").trim()!=="");
+    for(let i=0;i<files.length;i++){
+      const file=files[i];
+      if(!esExcel(file)){ cerrarProgreso(); mostrarToast(`No válido: ${file.name}`,"error"); return; }
+      let buffer=await file.arrayBuffer();
+      let wb=XLSX.read(buffer,{type:"array"});
+      let ws=wb.Sheets[wb.SheetNames[0]];
+      let json=XLSX.utils.sheet_to_json(ws,{header:1,defval:""});
+      json=json.filter(filaValida);
+      if(!json.length) continue;
+      let encActual=json[0].map(h=>String(h||"").toLowerCase().trim());
+      if(i===0){
+        encabezadoBase=encActual;
+        resultado.push(json[0],...json.slice(1));
       }else{
-
-        let iguales = encabezadoBase.length === encabezadoActual.length &&
-          encabezadoBase.every((col, idx) => col === encabezadoActual[idx]);
-
-        if(!iguales){
-          cerrarProgreso();
-          mostrarMensaje(
-            "Las columnas no coinciden en:\n\n" + file.name +
-            "\n\nTodos los archivos deben tener la misma estructura.",
-            "Error de estructura"
-          );
-          return;
-        }
-
-        json = json.slice(1);
-        json = json.filter(filaValida);
-        resultado.push(...json);
+        let iguales=encabezadoBase.length===encActual.length && encabezadoBase.every((c,idx)=>c===encActual[idx]);
+        if(!iguales){ cerrarProgreso(); mostrarToast(`Columnas diferentes en ${file.name}`,"error"); return; }
+        resultado.push(...json.slice(1));
       }
-
-      progreso((i+1)/files.length * 70);
+      progreso(5+((i+1)/files.length)*70);
     }
-
-    if(resultado.length === 0){
-      cerrarProgreso();
-      mostrarMensaje("No hay datos para unir", "Error");
-      return;
+    if(resultado.length<=1){ cerrarProgreso(); mostrarToast("Sin datos","error"); return; }
+    progreso(85);
+    if(encabezadoBase){
+      const eliminar=["s","consignatario","poblacion","rep.","hoja","h. desde 1","h. hasta 1","h. desde 2","h. hasta 2","modo asg.","info oln"];
+      let idxElim=encabezadoBase.map((h,i)=>eliminar.includes(h)?i:-1).filter(i=>i!==-1);
+      if(idxElim.length) resultado=resultado.map(row=>row.filter((_,i)=>!idxElim.includes(i)));
     }
-
-    let headers = resultado[0].map(h => String(h).toLowerCase().trim());
-
-    const eliminar = [
-      "s","consignatario","poblacion","rep.","hoja",
-      "h. desde 1","h. hasta 1","h. desde 2","h. hasta 2",
-      "modo asg.","info oln"
-    ];
-
-    let indices = headers
-      .map((h,i)=> eliminar.includes(h) ? i : -1)
-      .filter(i=>i !== -1);
-
-    resultado = resultado.map(row =>
-      row.filter((_,i)=> !indices.includes(i))
-    );
-
-    progreso(90);
-
-    const wsFinal = XLSX.utils.aoa_to_sheet(resultado);
-    const wbFinal = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wbFinal, wsFinal, "Unido");
-
+    progreso(95);
+    const wsFinal=XLSX.utils.aoa_to_sheet(resultado);
+    wsFinal['!cols']=resultado[0]?.map(()=>({wch:15}))||[];
+    const wbFinal=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wbFinal,wsFinal,"DatosUnidos");
     progreso(100);
-
-    setTimeout(()=>{
-      XLSX.writeFile(wbFinal, nombreArchivoCEUTRA());
-    },400);
-
-  }catch(err){
-    cerrarProgreso();
-    console.error(err);
-    mostrarMensaje("Error al unir archivos:\n\n" + err.message, "Error crítico");
-  }
-};
-
-// =========================
-// ===== ACCIONES =========
-// =========================
-function accion(t){
-
+    setTimeout(()=>{ XLSX.writeFile(wbFinal,nombreArchivoCEUTRA()); mostrarToast("✅ Unido correctamente","success"); },500);
+  }catch(err){ cerrarProgreso(); mostrarToast("Error al unir","error"); }
+}
+function transformarAEstructuraRequerida(datos){
+  return datos.map(row=>({
+    "REFERENCIA": row.REFERENCIA||"",
+    "PZA.": row["PZA."]||row.PZA||row.PIEZAS||"",
+    "REC.": row["REC."]||row.REC||row.RECOGIDAS||"",
+    "FECHA": row.FECHA||row.FECHA_CREACION||row.CREADO||"",
+    "SITUACION": row.SITUACION||row.SITUACION_ACTUAL||row.ESTADO||"",
+    "REINTENTO": row.REINTENTO||row.REINTENTOS||""
+  }));
+}
+function accion(tipo){
   document.getElementById("modalAcciones").classList.remove("show");
-
-  let d=[...data];
-
-  progreso(20);
-
+  if(!datosProcesar.length) return mostrarToast("Sin datos","error");
+  progreso(10);
   setTimeout(()=>{
-
-    if(t!=="eliminar"){
-      d=d.map(r=>{
-        if(r.REFERENCIA){
-          let p=String(r.REFERENCIA).split("/");
-          r.REFERENCIA=p[0];
-          r.REINTENTO=p[1]?"/"+p[1]:"";
-        }
-        return r;
-      });
-    }
-
-    progreso(70);
-
-    setTimeout(()=>{
-
-      if(t!=="separar"){
-        let map={};
-
-        d.forEach(r=>{
-          let v=parseInt((r.REINTENTO||"").replace("/",""))||0;
-
-          if(!map[r.REFERENCIA] || v > map[r.REFERENCIA].v){
-            map[r.REFERENCIA]={r,v};
+    let modificados=[...datosProcesar];
+    try{
+      if(tipo!=="eliminar"){
+        modificados=modificados.map(row=>{
+          let nueva={...row};
+          if(nueva.REFERENCIA){
+            let partes=String(nueva.REFERENCIA).split("/");
+            nueva.REFERENCIA=partes[0].trim();
+            nueva.REINTENTO=partes[1]?.trim()||nueva.REINTENTO||"";
           }
+          return nueva;
         });
-
-        d=Object.values(map).map(x=>x.r);
       }
-
-      progreso(100);
-
-      setTimeout(()=>descargar(d),400);
-
-    },500);
-
-  },500);
+      progreso(40);
+      setTimeout(()=>{
+        if(tipo!=="separar"){
+          const mapa=new Map();
+          modificados.forEach(row=>{
+            let ref=row.REFERENCIA;
+            if(!ref) return;
+            let reint=0, reintVal=row.REINTENTO||"";
+            if(reintVal) reint=parseInt(String(reintVal).replace(/[^0-9]/g,""))||0;
+            if(!mapa.has(ref)||reint>mapa.get(ref).reintento) mapa.set(ref,{datos:row,reintento:reint});
+          });
+          modificados=Array.from(mapa.values()).map(v=>v.datos);
+        }
+        progreso(70);
+        setTimeout(()=>{
+          const finales=transformarAEstructuraRequerida(modificados);
+          if(!finales.length){ progreso(100); cerrarProgreso(); mostrarToast("Sin datos después","warning"); return; }
+          progreso(90);
+          const ws=XLSX.utils.json_to_sheet(finales);
+          ws['!cols']=[{wch:20},{wch:12},{wch:12},{wch:15},{wch:25},{wch:12}];
+          const wb=XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb,ws,"CEUTRA_Resultado");
+          progreso(100);
+          setTimeout(()=>{
+            XLSX.writeFile(wb,nombreArchivoCEUTRA());
+            mostrarToast("✅ Procesado correctamente","success");
+            datosProcesar=[];
+            fileProcesar.value='';
+          },300);
+        },200);
+      },300);
+    }catch(e){ cerrarProgreso(); mostrarToast("Error al procesar","error"); }
+  },200);
 }
-
-// =========================
-// ===== DESCARGA =========
-// =========================
-function descargar(d){
-  const ws=XLSX.utils.json_to_sheet(d);
-  const wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,ws,"Resultado");
-  XLSX.writeFile(wb, nombreArchivoCEUTRA());
-}
-
-// =========================
-// ===== MODAL MENSAJES ====
-// =========================
-function mostrarMensaje(texto, titulo="Aviso"){
-  document.getElementById("mensajeTitulo").innerText = titulo;
-  document.getElementById("mensajeTexto").innerText = texto;
-  document.getElementById("modalMensaje").classList.add("show");
-}
-
-function cerrarMensaje(){
-  document.getElementById("modalMensaje").classList.remove("show");
-}
-
+// Cargar modo oscuro al inicio
+cargarModoOscuro();
 </script>
-
-</script>
-<div class="footer-text">
-  © Ing. Javier Mastrangelo. Todos los derechos reservados.
-</div>
 </body>
 </html>

@@ -1,152 +1,67 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tipificaciones BO</title>
-<link rel="icon" href="img/logo.ico">
-
+<link rel="icon" href="img/logo2.ico">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
 <style>
-body.dark-mode{
-  background:#1f1f1f !important;
-  color:white;
+/* Estilos base (sin modo oscuro propio) */
+.tip-btn.active{ box-shadow:0 0 0 3px rgba(25,135,84,.35); }
+.hora-espana{ cursor:pointer; user-select:none; }
+.textarea-pro{ border-radius:12px; border:1px solid #ced4da; transition:all 0.25s; font-size:14px; line-height:1.5; resize:none; }
+.textarea-pro:hover{ border-color:#86b7fe; }
+.textarea-pro:focus{ border-color:#198754; box-shadow:0 0 0 0.2rem rgba(25,135,84,.25); background:#fdfefe; }
+.action-btn.active{ background:#198754 !important; color:white !important; border-color:#198754 !important; box-shadow:0 0 0 3px rgba(25,135,84,.35); }
+
+/* Clases para modo oscuro recibido desde el padre */
+body.dark-mode {
+  background: #1a1a2e !important;
+  color: #e0e0e0 !important;
 }
-body.dark-mode .card{
-  background:#2b2b2b;
-  color:white;
+body.dark-mode .card {
+  background: #16213e !important;
+  color: #e0e0e0 !important;
+  border-color: #2a2a4a;
 }
 body.dark-mode .form-control,
-body.dark-mode .form-select{
-  background:#333;
-  color:white;
-  border-color:#555;
+body.dark-mode .form-select {
+  background: #0f3460 !important;
+  color: #e0e0e0 !important;
+  border-color: #2a2a4a;
 }
-body.dark-mode footer{
-  color:#aaa;
+body.dark-mode .textarea-pro {
+  background: #0f3460 !important;
+  color: #e0e0e0;
+  border-color: #2a2a4a;
 }
-.tip-btn.active{
-  box-shadow:0 0 0 3px rgba(25,135,84,.35);
+body.dark-mode .textarea-pro:focus {
+  background: #1a1a2e;
+  border-color: #54eb36;
 }
-.hora-espana{
-  cursor:pointer;
-  user-select:none;
+body.dark-mode .btn-outline-success {
+  color: #54eb36;
+  border-color: #54eb36;
 }
-
-.textarea-pro{
-  border-radius:12px;
-  border:1px solid #ced4da;
-  transition:all 0.25s ease;
-  font-size:14px;
-  line-height:1.5;
-  resize:none;
+body.dark-mode .btn-outline-success:hover {
+  background: #54eb36;
+  color: #000;
 }
-
-/* Hover suave */
-.textarea-pro:hover{
-  border-color:#86b7fe;
+body.dark-mode .border {
+  border-color: #2a2a4a !important;
 }
-
-/* Focus PRO */
-.textarea-pro:focus{
-  border-color:#198754;
-  box-shadow:0 0 0 0.2rem rgba(25,135,84,.25);
-  background:#fdfefe;
+body.dark-mode .modal-content {
+  background: #16213e;
+  color: #e0e0e0;
 }
-
-/* Modo oscuro */
-body.dark-mode .textarea-pro{
-  background:#2f2f2f;
-  color:#fff;
-  border-color:#555;
-}
-
-body.dark-mode .textarea-pro:focus{
-  background:#2f2f2f;
-  border-color:#20c997;
-  box-shadow:0 0 0 0.2rem rgba(32,201,151,.25);
-}
-
-/* =========================
-   LOGO EFECTO LETRAS
-========================= */
-
-.logo-empresa{
-  transition:all 0.35s ease;
-}
-
-/* Shadow SOLO sobre letras claras */
-body.dark-mode .logo-empresa{
-  filter:
-    drop-shadow(0 0 4px rgba(255,255,255,.45))
-    drop-shadow(0 0 10px rgba(25,135,84,.85))
-    drop-shadow(0 0 22px rgba(25,135,84,.75))
-    drop-shadow(0 0 40px rgba(25,135,84,.60))
-    drop-shadow(0 0 65px rgba(25,135,84,.45));
-}
-
-/* BOTONES ACTIVOS */
-.action-btn.active{
-  background:#198754 !important;
-  color:white !important;
-  border-color:#198754 !important;
-  box-shadow:0 0 0 3px rgba(25,135,84,.35);
-}
-
-/* =========================
-   ANIMACIÓN HORA
-========================= */
-
-#hora-espana {
-      display: inline-block; /* Permite la transformación */
-      transition: transform 0.5s ease, opacity 0.5s ease;
-      transform: translateX(0);
-      opacity: 1;
-    }
-
-    /* Cuando se oculta: desliza hacia la izquierda y se vuelve invisible */
-    #hora-dinamica.slide-hidden {
-      transform: translateX(-100%);
-      opacity: 0;
-    }
-
-    /* Clase temporal para mostrar la hora: se inicia desplazada a la derecha */
-    #hora-dinamica.slide-from-right {
-      transform: translateX(100%);
-      opacity: 0;
-    }
 </style>
-
 </head>
-
 <body class="bg-light">
-
 <div class="container py-4">
-
-<!-- HORA -->
-<div class="text-center mb-3 fs-5 hora-espana">
-
-  <span class="titulo-hora">
-    Hora en España:
-  </span>
-
-  <span id="contenedorHora">
-    <span id="hora-dinamica"></span>
-  </span>
-
-</div>
-
-<!-- DARK MODE -->
-<button id="toggleDarkMode" class="btn btn-dark position-fixed top-0 start-0 m-2">🌙</button>
-
-
+<div class="text-center mb-3 fs-5 hora-espana"><span class="titulo-hora">Hora en España:</span><span id="contenedorHora"><span id="hora-dinamica"></span></span></div>
 <div class="card shadow p-4">
-
 <h1 class="text-center mb-4">Tipificaciones ZContactos</h1>
-
-<!-- BOTONES -->
 <div class="row g-2 mb-3">
   <div class="col"><button class="btn btn-outline-success w-100 tip-btn" data-t="T01">T01</button></div>
   <div class="col"><button class="btn btn-outline-success w-100 tip-btn" data-t="T05">T05</button></div>
@@ -154,415 +69,143 @@ body.dark-mode .logo-empresa{
   <div class="col"><button class="btn btn-outline-success w-100 tip-btn" data-t="T12">T12</button></div>
   <div class="col"><button class="btn btn-outline-success w-100 tip-btn" data-t="T40">T40</button></div>
 </div>
-
 <div class="d-flex gap-2 mb-3 flex-wrap">
   <button class="btn btn-outline-success flex-fill tip-btn" data-t="Agil">Agilizaciones</button>
-
   <button id="btnValidador" class="btn btn-outline-success flex-fill action-btn" onclick="mostrarValidador()">Validar Plazo</button>
-
-<button id="btnCP" class="btn btn-outline-success flex-fill action-btn" onclick="mostrarBuscadorCP()">Pza GEO</button>
-
+  <button id="btnCP" class="btn btn-outline-success flex-fill action-btn" onclick="mostrarBuscadorCP()">Pza GEO</button>
   <button class="btn btn-outline-success flex-fill tip-btn" data-t="FPO">Fuera de Plazo</button>
 </div>
-
-<!-- VALIDAR PLAZO -->
 <div id="validadorPlazo" class="border rounded p-3 mb-3 d-none">
-  <label class="form-label">Fecha entrega</label>
-  <input type="date" id="fechaEntrega" class="form-control mb-2">
-
-  <label class="form-label">Fecha actual</label>
-  <input type="date" id="fechaActual" class="form-control mb-2">
-
+  <label class="form-label">Fecha entrega</label><input type="date" id="fechaEntrega" class="form-control mb-2">
+  <label class="form-label">Fecha actual</label><input type="date" id="fechaActual" class="form-control mb-2">
   <button class="btn btn-primary w-100" onclick="calcularDias()">Calcular días</button>
   <div id="resultadoDias" class="fw-bold mt-2"></div>
 </div>
-
-<!-- CP -->
 <div id="buscadorCP" class="d-none mb-3">
-  <label class="form-label">Código Postal</label>
-  <input type="text" id="codigoPostal" class="form-control" maxlength="5">
+  <label class="form-label">Código Postal</label><input type="text" id="codigoPostal" class="form-control" maxlength="5">
   <div id="resultadoCP" class="mt-2"></div>
 </div>
-
-<!-- TIPIFICACIONES -->
 <div id="selector" class="d-none">
   <select id="tipSelect" class="form-select mb-2"></select>
-  <div class="form-floating mb-3">
-  <textarea 
-    id="tipText" 
-    class="form-control textarea-pro" 
-    placeholder="Escribe aquí..." 
-    style="height:180px">
-  </textarea>
+  <div class="form-floating mb-3"><textarea id="tipText" class="form-control textarea-pro" style="height:180px"></textarea></div>
+  <div class="d-flex gap-2"><button id="copyBtn" class="btn btn-success flex-fill">Copiar</button><button id="resetBtn" class="btn btn-secondary flex-fill">Reset</button></div>
 </div>
-
-  <div class="d-flex gap-2">
-    <button id="copyBtn" class="btn btn-success flex-fill">Copiar</button>
-    <button id="resetBtn" class="btn btn-secondary flex-fill">Reset</button>
-  </div>
 </div>
-
+<div class="toast position-fixed top-0 start-50 translate-middle-x mt-3" id="toast"><div class="toast-body bg-success text-white">Tipificación copiada</div></div>
 </div>
-
-<!-- TOAST -->
-<div class="toast position-fixed top-0 start-50 translate-middle-x mt-3" id="toast">
-  <div class="toast-body bg-success text-white">Tipificación copiada</div>
-</div>
-
-</div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
+// Escuchar mensajes del padre para modo oscuro
+window.addEventListener('message', (event) => {
+  if(event.data && event.data.type === 'DARK_MODE') {
+    if(event.data.darkMode) document.body.classList.add('dark-mode');
+    else document.body.classList.remove('dark-mode');
+  }
+});
+// Notificar que estamos listos
+window.parent.postMessage({ type: 'IFRAME_READY' }, '*');
 
-/* =========================
-   VISTA CENTRAL
-========================= */
+// ========== resto de la lógica de BO (igual que antes) ==========
 function ocultarTodo(){
-
   document.getElementById("selector").classList.add("d-none");
   document.getElementById("validadorPlazo").classList.add("d-none");
   document.getElementById("buscadorCP").classList.add("d-none");
-
-  // quitar activos
-  document.querySelectorAll(".tip-btn").forEach(b=>{
-    b.classList.remove("active");
-  });
-
-  document.querySelectorAll(".action-btn").forEach(b=>{
-    b.classList.remove("active");
-  });
+  document.querySelectorAll(".tip-btn").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll(".action-btn").forEach(b=>b.classList.remove("active"));
 }
-
-/* =========================
-   DATA
-========================= */
 const data={
-  T01: [
-      "SE SOLICITA ALBARAN",
-      "ALBARAN ENVIADO",
-      "MAL TABULADO",
-      "FALTA CORREO",
-      "FUERA DE PLAZO",
-      "PEDIDO DEVUELTO",
-      "SE INFORMA PEDIDO IMEI XXXXX - ABONO",
-      "TABULAR INCIDENCIA SOLICITUD ALBARAN SIN REPOSICIÓN.","FUERA DE PLAZO +30"
-      ],
-    T05: [
-      "ENVIAR A TIENDA",
-      "NO ENTREGADO",
-      "PEDIDO DEVUELTO",
-      "PENDIENTE DE RECOGIDA",
-      "TEXTO LIBRE",
-      "MAL TABULADO",
-      "FALTAN DATOS",
-      "ESCALAR A WF DE GAMA BLANCA (SE USA CUANDO APARECE 9014)",
-      "ESCALAR A POSVENTA",
-      "EN PROCESO DE DEVOLUCIÓN", "ZPS", "TV >= 55”", "FALLIDA"
-       ],
-    T11: [
-      "PENDIENTE ENTREGA", "SE ACTUALIZAN LOS DATOS", "ENTREGADO", "NO ES POSIBLE CAMBIO DE TELEFONO POR TELCO", "PEDIDO DEVUELTO", "EN PROCESO DE DEVOLUCIÓN", "NO ES POSIBLE CAMBIO DE DIRECCION", "FALTA DEF", "PEDIDO ESTA ANULADO"
-      ],
-    T12: ["ENTREGADO", "NO CONSTA DEVUELTO", "SOLICITADO REENVÍO"],
-    T40: [
-      "ENTREGADO", "PEDIDO DEVUELTO", "ALBARAN ENVIADO", "PENDIENTE ENTREGA", "PEDIDO ANULADO", "FALTAN DATOS"
-      ],
-    Agil:[
-      "PEDIDO CON INCIDENCIA DE TRANSPORTES", 
-      "PEDIDO CONTABILIZADO", "PEDIDO EN DISTRIBUCIÓN O REPARTO",
-      "PEDIDO CON FALTA DE STOCK", "EN PROCESO DE DEVOLUCIÓN",
-      "PEDIDO ENTREGADO", "PEDIDO CON BLOQUEO DE ENTREGA / MANIPULACION PEDIDO",
-      "PEDIDO INCOMPLETO FALTA TECNICO COMERCIAL", 
-      "PEDIDO INCOMPLETO"
-      ],
-     FPO:[
-      "NO CONTACTO CON DTT", "NO DESEA EL ALBARAN", "NO LO NECESITA", "NO PLAZAS/ ARIL (CUANDO SE BUSCA EN TODOS LOS APLICATIVOS Y NO APARECE NADA)", "NO HAY EVIDENCIAS"
-     ] 
-  };
-
-
-  const descriptions = {
-    "NO CONTACTO CON DTT":"IMPROCEDENTE: DENEGADO NO CONTACTO CON DTT", "FALTA DEF":"IMPROCEDENTE: FALTA DEF", "PENDIENTE ENTREGA":"PENDIENTE DE ENTREGA, ENTREGA ESTIMADA EN 24–48 HORAS LABORABLES.", "PEDIDO ESTA ANULADO":"IMPROCEDENTE: NO PODEMOS TRAMITAR ESTA SOLICITUD PORQUE EL PEDIDO ESTÁ ANULADO.", "PEDIDO ANULADO":"PEDIDO ANULADO SEGÚN LO SOLICITADO.", "NO ENTREGADO":"IMPROCEDENTE: PEDIDO NO CONSTA ENTREGADO", "TV >= 55”":"PENDIENTE DE CONCERTAR CITA CON EL CLIENTE EN 24/48/72H LABORABLES.", "ZPS":"GESTIONADO PEDIDO DE SUSTITUCIÓN, RECOGIDA Y ENTREGA SIMULTANEA ESTIMADA EN 24–48 HORAS LABORABLES.", "FUERA DE PLAZO +30":"IMPROCEDENTE: FUERA DE PLAZO +30 DIAS PARA LA RECLAMACIÓN","EN PROCESO DE DEVOLUCIÓN":"EN PROCESO DE DEVOLUCIÓN, DEVOLUCIÓN ESTIMADA EN 24/48 HORAS LABORALES", "NO DESEA EL ALBARAN":"IMPROCEDENTE: DENEGADO CLIENTE NO DESEA EL ALBARAN", "NO LO NECESITA":"IMPROCEDENTE: DENEGADO CLIENTE NO LO NECESITA", "NO PLAZAS/ ARIL (CUANDO SE BUSCA EN TODOS LOS APLICATIVOS Y NO APARECE NADA)":"IMPROCEDENTE: DENEGADO NO PLAZAS/ ARIL", "NO HAY EVIDENCIAS":"IMPROCEDENTE: NO HAY EVIDENCIAS", "PEDIDO CON INCIDENCIA DE TRANSPORTES":"IMPROCEDENTE: PEDIDO CON INCIDENCIA DE TRANSPORTES", "PEDIDO CONTABILIZADO":"IMPROCEDENTE: PEDIDO CONTABILIZADO", "PEDIDO EN DISTRIBUCIÓN O REPARTO":"IMPROCEDENTE: PEDIDO EN DISTRIBUCIÓN O REPARTO, ENTREGA ESTIMADA EN 24–48 HORAS LABORABLES.", "PEDIDO CON FALTA DE STOCK":"IMPROCEDENTE: PEDIDO CON FALTA DE STOCK", "PEDIDO ENTREGADO":"IMPROCEDENTE: PEDIDO ENTREGADO", "PEDIDO CON BLOQUEO DE ENTREGA / MANIPULACION PEDIDO":"IMPROCEDENTE: PEDIDO CON BLOQUEO DE ENTREGA / MANIPULACION PEDIDO", "PEDIDO INCOMPLETO FALTA TECNICO COMERCIAL":"IMPROCEDENTE:PEDIDO INCOMPLETO FALTA TECNICO COMERCIAL", "PEDIDO INCOMPLETO":"IMPROCEDENTE: PEDIDO INCOMPLETO FALTA DETERMINACION DE PRECIO", "SE SOLICITA ALBARAN": "COMPROBANTE DE ENTREGA SOLICITADO PARA SU ENVÍO AL CLIENTE.","ALBARAN ENVIADO":"EL COMPROBANTE DE ENTREGA HA SIDO ENVIADO AL CLIENTE.", "PENDIENTE DE CONCERTAR CITA CON EL CLIENTE PARA SU RECOGIDA":"PENDIENTE DE CONCERTAR CITA CON EL CLIENTE PARA SU RECOGIDA","MAL TABULADO": "IMPROCEDENTE: MAL TABULADO, TABULAR XXX", "FALTA CORREO": "IMPROCEDENTE: FALTA DE INFORMACION INDICAR CORREO", "FUERA DE PLAZO": "IMPROCEDENTE: FUERA DE PLAZO", "PEDIDO DEVUELTO": "IMPROCEDENTE: EL PEDIDO NO SE ENTREGÓ Y HA SIDO DEVUELTO AL ALMACÉN. LA DEVOLUCIÓN ESTÁ GESTIONADA.", "SE INFORMA PEDIDO IMEI XXXXX - ABONO": "IMPROCEDENTE: SE INFORMA PEDIDO IMEI XXXXX - ABONO", "TABULAR INCIDENCIA SOLICITUD ALBARAN SIN REPOSICIÓN.": "IMPROCEDENTE: TABULAR INCIDENCIA SOLICITUD ALBARAN SIN REPOSICIÓN.", "ENVIAR A TIENDA": "IMPROCEDENTE: AL SER UN EQUIPAMIENTO MÓVIL DE RENT EL DESISTIMIENTO TIENE QUE GESTIONARSE EN CUALQUIER TIENDA DE MOVISTAR","ENTREGADO":"ENTREGADO", "PENDIENTE DE RECOGIDA":"PENDIENTE DE RECOGIDA, RECOGIDA ESTIMADA EN 24–48 HORAS LABORABLES.", "FALTAN DATOS":"IMPROCEDENTE: FALTAN DATOS", "NO ES POSIBLE CAMBIO DE DIRECCION":"IMPROCEDENTE: NO ES POSIBLE CAMBIO DE DIRECCION", "ESCALAR A WF DE GAMA BLANCA (SE USA CUANDO APARECE 9014)":"IMPROCEDENTE: ESCALAR A WF DE GAMA BLANCA", "ESCALAR A POSVENTA":"IMPROCEDENTE: ESCALAR A POSVENTA", "NO ES POSIBLE CAMBIO DE TELEFONO POR TELCO":"IMPROCEDENTE: NO ES POSIBLE CAMBIO DE TELEFONO POR TELCO","SE ACTUALIZAN LOS DATOS":"SE ACTUALIZAN LOS DATOS", "TEXTO LIBRE": "10-12-2025 NOMBRE TRAMITADA RECOGIDA POR DESISTIMIENTO INC ", "NO CONSTA DEVUELTO":"IMPROCEDENTE: PEDIDO NO CONSTA DEVUELTO", "SOLICITADO REENVÍO":"SOLICITADO REENVÍO", "FALLIDA":"IMPROCEDENTE: RECOGIDA FALLIDA POR CLIENTE XXX; SI HAY QUE INTENTAR DE NUEVO LA RECOGIDA, HAY QUE GENERAR UN NUEVO ZCONTACTOS DE “REINTENTO DE RECOGIDA”."
-  };
-
-/* =========================
-   TIPIFICACIONES
-========================= */
+  T01:["SE SOLICITA ALBARAN","ALBARAN ENVIADO","MAL TABULADO","FALTA CORREO","FUERA DE PLAZO","PEDIDO DEVUELTO","SE INFORMA PEDIDO IMEI XXXXX - ABONO","TABULAR INCIDENCIA SOLICITUD ALBARAN SIN REPOSICIÓN.","FUERA DE PLAZO +30"],
+  T05:["ENVIAR A TIENDA","NO ENTREGADO","PEDIDO DEVUELTO","PENDIENTE DE RECOGIDA","TEXTO LIBRE","MAL TABULADO","FALTAN DATOS","ESCALAR A WF DE GAMA BLANCA (SE USA CUANDO APARECE 9014)","ESCALAR A POSVENTA","EN PROCESO DE DEVOLUCIÓN","ZPS","TV >= 55”","FALLIDA"],
+  T11:["PENDIENTE ENTREGA","SE ACTUALIZAN LOS DATOS","ENTREGADO","NO ES POSIBLE CAMBIO DE TELEFONO POR TELCO","PEDIDO DEVUELTO","EN PROCESO DE DEVOLUCIÓN","NO ES POSIBLE CAMBIO DE DIRECCION","FALTA DEF","PEDIDO ESTA ANULADO"],
+  T12:["ENTREGADO","NO CONSTA DEVUELTO","SOLICITADO REENVÍO"],
+  T40:["ENTREGADO","PEDIDO DEVUELTO","ALBARAN ENVIADO","PENDIENTE ENTREGA","PEDIDO ANULADO","FALTAN DATOS"],
+  Agil:["PEDIDO CON INCIDENCIA DE TRANSPORTES","PEDIDO CONTABILIZADO","PEDIDO EN DISTRIBUCIÓN O REPARTO","PEDIDO CON FALTA DE STOCK","EN PROCESO DE DEVOLUCIÓN","PEDIDO ENTREGADO","PEDIDO CON BLOQUEO DE ENTREGA / MANIPULACION PEDIDO","PEDIDO INCOMPLETO FALTA TECNICO COMERCIAL","PEDIDO INCOMPLETO"],
+  FPO:["NO CONTACTO CON DTT","NO DESEA EL ALBARAN","NO LO NECESITA","NO PLAZAS/ ARIL (CUANDO SE BUSCA EN TODOS LOS APLICATIVOS Y NO APARECE NADA)","NO HAY EVIDENCIAS"]
+};
+const descriptions={
+  "NO CONTACTO CON DTT":"IMPROCEDENTE: DENEGADO NO CONTACTO CON DTT","FALTA DEF":"IMPROCEDENTE: FALTA DEF","PENDIENTE ENTREGA":"PENDIENTE DE ENTREGA, ENTREGA ESTIMADA EN 24–48 HORAS LABORABLES.","PEDIDO ESTA ANULADO":"IMPROCEDENTE: NO PODEMOS TRAMITAR ESTA SOLICITUD PORQUE EL PEDIDO ESTÁ ANULADO.","PEDIDO ANULADO":"PEDIDO ANULADO SEGÚN LO SOLICITADO.","NO ENTREGADO":"IMPROCEDENTE: PEDIDO NO CONSTA ENTREGADO","TV >= 55”":"PENDIENTE DE CONCERTAR CITA CON EL CLIENTE EN 24/48/72H LABORABLES.","ZPS":"GESTIONADO PEDIDO DE SUSTITUCIÓN, RECOGIDA Y ENTREGA SIMULTANEA ESTIMADA EN 24–48 HORAS LABORABLES.","FUERA DE PLAZO +30":"IMPROCEDENTE: FUERA DE PLAZO +30 DIAS PARA LA RECLAMACIÓN","EN PROCESO DE DEVOLUCIÓN":"EN PROCESO DE DEVOLUCIÓN, DEVOLUCIÓN ESTIMADA EN 24/48 HORAS LABORALES","NO DESEA EL ALBARAN":"IMPROCEDENTE: DENEGADO CLIENTE NO DESEA EL ALBARAN","NO LO NECESITA":"IMPROCEDENTE: DENEGADO CLIENTE NO LO NECESITA","NO PLAZAS/ ARIL (CUANDO SE BUSCA EN TODOS LOS APLICATIVOS Y NO APARECE NADA)":"IMPROCEDENTE: DENEGADO NO PLAZAS/ ARIL","NO HAY EVIDENCIAS":"IMPROCEDENTE: NO HAY EVIDENCIAS","PEDIDO CON INCIDENCIA DE TRANSPORTES":"IMPROCEDENTE: PEDIDO CON INCIDENCIA DE TRANSPORTES","PEDIDO CONTABILIZADO":"IMPROCEDENTE: PEDIDO CONTABILIZADO","PEDIDO EN DISTRIBUCIÓN O REPARTO":"IMPROCEDENTE: PEDIDO EN DISTRIBUCIÓN O REPARTO, ENTREGA ESTIMADA EN 24–48 HORAS LABORABLES.","PEDIDO CON FALTA DE STOCK":"IMPROCEDENTE: PEDIDO CON FALTA DE STOCK","PEDIDO ENTREGADO":"IMPROCEDENTE: PEDIDO ENTREGADO","PEDIDO CON BLOQUEO DE ENTREGA / MANIPULACION PEDIDO":"IMPROCEDENTE: PEDIDO CON BLOQUEO DE ENTREGA / MANIPULACION PEDIDO","PEDIDO INCOMPLETO FALTA TECNICO COMERCIAL":"IMPROCEDENTE:PEDIDO INCOMPLETO FALTA TECNICO COMERCIAL","PEDIDO INCOMPLETO":"IMPROCEDENTE: PEDIDO INCOMPLETO FALTA DETERMINACION DE PRECIO","SE SOLICITA ALBARAN":"COMPROBANTE DE ENTREGA SOLICITADO PARA SU ENVÍO AL CLIENTE.","ALBARAN ENVIADO":"EL COMPROBANTE DE ENTREGA HA SIDO ENVIADO AL CLIENTE.","PENDIENTE DE CONCERTAR CITA CON EL CLIENTE PARA SU RECOGIDA":"PENDIENTE DE CONCERTAR CITA CON EL CLIENTE PARA SU RECOGIDA","MAL TABULADO":"IMPROCEDENTE: MAL TABULADO, TABULAR XXX","FALTA CORREO":"IMPROCEDENTE: FALTA DE INFORMACION INDICAR CORREO","FUERA DE PLAZO":"IMPROCEDENTE: FUERA DE PLAZO","PEDIDO DEVUELTO":"IMPROCEDENTE: EL PEDIDO NO SE ENTREGÓ Y HA SIDO DEVUELTO AL ALMACÉN. LA DEVOLUCIÓN ESTÁ GESTIONADA.","SE INFORMA PEDIDO IMEI XXXXX - ABONO":"IMPROCEDENTE: SE INFORMA PEDIDO IMEI XXXXX - ABONO","TABULAR INCIDENCIA SOLICITUD ALBARAN SIN REPOSICIÓN.":"IMPROCEDENTE: TABULAR INCIDENCIA SOLICITUD ALBARAN SIN REPOSICIÓN.","ENVIAR A TIENDA":"IMPROCEDENTE: AL SER UN EQUIPAMIENTO MÓVIL DE RENT EL DESISTIMIENTO TIENE QUE GESTIONARSE EN CUALQUIER TIENDA DE MOVISTAR","ENTREGADO":"ENTREGADO","PENDIENTE DE RECOGIDA":"PENDIENTE DE RECOGIDA, RECOGIDA ESTIMADA EN 24–48 HORAS LABORABLES.","FALTAN DATOS":"IMPROCEDENTE: FALTAN DATOS","NO ES POSIBLE CAMBIO DE DIRECCION":"IMPROCEDENTE: NO ES POSIBLE CAMBIO DE DIRECCION","ESCALAR A WF DE GAMA BLANCA (SE USA CUANDO APARECE 9014)":"IMPROCEDENTE: ESCALAR A WF DE GAMA BLANCA","ESCALAR A POSVENTA":"IMPROCEDENTE: ESCALAR A POSVENTA","NO ES POSIBLE CAMBIO DE TELEFONO POR TELCO":"IMPROCEDENTE: NO ES POSIBLE CAMBIO DE TELEFONO POR TELCO","SE ACTUALIZAN LOS DATOS":"SE ACTUALIZAN LOS DATOS","TEXTO LIBRE":"10-12-2025 NOMBRE TRAMITADA RECOGIDA POR DESISTIMIENTO INC ","NO CONSTA DEVUELTO":"IMPROCEDENTE: PEDIDO NO CONSTA DEVUELTO","SOLICITADO REENVÍO":"SOLICITADO REENVÍO","FALLIDA":"IMPROCEDENTE: RECOGIDA FALLIDA POR CLIENTE XXX; SI HAY QUE INTENTAR DE NUEVO LA RECOGIDA, HAY QUE GENERAR UN NUEVO ZCONTACTOS DE “REINTENTO DE RECOGIDA”."
+};
 const selector=document.getElementById("selector");
 const select=document.getElementById("tipSelect");
 const textarea=document.getElementById("tipText");
-
 document.querySelectorAll(".tip-btn").forEach(btn=>{
-btn.addEventListener("click",()=>{
-
-ocultarTodo();
-
-document.querySelectorAll(".tip-btn").forEach(b=>b.classList.remove("active"));
-btn.classList.add("active");
-
-const items=data[btn.dataset.t]||[];
-
-select.innerHTML="";
-
-items.forEach(i=>{
-const opt=document.createElement("option");
-opt.value=i;
-opt.textContent=i;
-select.appendChild(opt);
+  btn.addEventListener("click",()=>{
+    ocultarTodo();
+    document.querySelectorAll(".tip-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    const items=data[btn.dataset.t]||[];
+    select.innerHTML="";
+    items.forEach(i=>{const opt=document.createElement("option");opt.value=i;opt.textContent=i;select.appendChild(opt);});
+    selector.classList.remove("d-none");
+    textarea.value=descriptions[items[0]]||"";
+  });
 });
-
-selector.classList.remove("d-none");
-
-textarea.value=descriptions[items[0]]||"";
-});
-});
-
-/* =========================
-   SELECT
-========================= */
-select.addEventListener("change",e=>{
-textarea.value=descriptions[e.target.value]||"";
-});
-
-/* =========================
-   COPIAR
-========================= */
-document.getElementById("copyBtn").addEventListener("click",()=>{
-navigator.clipboard.writeText(textarea.value);
-new bootstrap.Toast(document.getElementById("toast")).show();
-});
-
-/* =========================
-   RESET
-========================= */
-document.getElementById("resetBtn").addEventListener("click",()=>{
-select.selectedIndex=0;
-textarea.value=descriptions[select.value]||"";
-});
-
-/* =========================
-   VALIDAR PLAZO
-========================= */
-function mostrarValidador() {
-
-  // ocultar todas las vistas
+select.addEventListener("change",e=>{textarea.value=descriptions[e.target.value]||"";});
+document.getElementById("copyBtn").addEventListener("click",()=>{navigator.clipboard.writeText(textarea.value);new bootstrap.Toast(document.getElementById("toast")).show();});
+document.getElementById("resetBtn").addEventListener("click",()=>{select.selectedIndex=0;textarea.value=descriptions[select.value]||"";});
+function mostrarValidador(){
   ocultarTodo();
-
-  // quitar activos
-  document.querySelectorAll(".tip-btn").forEach(btn=>{
-    btn.classList.remove("active");
-  });
-
-  document.querySelectorAll(".action-btn").forEach(btn=>{
-    btn.classList.remove("active");
-  });
-
-  // activar botón validar
-  document.getElementById("btnValidador")
-    .classList.add("active");
-
-  // mostrar validador
-  document.getElementById("validadorPlazo")
-    .classList.remove("d-none");
-
-  const inputActual = document.getElementById("fechaActual");
-
-  // 📅 FECHA ACTUAL AUTOMÁTICA
-  const hoy = new Date();
-  const hoyISO = hoy.toISOString().split("T")[0];
-
-  inputActual.value = hoyISO;
-
-  // Mostrar también fecha actual visible
-  inputActual.dataset.realDate = hoy.toLocaleDateString("es-ES");
-
-  // limpiar resultado
-  document.getElementById("resultadoDias").innerHTML = "";
+  document.querySelectorAll(".tip-btn").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll(".action-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById("btnValidador").classList.add("active");
+  document.getElementById("validadorPlazo").classList.remove("d-none");
+  const hoy=new Date();
+  document.getElementById("fechaActual").value=hoy.toISOString().split("T")[0];
+  document.getElementById("resultadoDias").innerHTML="";
 }
-
-function calcularDias() {
-
-  const fEntrega = document.getElementById("fechaEntrega").value;
-  const fActual = document.getElementById("fechaActual").value;
-
-  const resultado = document.getElementById("resultadoDias");
-
-  if (!fEntrega) {
-    resultado.textContent = "⚠️ Selecciona fecha de entrega";
-    return;
-  }
-
-  const fecha1 = new Date(fEntrega);
-  const fecha2 = new Date(fActual);
-
-  // 📊 diferencia real
-  const diffMs = fecha2 - fecha1;
-
-  const dias = Math.floor(
-    diffMs / (1000 * 60 * 60 * 24)
-  );
-
-  // 🧠 lógica clara
-  if (dias === 0) {
-
-    resultado.textContent = "📅 Mismo día";
-
-  } else if (dias > 0) {
-
-    resultado.textContent = `⏱ Han pasado ${dias} días`;
-
-  } else {
-
-    resultado.textContent = `📌 Faltan ${Math.abs(dias)} días`;
-  }
+function calcularDias(){
+  const fEntrega=document.getElementById("fechaEntrega").value;
+  const fActual=document.getElementById("fechaActual").value;
+  const res=document.getElementById("resultadoDias");
+  if(!fEntrega){res.textContent="⚠️ Selecciona fecha de entrega";return;}
+  const dias=Math.floor((new Date(fActual)-new Date(fEntrega))/(1000*60*60*24));
+  if(dias===0)res.textContent="📅 Mismo día";
+  else if(dias>0)res.textContent=`⏱ Han pasado ${dias} días`;
+  else res.textContent=`📌 Faltan ${Math.abs(dias)} días`;
 }
-
-/* =========================
-   CP
-========================= */
-function mostrarBuscadorCP() {
-
-  // ocultar todas las vistas
+function mostrarBuscadorCP(){
   ocultarTodo();
-
-  // quitar activos
-  document.querySelectorAll(".tip-btn").forEach(btn=>{
-    btn.classList.remove("active");
-  });
-
-  document.querySelectorAll(".action-btn").forEach(btn=>{
-    btn.classList.remove("active");
-  });
-
-  // activar botón CP
-  document.getElementById("btnCP")
-    .classList.add("active");
-
-  // mostrar solo CP
-  const div = document.getElementById("buscadorCP");
-
-  div.classList.remove("d-none");
-
-  // limpiar campos
-  document.getElementById("codigoPostal").value = "";
-  document.getElementById("resultadoCP").innerHTML = "";
+  document.querySelectorAll(".tip-btn").forEach(b=>b.classList.remove("active"));
+  document.querySelectorAll(".action-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById("btnCP").classList.add("active");
+  document.getElementById("buscadorCP").classList.remove("d-none");
+  document.getElementById("codigoPostal").value="";
+  document.getElementById("resultadoCP").innerHTML="";
 }
-
-const plataformas = [
-  { principal: "*001 VITORIA", codigos: ["01", "20", "26", "31", "39", "48"] },
-  { principal: "*003 ALICANTE", codigos: ["03", "30", "12", "46"] },
-  { principal: "*008 BARCELONA", codigos: ["08", "07", "17", "25", "43"] },
-  { principal: "*015 CORUÑA", codigos: ["15", "27", "32", "36"] },
-  { principal: "*028 MADRID", codigos: ["28", "02", "13", "16", "19", "35", "45", "38"] },
-  { principal: "*029 MÁLAGA", codigos: ["29", "04", "18", "23", "52", "51", "59"] },
-  { principal: "*041 SEVILLA", codigos: ["41", "06", "10", "11", "14", "21"] },
-  { principal: "*047 VALLADOLID", codigos: ["47", "05", "09", "24", "33", "34", "37", "40", "49"] },
-  { principal: "*050 ZARAGOZA", codigos: ["50", "22", "44", "42"] }
+const plataformas=[
+  {principal:"*001 VITORIA",codigos:["01","20","26","31","39","48"]},
+  {principal:"*003 ALICANTE",codigos:["03","30","12","46"]},
+  {principal:"*008 BARCELONA",codigos:["08","07","17","25","43"]},
+  {principal:"*015 CORUÑA",codigos:["15","27","32","36"]},
+  {principal:"*028 MADRID",codigos:["28","02","13","16","19","35","45","38"]},
+  {principal:"*029 MÁLAGA",codigos:["29","04","18","23","52","51","59"]},
+  {principal:"*041 SEVILLA",codigos:["41","06","10","11","14","21"]},
+  {principal:"*047 VALLADOLID",codigos:["47","05","09","24","33","34","37","40","49"]},
+  {principal:"*050 ZARAGOZA",codigos:["50","22","44","42"]}
 ];
-
-const inputCP = document.getElementById("codigoPostal");
-const resultadoCP = document.getElementById("resultadoCP");
-
-if (inputCP) {
-
-  inputCP.addEventListener("input", function() {
-
-    this.value = this.value
-      .replace(/\D/g, "")
-      .slice(0, 5);
-
-    if (this.value.length < 2) {
-
-      resultadoCP.innerText =
-        "✍️ Escribe al menos 2 dígitos...";
-
-      return;
-    }
-
-    let prefijo = this.value.substring(0, 2);
-
-    prefijo = String(
-      parseInt(prefijo)
-    ).padStart(2, "0");
-
-    // excepción VALENCIA
-    if (prefijo === "12" || prefijo === "46") {
-
-      resultadoCP.innerText =
-        "📦 VALENCIA - usuario jmbellido";
-
-      return;
-    }
-
-    // búsqueda plataformas
-    for (let grupo of plataformas) {
-
-      if (grupo.codigos.includes(prefijo)) {
-
-        resultadoCP.innerText =
-          `📦 ${grupo.principal}`;
-
-        return;
-      }
-    }
-
-    resultadoCP.innerText = "❌ No encontrado";
+const inputCP=document.getElementById("codigoPostal");
+const resultadoCP=document.getElementById("resultadoCP");
+if(inputCP){
+  inputCP.addEventListener("input",function(){
+    this.value=this.value.replace(/\D/g,"").slice(0,5);
+    if(this.value.length<2){resultadoCP.innerText="✍️ Escribe al menos 2 dígitos...";return;}
+    let prefijo=this.value.substring(0,2);
+    prefijo=String(parseInt(prefijo)).padStart(2,"0");
+    if(prefijo==="12"||prefijo==="46"){resultadoCP.innerText="📦 VALENCIA - usuario jmbellido";return;}
+    for(let g of plataformas){if(g.codigos.includes(prefijo)){resultadoCP.innerText=`📦 ${g.principal}`;return;}}
+    resultadoCP.innerText="❌ No encontrado";
   });
 }
-
-/* =========================
-   HORA 12H + EFECTO SLIDE
-========================= */
-
-const horaSpan = document.getElementById("hora-dinamica");
-
-const horaBox = document.querySelector(".hora-espana");
-
-const contenedorHora =
-  document.getElementById("contenedorHora");
-
-let visible = true;
-
-// CLICK
-horaBox.addEventListener("click",()=>{
-
-  visible = !visible;
-
-  if(visible){
-
-    contenedorHora.classList.remove("oculto");
-
-  }else{
-
-    contenedorHora.classList.add("oculto");
-  }
-});
-
-// ACTUALIZAR HORA
-function hora(){
-
-  horaSpan.textContent =
-    new Date().toLocaleTimeString("es-ES",{
-      timeZone:"Europe/Madrid",
-      hour:"2-digit",
-      minute:"2-digit",
-      second:"2-digit",
-      hour12:true
-    });
+const horaSpan=document.getElementById("hora-dinamica");
+const horaBox=document.querySelector(".hora-espana");
+const contenedorHora=document.getElementById("contenedorHora");
+let visible=true;
+function actualizarHora(){
+  horaSpan.textContent=new Date().toLocaleTimeString("es-ES",{timeZone:"Europe/Madrid",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:true});
 }
-
-setInterval(hora,1000);
-
-hora();
-
-/* =========================
-   DARK MODE
-========================= */
-document.getElementById("toggleDarkMode").addEventListener("click",()=>{
-document.body.classList.toggle("dark-mode");
-});
-
+setInterval(actualizarHora,1000);
+actualizarHora();
+horaBox.addEventListener("click",()=>{visible=!visible;if(visible)contenedorHora.classList.remove("oculto");else contenedorHora.classList.add("oculto");});
 </script>
-
 </body>
 </html>
